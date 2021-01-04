@@ -1,0 +1,30 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v2
+      - uses: asdf-vm/actions/install@v1
+        with:
+          node-version: "10.x"
+      - run: npm install
+      - run: npm run lint
+
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: asdf-vm/actions/install@v1
+        with:
+          node-version: "10.x"
+      - run: npm install
+      - run: npm run test:unit
+  # integration:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: asdf-vm/actions/install@v1
+  #     - run: npm install
+  #     - run: npm run tests:integration
