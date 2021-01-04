@@ -6,6 +6,7 @@ jobs:
     continue-on-error: true
     steps:
       - uses: actions/checkout@v2
+      - run: bash -c '${ASDF_DATA_DIR:=$HOME/.asdf}/plugins/nodejs/bin/import-release-team-keyring'
       - uses: asdf-vm/actions/install@v1
       - run: npm install
       - run: npm run lint
@@ -14,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - run: bash -c '${ASDF_DATA_DIR:=$HOME/.asdf}/plugins/nodejs/bin/import-release-team-keyring'
       - uses: asdf-vm/actions/install@v1
       - run: npm install
       - run: npm run test:unit
