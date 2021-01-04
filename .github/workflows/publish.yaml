@@ -1,0 +1,28 @@
+name: publish package
+on:
+  release:
+    types: [created] # probably should be "published"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      # Setup .npmrc file to publish to npm
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "10.x"
+          registry-url: "https://registry.npmjs.org"
+      - run: npm ci
+      - run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
+      # Setup .npmrc file to publish to GitHub Packages
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "10.x"
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@jthegedus"
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_PUBLISH_TOKEN }}

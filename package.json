@@ -17,7 +17,7 @@
     "dist"
   ],
   "scripts": {
-    "lint": "rome check",
+    "lint": "rome check src/index.js tests/index.test.js",
     "test:unit": "ava",
     "dev": "rollup --watch --config rollup.config.mjs",
     "build": "rollup --config rollup.config.mjs && cp src/files/cloud_run_package.json dist/files/package.json",
