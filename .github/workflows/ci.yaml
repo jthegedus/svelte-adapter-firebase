@@ -7,8 +7,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: asdf-vm/actions/install@v1
-        with:
-          node-version: "10.x"
       - run: npm install
       - run: npm run lint
 
@@ -17,8 +15,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: asdf-vm/actions/install@v1
-        with:
-          node-version: "10.x"
       - run: npm install
       - run: npm run test:unit
   # integration:
