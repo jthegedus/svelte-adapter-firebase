@@ -267,4 +267,3 @@ for either a Function or Cloud Run service.
 		);
 	},
 );
-
