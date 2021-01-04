@@ -1,0 +1,1 @@
+# svelte-adapter-firebase
