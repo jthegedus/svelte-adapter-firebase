@@ -9,6 +9,7 @@
 # svelte-adapter-firebase
 
 <!-- TODO: GitHub Actions badges, NPM badges/links -->
+![ci](https://github.com/jthegedus/svelte-adapter-firebase/workflows/ci/badge.svg)
 
 [Firebase](https://firebase.google.com/) adapter for [SvelteKit](https://svelte.dev). Supports:
 
@@ -54,7 +55,7 @@ This adapter reads your `firebase.json` to determine if the Firebase Hosting sit
 
 Please read the docs carefully!
 
-:information_source: I recommend using a [Cloud Run](#cloud-run) service for rewrites instead of Cloud Functions.
+:information_source: I recommend using a [Cloud Run](#cloud-run) service for SSR instead of Cloud Functions.
 
 ## Configuration Overview
 
