@@ -1,0 +1,15 @@
+{
+	"name": "sveltekit-server",
+	"main": "handler.js",
+	"dependencies": {
+		"@google-cloud/functions-framework": "^1.7.1",
+		"@sveltejs/kit": "next",
+		"@sveltejs/app-utils": "next"
+	},
+	"scripts": {
+		"start": "functions-framework --target=sveltekit_server"
+	},
+	"engines": {
+		"node": "14"
+	}
+}

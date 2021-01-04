@@ -1,0 +1,13 @@
+{
+	"hosting": {
+		"public": "app",
+		"rewrites": [
+			{
+				"source": "**",
+				"run": {
+					"serviceId": "some_service"
+				}
+			}
+		]
+	}
+}

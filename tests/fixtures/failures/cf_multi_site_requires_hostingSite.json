@@ -1,0 +1,25 @@
+{
+	"hosting": [
+		{
+			"site": "app",
+			"public": "app",
+			"rewrites": [
+				{
+					"source": "**",
+					"function": "some_func"
+				}
+			]
+		},
+		{
+			"site": "blog",
+			"public": "blog"
+		},
+		{
+			"site": "marketing",
+			"public": "marketing"
+		}
+	],
+	"functions": {
+		"source": "functions"
+	}
+}
