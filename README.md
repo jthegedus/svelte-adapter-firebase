@@ -40,11 +40,11 @@ Integrates with existing [JavaScript or TypeScript Cloud Functions](https://fire
 
 In your standard SvelteKit project:
 
-- `npm i -D @jthegedus/svelte-adapter-firebase`
+- `npm i -D svelte-adapter-firebase`
 - add adapter to `svelte.config.js`:
   ```
   kit: {
-    adapter: ["@jthegedus/adapter-firebase"],
+    adapter: ["svelte-adapter-firebase"],
     target: "#svelte",
   }
   ```
@@ -141,7 +141,7 @@ To correctly lookup the `blog` site, `hostingSite` will need to be set in `svelt
 ```javascript
 // svelte.config.js
   kit: {
-    adapter: ["@jthegedus/adapter-firebase", {
+    adapter: ["svelte-adapter-firebase", {
         "hostingSite": "blog"
     }],
     target: "#svelte",
@@ -201,7 +201,7 @@ To correctly lookup the `blog` site, `hostingSite` will need to be set in `svelt
 ```javascript
 // svelte.config.js
   kit: {
-    adapter: ["@jthegedus/adapter-firebase", {
+    adapter: ["svelte-adapter-firebase", {
         "hostingSite": "blog"
     }],
     target: "#svelte",
@@ -246,7 +246,7 @@ If the firebase.json.hosting is an array of sites, then you must provide a siten
 ```javascript
 // svelte.config.js
   kit: {
-    adapter: ["@jthegedus/adapter-firebase", {
+    adapter: ["svelte-adapter-firebase", {
         "hostingSite": "blog"
     }],
     target: "#svelte",
@@ -280,7 +280,7 @@ If the rewrite `source` pattern is not `**`, then `svelte.config.js` `sourceRewr
 ```javascript
 // svelte.config.js
   kit: {
-    adapter: ["@jthegedus/adapter-firebase", {
+    adapter: ["svelte-adapter-firebase", {
         "sourceRewriteMatch": "/blog/**"
     }],
     target: "#svelte",
@@ -311,7 +311,7 @@ functions/
 ```javascript
 // app/svelte.config.js
   kit: {
-    adapter: ["@jthegedus/adapter-firebase", {
+    adapter: ["svelte-adapter-firebase", {
         "firebaseJson": "../firebase.json"
     }],
     target: "#svelte",
@@ -363,7 +363,7 @@ If you wish to customise this output dir, then you can specify it in the adapter
 ```javascript
 // svelte.config.js
   kit: {
-    adapter: ["@jthegedus/adapter-firebase", {
+    adapter: ["svelte-adapter-firebase", {
         "cloudRunBuildDir": ".special/ssr/output/dir"
     }],
     target: "#svelte",

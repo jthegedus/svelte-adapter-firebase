@@ -1,5 +1,5 @@
 {
-  "name": "@jthegedus/svelte-adapter-firebase",
+  "name": "svelte-adapter-firebase",
   "description": "Adapter for Svelte apps that integrates a firebase website with Cloud Functions or Cloud Run for server side rendering.",
   "main": "dist/index.js",
   "version": "0.1.0",
