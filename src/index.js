@@ -1,7 +1,7 @@
-const {existsSync, readFileSync} = require("fs");
-const {dirname, join} = require("path");
-const {copy} = require("@sveltejs/app-utils/files");
-const Joi = require("joi");
+const {existsSync, readFileSync} = require('fs');
+const path = require('path');
+const {copy} = require('@sveltejs/app-utils/files');
+const Joi = require('joi');
 
 // If valid config returns the config as JS Object, else throws error
 function validateFirebaseConfig(firebaseJson, hostingSite, sourceRewriteMatch) {
@@ -10,12 +10,12 @@ function validateFirebaseConfig(firebaseJson, hostingSite, sourceRewriteMatch) {
 			Joi.object().keys({
 				public: Joi.string().required(),
 				site: Joi.string().when(
-					"/hosting.length",
+					'/hosting.length',
 					{
 						is: Joi.number().integer().positive().less(2),
 						then: Joi.optional(),
-						otherwise: Joi.required(),
-					},
+						otherwise: Joi.required()
+					}
 				),
 				// Firebase rewrite schema
 				rewrites: Joi.array().items(
@@ -23,37 +23,37 @@ function validateFirebaseConfig(firebaseJson, hostingSite, sourceRewriteMatch) {
 						source: Joi.string(),
 						regex: Joi.string(),
 						// https://github.com/firebase/firebase-tools/blob/50efc2e6983f7b907d6792c8a9e3f8d1eac64591/src/deploy/functions/validate.ts#L36
-						function: Joi.string().pattern(new RegExp("^[a-zA-Z0-9_-]{1,62}$")),
+						function: Joi.string().pattern(/^[\w-]{1,62}$/),
 						run: Joi.object().keys({
-							serviceId: Joi.string().required(),
+							serviceId: Joi.string().required()
 						}),
 						destination: Joi.string(),
-						dynamicLinks: Joi.boolean().invalid(false),
-					}).xor("source", "regex").xor(
-						"function",
-						"run",
-						"destination",
-						"dynamicLinks",
-					),
-				).min(1),
-			}),
+						dynamicLinks: Joi.boolean().invalid(false)
+					}).xor('source', 'regex').xor(
+						'function',
+						'run',
+						'destination',
+						'dynamicLinks'
+					)
+				).min(1)
+			})
 		).single().required().has(
 			// START: svelte-adapter-firebase required hosting values
 			Joi.object().keys({
 				public: Joi.string().required(),
 
-				// if single site in hosting array
+				// If single site in hosting array
 				//	then site is optional
 				//	otherwise site is either a string || must match hostingSite if provided
 				site: Joi.any().when(
-					"/hosting.length",
+					'/hosting.length',
 					{
 						is: Joi.number().integer().positive().less(2),
 						then: Joi.string().optional(),
 						otherwise: Joi.string().valid(
-							hostingSite ? hostingSite : Joi.string(),
-						).required(),
-					},
+							hostingSite ? hostingSite : Joi.string()
+						).required()
+					}
 				),
 				rewrites: Joi.array().has(
 					Joi.object().keys({
@@ -61,36 +61,36 @@ function validateFirebaseConfig(firebaseJson, hostingSite, sourceRewriteMatch) {
 						regex: Joi.string().valid(sourceRewriteMatch),
 						function: Joi.string(),
 						run: Joi.object().keys({
-							serviceId: Joi.string().required(),
-						}),
-					}).xor("source", "regex").xor("function", "run"),
-				),
-			}).with("public", "rewrites"),
+							serviceId: Joi.string().required()
+						})
+					}).xor('source', 'regex').xor('function', 'run')
+				)
+			}).with('public', 'rewrites')
 			// END
 		),
 		functions: Joi.object().keys({
-			source: Joi.string(),
+			source: Joi.string()
 		}).when(
-			"/hosting",
+			'/hosting',
 			{
 				is: Joi.array().has(
 					Joi.object().keys({
 						rewrites: Joi.array().has(
 							Joi.object().keys({
-								function: Joi.string().required(),
-							}),
-						).required(),
-					}),
+								function: Joi.string().required()
+							})
+						).required()
+					})
 				),
 				then: Joi.required(),
-				otherwise: Joi.optional(),
-			},
-		),
+				otherwise: Joi.optional()
+			}
+		)
 	});
 
 	const {error, value} = schema.validate(
 		JSON.parse(getFile(firebaseJson)),
-		{allowUnknown: true},
+		{allowUnknown: true}
 	);
 
 	if (error) {
@@ -99,13 +99,13 @@ function validateFirebaseConfig(firebaseJson, hostingSite, sourceRewriteMatch) {
 
 Error with "${firebaseJson}" config.
 Expected Hosting config for site:
-	${hostingSite
-				? hostingSite
-				: '"default" - did you mean to specify a specific site?'}
+	${hostingSite ?
+		hostingSite :
+		'"default" - did you mean to specify a specific site?'}
 with config:
 	"rewrites.*.source": "${sourceRewriteMatch}"
 for either a Function or Cloud Run service.
-`,
+`
 		);
 	}
 
@@ -115,7 +115,7 @@ for either a Function or Cloud Run service.
 function getFile(filepath) {
 	if (existsSync(filepath)) {
 		try {
-			return readFileSync(filepath, "utf-8");
+			return readFileSync(filepath, 'utf-8');
 		} catch (error) {
 			throw new Error(`Error reading ${filepath}: ${error.message}`);
 		}
@@ -128,61 +128,61 @@ async function adapter(
 	builder,
 	{
 		hostingSite,
-		sourceRewriteMatch = "**",
-		firebaseJson = "firebase.json",
-		cloudRunBuildDir,
-	},
+		sourceRewriteMatch = '**',
+		firebaseJson = 'firebase.json',
+		cloudRunBuildDir
+	}
 ) {
 	// Joi.array.single converts the hosting field to an array if a single item is provided
 	const firebaseConfig = validateFirebaseConfig(
 		firebaseJson,
 		hostingSite,
-		sourceRewriteMatch,
+		sourceRewriteMatch
 	);
 
 	// @ this point Joi has validated that all required values are in the config file
 	const firebaseSiteConfig =
-		firebaseConfig.hosting.length === 1
-			? firebaseConfig.hosting[0] // site field is optional for single site configs, so just grab first
-			: firebaseConfig.hosting.find((item) => item.site === hostingSite);
-	const firebaseRewriteConfig = firebaseSiteConfig.rewrites.find((item) => {
+		firebaseConfig.hosting.length === 1 ?
+			firebaseConfig.hosting[0] : // Site field is optional for single site configs, so just grab first
+			firebaseConfig.hosting.find(item => item.site === hostingSite);
+	const firebaseRewriteConfig = firebaseSiteConfig.rewrites.find(item => {
 		return item.source === sourceRewriteMatch && (item.function || item.run);
 	});
 
 	if (firebaseRewriteConfig.function) {
 		const functionsSourceDir = firebaseConfig.functions.source;
-		const functionsPackageJsonPath = join(functionsSourceDir, "package.json");
+		const functionsPackageJsonPath = path.join(functionsSourceDir, 'package.json');
 
-		// get "main" of package.json @ functions.source
+		// Get "main" of package.json @ functions.source
 		const functionsPackageJson = JSON.parse(getFile(functionsPackageJsonPath));
 		if (!functionsPackageJson.main) {
 			throw new Error(`"main" field missing from ${functionsPackageJsonPath}`);
 		}
 
-		// write files to dir
-		const ssrDirname = hostingSite ?? "sveltekit";
-		const serverOutputDir = join(
-			join(functionsSourceDir, dirname(functionsPackageJson.main), ssrDirname),
+		// Write files to dir
+		const ssrDirname = hostingSite ?? 'sveltekit';
+		const serverOutputDir = path.join(
+			path.join(functionsSourceDir, path.dirname(functionsPackageJson.main), ssrDirname)
 		);
 		builder.log.minor(
-			`Writing Cloud Function server assets to ${serverOutputDir}`,
+			`Writing Cloud Function server assets to ${serverOutputDir}`
 		);
 		builder.copy_server_files(serverOutputDir);
 		copy(
-			join(__dirname, "./files/handler.js"),
-			join(serverOutputDir, "handler.js"),
+			path.join(__dirname, './files/handler.js'),
+			path.join(serverOutputDir, 'handler.js')
 		);
 
-		const functionsIndexPath = join(
+		const functionsIndexPath = path.join(
 			functionsSourceDir,
-			functionsPackageJson.main,
+			functionsPackageJson.main
 		);
 		try {
-			// read functions index file to see if function is already included there,
+			// Read functions index file to see if function is already included there,
 			// if so, do not output anything
 			const cloudFunctionName = firebaseRewriteConfig.function;
-			const ssrSvelteFunctionName = ssrDirname.replace(/\W/g, "").concat(
-				"Server",
+			const ssrSvelteFunctionName = ssrDirname.replace(/\W/g, '').concat(
+				'Server'
 			);
 			if (
 				existsSync(functionsIndexPath) &&
@@ -196,49 +196,49 @@ exports.${cloudFunctionName} = functions.https.onRequest(
 	async (request, response) => {
 		if (!${ssrSvelteFunctionName}) {
 			functions.logger.info("Initializing SvelteKit SSR Handler");
-			${ssrSvelteFunctionName} = require("./${ssrDirname}/handler").sveltekit_server;
+			${ssrSvelteFunctionName} = require("./${ssrDirname}/handler").sveltekitServer;
 			functions.logger.info("SvelteKit SSR Handler initialised!");
 		}
 		return await ${ssrSvelteFunctionName}(request, response);
 	}
 );
-+--------------------------------------------------+`,
++--------------------------------------------------+`
 				);
 			}
-		} catch (error) {
+		} catch {
 			// TODO: Improve this warning or the flow around reading functions index file.
 			builder.log.warn(`There was an issue reading file ${functionsIndexPath}`);
 		}
 
-		if (!JSON.stringify(functionsPackageJson).includes("@sveltejs/app-utils")) {
+		if (!JSON.stringify(functionsPackageJson).includes('@sveltejs/app-utils')) {
 			builder.log.info(
 				`\nAdd the required dependency to ${functionsPackageJsonPath}
 +--------------------------------------------------+
 "@sveltejs/app-utils": "next"
-+--------------------------------------------------+`,
++--------------------------------------------------+`
 			);
 		}
 	} else if (firebaseRewriteConfig.run) {
-		const serverOutputDir = join(
-			cloudRunBuildDir || `.${firebaseRewriteConfig.run.serviceId}`,
+		const serverOutputDir = path.join(
+			cloudRunBuildDir || `.${firebaseRewriteConfig.run.serviceId}`
 		);
 
 		builder.log.minor(`Writing Cloud Run service to ./${serverOutputDir}`);
 		builder.copy_server_files(serverOutputDir);
-		copy(join(__dirname, "./files"), serverOutputDir);
+		copy(path.join(__dirname, './files'), serverOutputDir);
 		builder.log.info(
 			`To deploy your Cloud Run service, run this command:
 +--------------------------------------------------+
 gcloud beta run --platform managed --region us-central1 deploy ${firebaseRewriteConfig.run.serviceId} --source ${serverOutputDir} --allow-unauthenticated
-+--------------------------------------------------+`,
++--------------------------------------------------+`
 		);
 	} else {
 		throw new Error(
-			"This code path should be unreachable, please open an issue @ https://github.com/jthegedus/svelte-adatper-firebase/issues with debug information",
+			'This code path should be unreachable, please open an issue @ https://github.com/jthegedus/svelte-adatper-firebase/issues with debug information'
 		);
 	}
 
-	const staticOutputDir = join(firebaseSiteConfig.public);
+	const staticOutputDir = path.join(firebaseSiteConfig.public);
 	builder.log.minor(`Writing client application to ${staticOutputDir}`);
 	builder.copy_static_files(staticOutputDir);
 	builder.copy_client_files(staticOutputDir);
