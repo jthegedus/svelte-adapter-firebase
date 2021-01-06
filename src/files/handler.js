@@ -1,24 +1,25 @@
-const {parse, URLSearchParams} = require("url");
-const {get_body: getBody} = require("@sveltejs/app-utils/http");
-const app = require("./app.js");
+const {get_body: getBody} = require('@sveltejs/app-utils/http');
+const app = require('./app.js');
 
-exports.sveltekit_server = async (req, res) => {
-	const {pathname, query = ""} = parse(req.url || "");
+exports.sveltekitServer = async (request, response) => {
+	const {pathname, query = ''} = new URL(
+		request.url || '',
+		`https://${request.headers.host}/`
+	);
 
 	const rendered = await app.render({
 		host: null,
-		// TODO
-		method: req.method,
-		headers: req.headers,
+		method: request.method,
+		headers: request.headers,
 		path: pathname,
 		query: new URLSearchParams(query),
-		body: await getBody(req),
+		body: await getBody(request)
 	});
 
 	if (rendered) {
 		const {status, headers, body} = rendered;
-		return res.writeHead(status, headers).end(body);
+		return response.writeHead(status, headers).end(body);
 	}
 
-	return res.writeHead(404).end();
+	return response.writeHead(404).end();
 };
