@@ -1,6 +1,6 @@
 {
   "name": "svelte-adapter-firebase",
-  "description": "Adapter for Svelte apps that integrates a firebase website with Cloud Functions or Cloud Run for server side rendering.",
+  "description": "Adapter for Svelte apps that integrates a Firebase Hosting Website with Cloud Functions or Cloud Run for server side rendering.",
   "source": "src/index.js",
   "main": "dist/index.js",
   "version": "0.2.0",
