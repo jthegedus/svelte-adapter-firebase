@@ -1,12 +1,12 @@
 {
 	"[javascript]": {
-		"editor.defaultFormatter": "rome.rome"
+		"editor.defaultFormatter": "samverschueren.linter-xo"
 	},
 	"[typescript]": {
-		"editor.defaultFormatter": "rome.rome"
+		"editor.defaultFormatter": "samverschueren.linter-xo"
 	},
 	"[json]": {
-		"editor.defaultFormatter": "rome.rome"
+		"editor.defaultFormatter": "vscode.json-language-features"
 	},
 	"[yaml]": {
 		"editor.defaultFormatter": "redhat.vscode-yaml"
