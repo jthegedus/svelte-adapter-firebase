@@ -3,8 +3,7 @@
 | :warning: WARNING: this project is considered alpha until SvelteKit is available for general use and the Adapter API is stable! |
 | ------------------------------------------------------------------------------------------------------------------------------- |
 
-<!-- TODO: use social preview image here -->
-<img src="" />
+![SvelteKit adapter Firebase social preview](assets/github-preview-svelte-adapter-firebase.png)
 
 # svelte-adapter-firebase
 
@@ -553,7 +552,6 @@ For those interested, this build & deploy command uses [Cloud Build](https://clo
 
 ### todo
 
-- social template
 - fix GitHub packages publish
 - remove dependency on Joi?
 - diagram showing Cloud Run vs Cloud Functions
