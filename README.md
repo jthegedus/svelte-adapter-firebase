@@ -9,7 +9,8 @@
 # svelte-adapter-firebase
 
 <!-- TODO: GitHub Actions badges, NPM badges/links -->
-![ci](https://github.com/jthegedus/svelte-adapter-firebase/workflows/ci/badge.svg)
+
+[![ci](https://github.com/jthegedus/svelte-adapter-firebase/workflows/ci/badge.svg)](https://github.com/jthegedus/svelte-adapter-firebase/actions?query=workflow%3Aci) [![npm](https://img.shields.io/npm/v/svelte-adapter-firebase?color=green)](https://www.npmjs.com/package/svelte-adapter-firebase)
 
 [Firebase](https://firebase.google.com/) adapter for [SvelteKit](https://svelte.dev). Supports:
 
@@ -553,6 +554,8 @@ For those interested, this build & deploy command uses [Cloud Build](https://clo
 ### todo
 
 - social template
+- fix GitHub packages publish
+- remove dependency on Joi?
 - diagram showing Cloud Run vs Cloud Functions
 - examples
   - use examples as e2e tests?
