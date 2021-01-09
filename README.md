@@ -554,7 +554,5 @@ For those interested, this build & deploy command uses [Cloud Build](https://clo
 
 - fix GitHub packages publish
 - remove dependency on Joi?
-- diagram showing Cloud Run vs Cloud Functions
-- examples
-  - use examples as e2e tests?
-- copy app package.json.deps to cloud run service package.json on adapt for Cloud Run target?
+- examples? use examples as e2e tests?
+- copy app package.json.deps to cloud run service package.json.deps on adapt for Cloud Run target?
