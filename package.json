@@ -1,6 +1,26 @@
 {
   "name": "svelte-adapter-firebase",
   "description": "Adapter for Svelte apps that integrates a Firebase Hosting Website with Cloud Functions or Cloud Run for server side rendering.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jthegedus/svelte-adapter-firebase.git"
+  },
+  "homepage": "https://github.com/jthegedus/svelte-adapter-firebase#readme",
+  "bugs": {
+    "url": "https://github.com/jthegedus/svelte-adapter-firebase/issues"
+  },
+  "author": "James Hegedus <jthegedus@hey.com>",
+  "license": "MIT",
+  "keywords": [
+    "svelte",
+    "sveltekit",
+    "sveltekit-adapter",
+    "firebase",
+    "cloud-functions",
+    "cloud-run",
+    "serverless",
+    "ssr"
+  ],
   "source": "src/index.js",
   "main": "dist/index.js",
   "version": "0.2.0",
