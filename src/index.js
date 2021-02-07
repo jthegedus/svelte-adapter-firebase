@@ -128,7 +128,7 @@ async function adapter(
 	builder,
 	parameters
 ) {
-	const 	{
+	const {
 		hostingSite = null,
 		sourceRewriteMatch = '**',
 		firebaseJson = 'firebase.json',
