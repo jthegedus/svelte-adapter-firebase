@@ -1,5 +1,5 @@
 const {get_body: getBody} = require('@sveltejs/app-utils/http');
-const app = require('./app.js');
+const app = require('./app.cjs');
 
 exports.sveltekitServer = async (request, response) => {
 	const {pathname, query = ''} = new URL(
