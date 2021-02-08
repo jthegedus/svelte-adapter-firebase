@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.1](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.3.0...v0.3.1) (2021-02-08)
+
+
+### Bug Fixes
+
+* elevate logs to .warn & check CFs for `@sveltejs/kit` dep ([#9](https://github.com/jthegedus/svelte-adapter-firebase/issues/9)) ([6b35ee1](https://github.com/jthegedus/svelte-adapter-firebase/commit/6b35ee1a711a979fedaf7f97fc8f513974599698))
+
 ## 0.3.0 (2021-02-07)
 
 - fix: cjs output from sveltekit requires rename of local require in handler.js
