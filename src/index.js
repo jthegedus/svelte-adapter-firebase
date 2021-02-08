@@ -189,7 +189,7 @@ async function adapter(
 				existsSync(functionsIndexPath) &&
 				!getFile(functionsIndexPath).includes(`${cloudFunctionName} =`)
 			) {
-				builder.log.info(
+				builder.log.warn(
 					`Add the following Cloud Function to ${functionsIndexPath}
 +--------------------------------------------------+
 let ${ssrSvelteFunctionName};
@@ -212,7 +212,7 @@ exports.${cloudFunctionName} = functions.https.onRequest(
 		}
 
 		if (!JSON.stringify(functionsPackageJson).includes('@sveltejs/app-utils')) {
-			builder.log.info(
+			builder.log.warn(
 				`\nAdd the required dependency to ${functionsPackageJsonPath}
 +--------------------------------------------------+
 "@sveltejs/app-utils": "next"
@@ -227,7 +227,7 @@ exports.${cloudFunctionName} = functions.https.onRequest(
 		builder.log.minor(`Writing Cloud Run service to ./${serverOutputDir}`);
 		builder.copy_server_files(serverOutputDir);
 		copy(path.join(__dirname, './files'), serverOutputDir);
-		builder.log.info(
+		builder.log.warn(
 			`To deploy your Cloud Run service, run this command:
 +--------------------------------------------------+
 gcloud beta run --platform managed --region us-central1 deploy ${firebaseRewriteConfig.run.serviceId} --source ${serverOutputDir} --allow-unauthenticated
