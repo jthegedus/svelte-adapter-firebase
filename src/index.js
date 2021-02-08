@@ -6,92 +6,95 @@ const Joi = require('joi');
 // If valid config returns the config as JS Object, else throws error
 function validateFirebaseConfig(firebaseJson, hostingSite, sourceRewriteMatch) {
 	const schema = Joi.object().keys({
-		hosting: Joi.array().items(
-			Joi.object().keys({
-				public: Joi.string().required(),
-				site: Joi.string().when(
-					'/hosting.length',
-					{
+		hosting: Joi.array()
+			.items(
+				Joi.object().keys({
+					public: Joi.string().required(),
+					site: Joi.string().when('/hosting.length', {
 						is: Joi.number().integer().positive().less(2),
 						then: Joi.optional(),
 						otherwise: Joi.required()
-					}
-				),
-				// Firebase rewrite schema
-				rewrites: Joi.array().items(
-					Joi.object().keys({
-						source: Joi.string(),
-						regex: Joi.string(),
-						// https://github.com/firebase/firebase-tools/blob/50efc2e6983f7b907d6792c8a9e3f8d1eac64591/src/deploy/functions/validate.ts#L36
-						function: Joi.string().pattern(/^[\w-]{1,62}$/),
-						run: Joi.object().keys({
-							serviceId: Joi.string().required()
-						}),
-						destination: Joi.string(),
-						dynamicLinks: Joi.boolean().invalid(false)
-					}).xor('source', 'regex').xor(
-						'function',
-						'run',
-						'destination',
-						'dynamicLinks'
-					)
-				).min(1)
-			})
-		).single().required().has(
-			// START: svelte-adapter-firebase required hosting values
-			Joi.object().keys({
-				public: Joi.string().required(),
+					}),
+					// Firebase rewrite schema
+					rewrites: Joi.array()
+						.items(
+							Joi.object()
+								.keys({
+									source: Joi.string(),
+									regex: Joi.string(),
+									// https://github.com/firebase/firebase-tools/blob/50efc2e6983f7b907d6792c8a9e3f8d1eac64591/src/deploy/functions/validate.ts#L36
+									function: Joi.string().pattern(/^[\w-]{1,62}$/),
+									run: Joi.object().keys({
+										serviceId: Joi.string().required()
+									}),
+									destination: Joi.string(),
+									dynamicLinks: Joi.boolean().invalid(false)
+								})
+								.xor('source', 'regex')
+								.xor('function', 'run', 'destination', 'dynamicLinks')
+						)
+						.min(1)
+				})
+			)
+			.single()
+			.required()
+			.has(
+				// START: svelte-adapter-firebase required hosting values
+				Joi.object()
+					.keys({
+						public: Joi.string().required(),
 
-				// If single site in hosting array
-				//	then site is optional
-				//	otherwise site is either a string || must match hostingSite if provided
-				site: Joi.any().when(
-					'/hosting.length',
-					{
-						is: Joi.number().integer().positive().less(2),
-						then: Joi.string().optional(),
-						otherwise: Joi.string().valid(
-							hostingSite ? hostingSite : Joi.string()
-						).required()
-					}
-				),
-				rewrites: Joi.array().has(
-					Joi.object().keys({
-						source: Joi.string().valid(sourceRewriteMatch),
-						regex: Joi.string().valid(sourceRewriteMatch),
-						function: Joi.string(),
-						run: Joi.object().keys({
-							serviceId: Joi.string().required()
-						})
-					}).xor('source', 'regex').xor('function', 'run')
-				)
-			}).with('public', 'rewrites')
-			// END
-		),
-		functions: Joi.object().keys({
-			source: Joi.string()
-		}).when(
-			'/hosting',
-			{
+						// If single site in hosting array
+						//	then site is optional
+						//	otherwise site is either a string || must match hostingSite if provided
+						site: Joi.any().when('/hosting.length', {
+							is: Joi.number().integer().positive().less(2),
+							then: Joi.string().optional(),
+							otherwise: Joi.string()
+								.valid(hostingSite ? hostingSite : Joi.string())
+								.required()
+						}),
+						rewrites: Joi.array().has(
+							Joi.object()
+								.keys({
+									source: Joi.string().valid(sourceRewriteMatch),
+									regex: Joi.string().valid(sourceRewriteMatch),
+									function: Joi.string(),
+									run: Joi.object().keys({
+										serviceId: Joi.string().required()
+									})
+								})
+								.xor('source', 'regex')
+								.xor('function', 'run')
+						)
+					})
+					.with('public', 'rewrites')
+				// END
+			),
+		functions: Joi.object()
+			.keys({
+				source: Joi.string()
+			})
+			.when('/hosting', {
 				is: Joi.array().has(
 					Joi.object().keys({
-						rewrites: Joi.array().has(
-							Joi.object().keys({
-								function: Joi.string().required()
-							})
-						).required()
+						rewrites: Joi.array()
+							.has(
+								Joi.object().keys({
+									function: Joi.string().required()
+								})
+							)
+							.required()
 					})
 				),
 				then: Joi.required(),
 				otherwise: Joi.optional()
-			}
-		)
+			})
 	});
 
-	const {error, value} = schema.validate(
-		JSON.parse(getFile(firebaseJson)),
-		{allowUnknown: true}
-	);
+	const {error, value} = schema.validate(JSON.parse(getFile(firebaseJson)), {
+		allowUnknown: true
+	});
 
 	if (error) {
 		throw new Error(
@@ -99,9 +102,11 @@ function validateFirebaseConfig(firebaseJson, hostingSite, sourceRewriteMatch) {
 
 Error with "${firebaseJson}" config.
 Expected Hosting config for site:
-	${hostingSite ?
+	${
+	hostingSite ?
 		hostingSite :
-		'"default" - did you mean to specify a specific site?'}
+		'"default" - did you mean to specify a specific site?'
+}
 with config:
 	"rewrites.*.source": "${sourceRewriteMatch}"
 for either a Function or Cloud Run service.
@@ -124,10 +129,7 @@ function getFile(filepath) {
 	}
 }
 
-async function adapter(
-	builder,
-	parameters
-) {
+async function adapter(builder, parameters) {
 	const {
 		hostingSite = null,
 		sourceRewriteMatch = '**',
@@ -152,7 +154,10 @@ async function adapter(
 
 	if (firebaseRewriteConfig.function) {
 		const functionsSourceDir = firebaseConfig.functions.source;
-		const functionsPackageJsonPath = path.join(functionsSourceDir, 'package.json');
+		const functionsPackageJsonPath = path.join(
+			functionsSourceDir,
+			'package.json'
+		);
 
 		// Get "main" of package.json @ functions.source
 		const functionsPackageJson = JSON.parse(getFile(functionsPackageJsonPath));
@@ -163,7 +168,11 @@ async function adapter(
 		// Write files to dir
 		const ssrDirname = hostingSite ?? 'sveltekit';
 		const serverOutputDir = path.join(
-			path.join(functionsSourceDir, path.dirname(functionsPackageJson.main), ssrDirname)
+			path.join(
+				functionsSourceDir,
+				path.dirname(functionsPackageJson.main),
+				ssrDirname
+			)
 		);
 		builder.log.minor(
 			`Writing Cloud Function server assets to ${serverOutputDir}`
@@ -182,14 +191,14 @@ async function adapter(
 			// Read functions index file to see if function is already included there,
 			// if so, do not output anything
 			const cloudFunctionName = firebaseRewriteConfig.function;
-			const ssrSvelteFunctionName = ssrDirname.replace(/\W/g, '').concat(
-				'Server'
-			);
+			const ssrSvelteFunctionName = ssrDirname
+				.replace(/\W/g, '')
+				.concat('Server');
 			if (
 				existsSync(functionsIndexPath) &&
 				!getFile(functionsIndexPath).includes(`${cloudFunctionName} =`)
 			) {
-				builder.log.info(
+				builder.log.warn(
 					`Add the following Cloud Function to ${functionsIndexPath}
 +--------------------------------------------------+
 let ${ssrSvelteFunctionName};
@@ -212,10 +221,19 @@ exports.${cloudFunctionName} = functions.https.onRequest(
 		}
 
 		if (!JSON.stringify(functionsPackageJson).includes('@sveltejs/app-utils')) {
-			builder.log.info(
+			builder.log.warn(
 				`\nAdd the required dependency to ${functionsPackageJsonPath}
 +--------------------------------------------------+
 "@sveltejs/app-utils": "next"
++--------------------------------------------------+`
+			);
+		}
+
+		if (!JSON.stringify(functionsPackageJson).includes('@sveltejs/kit')) {
+			builder.log.warn(
+				`\nAdd the required dependency to ${functionsPackageJsonPath}
++--------------------------------------------------+
+"@sveltejs/kit": "next"
 +--------------------------------------------------+`
 			);
 		}
@@ -227,7 +245,7 @@ exports.${cloudFunctionName} = functions.https.onRequest(
 		builder.log.minor(`Writing Cloud Run service to ./${serverOutputDir}`);
 		builder.copy_server_files(serverOutputDir);
 		copy(path.join(__dirname, './files'), serverOutputDir);
-		builder.log.info(
+		builder.log.warn(
 			`To deploy your Cloud Run service, run this command:
 +--------------------------------------------------+
 gcloud beta run --platform managed --region us-central1 deploy ${firebaseRewriteConfig.run.serviceId} --source ${serverOutputDir} --allow-unauthenticated

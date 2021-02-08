@@ -1,4 +1,5 @@
 {
+	"files.insertFinalNewline": true,
 	"[javascript]": {
 		"editor.defaultFormatter": "samverschueren.linter-xo"
 	},
@@ -6,7 +7,7 @@
 		"editor.defaultFormatter": "samverschueren.linter-xo"
 	},
 	"[json]": {
-		"editor.defaultFormatter": "vscode.json-language-features"
+		"editor.defaultFormatter": "vscode.json-language-features",
 	},
 	"[yaml]": {
 		"editor.defaultFormatter": "redhat.vscode-yaml"
