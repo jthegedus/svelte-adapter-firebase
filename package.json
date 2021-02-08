@@ -32,6 +32,7 @@
     "ava": "^3.14.0",
     "microbundle": "^0.13.0",
     "rewire": "^5.0.0",
+    "standard-version": "^9.1.0",
     "xo": "^0.37.1"
   },
   "files": [
@@ -41,7 +42,7 @@
     "test": "xo && ava",
     "dev": "microbundle watch --target node",
     "build": "microbundle --target node && mkdir -p dist/files && cp -p src/files/cloud_run_package.json dist/files/package.json && cp -p src/files/handler.js dist/files/handler.js",
-    "prepublishOnly": "npm run build"
+    "release": "npm run build && standard-version && git push --follow-tags && npm publish"
   },
   "engines": {
     "node": ">=10.0.0"
