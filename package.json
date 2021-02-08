@@ -46,6 +46,7 @@
     "postinstall": "husky install",
     "prepublishOnly": "pinst --disable",
     "postpublish": "pinst --enable",
+    "fix": "xo --fix",
     "test": "xo && ava",
     "dev": "microbundle watch --target node",
     "build": "microbundle --target node && mkdir -p dist/files && cp -p src/files/cloud_run_package.json dist/files/package.json && cp -p src/files/handler.js dist/files/handler.js",
