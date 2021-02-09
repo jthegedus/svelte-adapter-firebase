@@ -129,13 +129,12 @@ function getFile(filepath) {
 	}
 }
 
-async function adapter(builder, parameters) {
-	const {
-		hostingSite = null,
-		sourceRewriteMatch = '**',
-		firebaseJson = 'firebase.json',
-		cloudRunBuildDir = null
-	} = parameters;
+async function adapter(builder, {
+	hostingSite = null,
+	sourceRewriteMatch = '**',
+	firebaseJson = 'firebase.json',
+	cloudRunBuildDir = null
+} = {}) {
 	// Joi.array.single converts the hosting field to an array if a single item is provided
 	const firebaseConfig = validateFirebaseConfig(
 		firebaseJson,
