@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.2](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.3.1...v0.3.2) (2021-02-09)
+
+
+### Bug Fixes
+
+* destructure of adapter config error ([#11](https://github.com/jthegedus/svelte-adapter-firebase/issues/11)) ([6ece557](https://github.com/jthegedus/svelte-adapter-firebase/commit/6ece5578129ff9178030b561850eacc5cf9af286))
+
 ### [0.3.1](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.3.0...v0.3.1) (2021-02-08)
 
 
