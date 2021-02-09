@@ -1,4 +1,11 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-npm run fix
+FILES=$(git diff --cached --name-only --diff-filter=ACMR "*.js" "*.jsx" | sed 's| |\\ |g')
+[ -z "$FILES" ] && exit 0
+
+# Fix all selected files
+echo "$FILES" | xargs ./node_modules/.bin/xo --fix
+
+# Add back the modified files to staging
+echo "$FILES" | xargs git add
