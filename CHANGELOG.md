@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+All notable changes to this project will be documented in this file.
 
 ### [0.3.2](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.3.1...v0.3.2) (2021-02-09)
 
