@@ -550,6 +550,14 @@ For those interested, this build & deploy command uses [Cloud Build](https://clo
 
 [Contributions of any kind welcome, just follow the guidelines](CONTRIBUTING.md)!
 
+Short version:
+
+```
+git clone https://github.com/jthegedus/svelte-adapter-firebase.git
+asdf install
+npm i
+```
+
 ### todo
 
 - remove dependency on Joi?
