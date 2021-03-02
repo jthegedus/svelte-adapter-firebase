@@ -9,7 +9,7 @@
 
 <!-- TODO: GitHub Actions badges, NPM badges/links -->
 
-[![ci](https://github.com/jthegedus/svelte-adapter-firebase/workflows/ci/badge.svg)](https://github.com/jthegedus/svelte-adapter-firebase/actions?query=workflow%3Aci) [![npm](https://img.shields.io/npm/v/svelte-adapter-firebase?color=green)](https://www.npmjs.com/package/svelte-adapter-firebase)
+[![GitHub Release](https://img.shields.io/github/release/jthegedus/svelte-adapter-firebase.svg?color=green)](https://github.com/jthegedus/svelte-adapter-firebase/releases) [![npm](https://img.shields.io/npm/v/svelte-adapter-firebase?color=green)](https://www.npmjs.com/package/svelte-adapter-firebase) [![Test](https://github.com/jthegedus/svelte-adapter-firebase/actions/workflows/test.yaml/badge.svg)](https://github.com/jthegedus/svelte-adapter-firebase/actions/workflows/test.yaml) [![CodeQL](https://github.com/jthegedus/svelte-adapter-firebase/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/jthegedus/svelte-adapter-firebase/actions/workflows/codeql-analysis.yml)
 
 [Firebase](https://firebase.google.com/) adapter for [SvelteKit](https://github.com/sveltejs/kit). Supports:
 
