@@ -1,3 +1,10 @@
+## [0.3.3](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.3.2...v0.3.3) (2021-03-04)
+
+
+### Bug Fixes
+
+* inline svelte-app-utils lib ([#15](https://github.com/jthegedus/svelte-adapter-firebase/issues/15)) ([6f79964](https://github.com/jthegedus/svelte-adapter-firebase/commit/6f79964715cda538a72f9a12f50a8584953db8d1))
+
 # Changelog
 
 All notable changes to this project will be documented in this file.

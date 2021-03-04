@@ -23,7 +23,7 @@
   ],
   "source": "src/index.js",
   "main": "dist/index.js",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "dependencies": {
     "@sveltejs/app-utils": "^1.0.0-next.1",
     "joi": "^17.4.0"
