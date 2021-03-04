@@ -1,9 +1,9 @@
-// deps - inlined
-import {get_body as getBody} from '@sveltejs/app-utils/http'
+// Deps - inlined
+import {get_body as getBody} from '@sveltejs/app-utils/http';
 
 const app = require('./app.js');
 
-export default async (request, response) => {
+const svelteKit = async (request, response) => {
 	const {pathname, query = ''} = new URL(
 		request.url || '',
 		`https://${request.headers.host}/`
@@ -25,3 +25,5 @@ export default async (request, response) => {
 
 	return response.writeHead(404).end();
 };
+
+export default svelteKit;

@@ -1,9 +1,9 @@
-// deps - installed
+// Deps - installed
 const fs = require('fs');
 const path = require('path');
 const Joi = require('joi');
 
-// deps - inlined
+// Deps - inlined
 import {copy} from '@sveltejs/app-utils/files';
 
 // If valid config returns the config as JS Object, else throws error
