@@ -1,7 +1,9 @@
-const {get_body: getBody} = require('@sveltejs/app-utils/http');
-const app = require('./app.cjs');
+// deps - inlined
+import {get_body as getBody} from '@sveltejs/app-utils/http'
 
-exports.sveltekitServer = async (request, response) => {
+const app = require('./app.js');
+
+export default async (request, response) => {
 	const {pathname, query = ''} = new URL(
 		request.url || '',
 		`https://${request.headers.host}/`

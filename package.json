@@ -25,8 +25,8 @@
   "main": "dist/index.js",
   "version": "0.3.2",
   "dependencies": {
-    "@sveltejs/app-utils": "1.0.0-next.0",
-    "joi": "^17.3.0"
+    "@sveltejs/app-utils": "^1.0.0-next.1",
+    "joi": "^17.4.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
@@ -37,6 +37,7 @@
     "husky": "^5.0.8",
     "microbundle": "^0.13.0",
     "rewire": "^5.0.0",
+    "rimraf": "^3.0.2",
     "semantic-release": "^17.4.0",
     "xo": "^0.37.1"
   },
@@ -48,7 +49,11 @@
     "fix": "xo --fix",
     "test": "xo && ava",
     "dev": "microbundle watch --target node",
-    "build": "microbundle --target node && mkdir -p dist/files && cp -p src/files/cloud_run_package.json dist/files/package.json && cp -p src/files/handler.js dist/files/handler.js"
+    "prebuild": "rimraf dist",
+    "build:cli": "microbundle --target node --external none",
+    "build:handler": "microbundle --target node --format es,cjs --external none --entry src/files/handler.js --output dist/files/handler.js",
+    "build:cloudrun": "mkdir -p dist/files && cp -p src/files/cloud_run_package.json dist/files/package.json",
+    "build": "npm run build:cli && npm run build:handler && npm run build:cloudrun"
   },
   "engines": {
     "node": ">=10.0.0"
