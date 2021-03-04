@@ -20,6 +20,9 @@ Integrates with existing [JavaScript or TypeScript Cloud Functions](https://fire
 
 </div>
 
+| :warning: WARNING: Everything is broken due to https://github.com/jthegedus/svelte-adapter-firebase/issues/16 Check back later for version `0.4.0` which should have a functioning Cloud Run implementation |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+
 ## Contents
 
 - [Quickstart](#quickstart)
