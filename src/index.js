@@ -1,7 +1,10 @@
-const {existsSync, readFileSync} = require('fs');
+// Deps - installed
+const fs = require('fs');
 const path = require('path');
-const {copy} = require('@sveltejs/app-utils/files');
 const Joi = require('joi');
+
+// Deps - inlined
+import {copy} from '@sveltejs/app-utils/files';
 
 // If valid config returns the config as JS Object, else throws error
 function validateFirebaseConfig(firebaseJson, hostingSite, sourceRewriteMatch) {
@@ -118,9 +121,9 @@ for either a Function or Cloud Run service.
 }
 
 function getFile(filepath) {
-	if (existsSync(filepath)) {
+	if (fs.existsSync(filepath)) {
 		try {
-			return readFileSync(filepath, 'utf-8');
+			return fs.readFileSync(filepath, 'utf-8');
 		} catch (error) {
 			throw new Error(`Error reading ${filepath}: ${error.message}`);
 		}
@@ -194,7 +197,7 @@ async function adapter(builder, {
 				.replace(/\W/g, '')
 				.concat('Server');
 			if (
-				existsSync(functionsIndexPath) &&
+				fs.existsSync(functionsIndexPath) &&
 				!getFile(functionsIndexPath).includes(`${cloudFunctionName} =`)
 			) {
 				builder.log.warn(
