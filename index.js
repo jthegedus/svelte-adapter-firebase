@@ -1,6 +1,7 @@
-import {copyFileSync, existsSync} from 'fs';
+import {copyFileSync, renameSync} from 'fs';
 import path from 'path';
 import {fileURLToPath} from 'url';
+import {copy} from '@sveltejs/app-utils/files'; // eslint-disable-line node/file-extension-in-import
 import {parseFirebaseConfiguration} from './utils.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -58,15 +59,16 @@ function adaptToCloudRun({builder, serviceId, region, cloudRunBuildDir}) {
 	builder.log.warn(`Writing Cloud Run service to ./${serverOutputDir}`);
 	builder.copy_server_files(serverOutputDir);
 
-	// Copy package.json and lockfile. Support npm (npm-shrinkwrap & package-lock), pnpm, yarn
-	copyFileSync(path.resolve('package.json'), `${serverOutputDir}/package.json`);
-	copyFileIfExistsSync('package-lock.json', serverOutputDir);
-	copyFileIfExistsSync('npm-shrinkwrap.json', serverOutputDir);
-	copyFileIfExistsSync('pnpm-lock.yaml', serverOutputDir);
-	copyFileIfExistsSync('yarn.lock', serverOutputDir);
-	// Write Dockerfile
-	copyFileSync(path.resolve(path.join(__dirname, 'files', 'Dockerfile')), `${serverOutputDir}/Dockerfile`);
-	copyFileSync(path.resolve(path.join(__dirname, 'files', '.dockerignore')), `${serverOutputDir}/.dockerignore`);
+	// Prepare handler & entrypoint
+	renameSync(path.join(serverOutputDir, 'app.js'), path.join(serverOutputDir, 'app.mjs'));
+	copy(path.join(__dirname, 'dist'), serverOutputDir);
+	// Prepare Cloud Run package.json
+	copyFileSync('package.json', path.join(serverOutputDir, 'package.json'));
+	// TODO: copy lockfiles if they exist
+	// TODO: add "@google-cloud/functions-framework": "^1.7.1", to package.json
+	// TODO: add "start": "functions-framework --target=sveltekit_server" to package.json
+	// TODO: add "engines": {"node": "14"} to package.json
+	// TODO: remove "type": "module" from package.json
 
 	builder.log.warn(
 		// eslint-disable-next-line indent
@@ -75,12 +77,6 @@ function adaptToCloudRun({builder, serviceId, region, cloudRunBuildDir}) {
 gcloud beta run deploy ${serviceId} --platform managed --region ${region} --source ${serverOutputDir} --allow-unauthenticated --project <YOUR_PROJECT>
 +--------------------------------------------------+`
 	);
-}
-
-function copyFileIfExistsSync(filename, destDir) {
-	if (existsSync(path.resolve(filename))) {
-		copyFileSync(path.resolve(filename), path.join(destDir, filename));
-	}
 }
 
 export default adapter;
