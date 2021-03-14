@@ -7,7 +7,7 @@ test.serial(
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: './tests/fixtures/successes/cf_site.json'};
 		const result = parseFirebaseConfiguration(config);
-		const expectedResult = {functions: {name: 'some_func', source: 'functions'}, cloudrun: false, publicDir: 'app'};
+		const expectedResult = {functions: {name: 'some_func', source: 'functions'}, cloudRun: false, publicDir: 'app'};
 
 		t.deepEqual(result, expectedResult);
 	}
@@ -18,7 +18,7 @@ test.serial(
 	t => {
 		const config = {hostingSite: 'app', sourceRewriteMatch: '**', firebaseJson: './tests/fixtures/successes/cf_sites.json'};
 		const result = parseFirebaseConfiguration(config);
-		const expectedResult = {functions: {name: 'some_func', source: 'functions'}, cloudrun: false, publicDir: 'app'};
+		const expectedResult = {functions: {name: 'some_func', source: 'functions'}, cloudRun: false, publicDir: 'app'};
 
 		t.deepEqual(result, expectedResult);
 	}
@@ -29,7 +29,7 @@ test.serial(
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: './tests/fixtures/successes/cr_site.json'};
 		const result = parseFirebaseConfiguration(config);
-		const expectedResult = {functions: false, cloudrun: {serviceId: 'some_service', region: 'us-central1'}, publicDir: 'app'};
+		const expectedResult = {functions: false, cloudRun: {serviceId: 'some_service', region: 'us-central1'}, publicDir: 'app'};
 
 		t.deepEqual(result, expectedResult);
 	}
@@ -40,7 +40,7 @@ test.serial(
 	t => {
 		const config = {hostingSite: 'app', sourceRewriteMatch: '**', firebaseJson: './tests/fixtures/successes/cr_sites.json'};
 		const result = parseFirebaseConfiguration(config);
-		const expectedResult = {functions: false, cloudrun: {serviceId: 'some_service', region: 'us-central1'}, publicDir: 'app'};
+		const expectedResult = {functions: false, cloudRun: {serviceId: 'some_service', region: 'us-central1'}, publicDir: 'app'};
 
 		t.deepEqual(result, expectedResult);
 	}
@@ -62,6 +62,15 @@ test.serial(
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: './tests/fixtures/failures/invalid.json'};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
 		t.is(error.message, 'Error parsing ./tests/fixtures/failures/invalid.json. Unexpected token } in JSON at position 28');
+	}
+);
+
+test.serial(
+	'firebase config without "hosting" field',
+	t => {
+		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: './tests/fixtures/failures/missing_hosting.json'};
+		const error = t.throws(() => parseFirebaseConfiguration(config));
+		t.is(error.message, 'Error with config ./tests/fixtures/failures/missing_hosting.json. "hosting" field required.');
 	}
 );
 
