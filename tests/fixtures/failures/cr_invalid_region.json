@@ -5,7 +5,7 @@
 			{
 				"source": "**",
 				"run": {
-					"serviceId": "someService",
+					"serviceId": "some-service",
 					"region": "not-a-region"
 				}
 			}

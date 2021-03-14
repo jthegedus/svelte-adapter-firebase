@@ -26,4 +26,4 @@ const svelteKit = async (request, response) => {
 	return response.writeHead(404).end();
 };
 
-export default svelteKit;
+exports.svelteKit = svelteKit;

@@ -1,9 +1,9 @@
 import test from 'ava';
-import {parseFirebaseConfiguration} from '../src/utils.js';
+import {parseFirebaseConfiguration, validCloudRunServiceId} from '../src/utils.js';
 
-// Valid configs
-test.serial(
-	'firebase config w Cloud Functions & single site',
+// ParseFirebaseConfiguration: Valid configs
+test(
+	'Firebase config w Cloud Functions & single site',
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: './tests/fixtures/successes/cf_site.json'};
 		const result = parseFirebaseConfiguration(config);
@@ -13,8 +13,8 @@ test.serial(
 	}
 );
 
-test.serial(
-	'firebase config w Cloud Functions & multiple sites',
+test(
+	'Firebase config w Cloud Functions & multiple sites',
 	t => {
 		const config = {hostingSite: 'app', sourceRewriteMatch: '**', firebaseJson: './tests/fixtures/successes/cf_sites.json'};
 		const result = parseFirebaseConfiguration(config);
@@ -24,31 +24,31 @@ test.serial(
 	}
 );
 
-test.serial(
-	'firebase config w Cloud Run & single site',
+test(
+	'Firebase config w Cloud Run & single site',
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: './tests/fixtures/successes/cr_site.json'};
 		const result = parseFirebaseConfiguration(config);
-		const expectedResult = {functions: false, cloudRun: {serviceId: 'some_service', region: 'us-central1'}, publicDir: 'app'};
+		const expectedResult = {functions: false, cloudRun: {serviceId: 'some-service', region: 'us-central1'}, publicDir: 'app'};
 
 		t.deepEqual(result, expectedResult);
 	}
 );
 
-test.serial(
-	'firebase config w Cloud Run & multiple sites',
+test(
+	'Firebase config w Cloud Run & multiple sites',
 	t => {
 		const config = {hostingSite: 'app', sourceRewriteMatch: '**', firebaseJson: './tests/fixtures/successes/cr_sites.json'};
 		const result = parseFirebaseConfiguration(config);
-		const expectedResult = {functions: false, cloudRun: {serviceId: 'some_service', region: 'us-central1'}, publicDir: 'app'};
+		const expectedResult = {functions: false, cloudRun: {serviceId: 'some-service', region: 'us-central1'}, publicDir: 'app'};
 
 		t.deepEqual(result, expectedResult);
 	}
 );
 
-// Invalid configs
-test.serial(
-	'firebase config does not exist',
+// ParseFirebaseConfiguration: Invalid configs
+test(
+	'Firebase config does not exist',
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: './does_not_exist.json'};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
@@ -56,8 +56,8 @@ test.serial(
 	}
 );
 
-test.serial(
-	'firebase config is invalid json',
+test(
+	'Firebase config is invalid json',
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: './tests/fixtures/failures/invalid.json'};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
@@ -65,8 +65,8 @@ test.serial(
 	}
 );
 
-test.serial(
-	'firebase config without "hosting" field',
+test(
+	'Firebase config without "hosting" field',
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: './tests/fixtures/failures/missing_hosting.json'};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
@@ -74,8 +74,8 @@ test.serial(
 	}
 );
 
-test.serial(
-	'firebase config w multiple sites missing "site" identifier',
+test(
+	'Firebase config w multiple sites missing "site" identifier',
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: './tests/fixtures/failures/sites_missing_rewrites.json'};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
@@ -83,8 +83,8 @@ test.serial(
 	}
 );
 
-test.serial(
-	'firebase config multiple sites require a hostingSite to be specified',
+test(
+	'Firebase config multiple sites require a hostingSite to be specified',
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: './tests/fixtures/failures/cf_multi_site_requires_hostingSite.json'};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
@@ -92,8 +92,8 @@ test.serial(
 	}
 );
 
-test.serial(
-	'firebase config w missing "public"',
+test(
+	'Firebase config w missing "public"',
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: './tests/fixtures/failures/site_missing_public.json'};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
@@ -101,8 +101,8 @@ test.serial(
 	}
 );
 
-test.serial(
-	'firebase config w site missing "rewrites"',
+test(
+	'Firebase config w site missing "rewrites"',
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: './tests/fixtures/failures/site_missing_rewrite.json'};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
@@ -110,8 +110,8 @@ test.serial(
 	}
 );
 
-test.serial(
-	'firebase config w "rewrites" mismatch',
+test(
+	'Firebase config w "rewrites" mismatch',
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: 'no_match', firebaseJson: './tests/fixtures/failures/cf_site_rewrite_mismatch.json'};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
@@ -119,8 +119,8 @@ test.serial(
 	}
 );
 
-test.serial(
-	'firebase config w Cloud Run missing required "serviceId" field',
+test(
+	'Firebase config w Cloud Run missing required "serviceId" field',
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: './tests/fixtures/failures/cr_missing_serviceId.json'};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
@@ -128,8 +128,17 @@ test.serial(
 	}
 );
 
-test.serial(
-	'firebase config w Cloud Run incompatible region field',
+test(
+	'Firebase config w Cloud Run incompatible serviceId field',
+	t => {
+		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: './tests/fixtures/failures/cr_invalid_serviceId.json'};
+		const error = t.throws(() => parseFirebaseConfiguration(config));
+		t.is(error.message, 'Error with config ./tests/fixtures/failures/cr_invalid_serviceId.json. "hosting[].public" field is required and should be a string. Hosting config with error: {"rewrites":[{"source":"**","run":{"serviceId":"anInvalidServiceId"}}]}');
+	}
+);
+
+test(
+	'Firebase config w Cloud Run incompatible region field',
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: './tests/fixtures/failures/cr_invalid_region.json'};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
@@ -137,11 +146,48 @@ test.serial(
 	}
 );
 
-test.serial(
-	'firebase config w Cloud Functions & single site missing top-level functions',
+test(
+	'Firebase config w Cloud Functions & single site missing top-level functions',
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: './tests/fixtures/failures/cf_site_missing_functions.json'};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
 		t.is(error.message, 'Error with config ./tests/fixtures/failures/cf_site_missing_functions.json. If you\'re using Cloud Functions for your SSR rewrite rule, you need to define a "functions.source" field (of type string) at your config root.');
 	}
 );
+
+// ValidCloudRunServiceId
+test('Cloud Run serviceId with all valid char types', t => {
+	const result = validCloudRunServiceId('is-valid1');
+	t.is(result, true);
+});
+
+test('Cloud Run serviceId with invalid dash prefix', t => {
+	const result = validCloudRunServiceId('-not-valid1');
+	t.is(result, false);
+});
+
+test('Cloud Run serviceId with invalid dash suffix', t => {
+	const result = validCloudRunServiceId('not-valid1-');
+	t.is(result, false);
+});
+
+test('Cloud Run serviceId with invalid uppercase char', t => {
+	const result = validCloudRunServiceId('notValid1');
+	t.is(result, false);
+});
+
+test('Cloud Run serviceId with invalid non-dash ($) symbol', t => {
+	const result = validCloudRunServiceId('not$valid1');
+	t.is(result, false);
+});
+
+test('Cloud Run serviceId with invalid non-dash (_) symbol', t => {
+	const result = validCloudRunServiceId('not_valid1');
+	t.is(result, false);
+});
+
+test('Cloud Run serviceId with invalid length', t => {
+	const result = validCloudRunServiceId('onetwothreefourfiveonetwothreefourfiveonetwothreefourfiveonetwothreefourfive');
+	t.is(result, false);
+});
+

@@ -65,6 +65,10 @@ export function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, fir
 		throw new Error(`Error with config ${firebaseJson}. Cloud Run rewrite configuration missing required field "serviceId". Rewrite config with error: ${JSON.stringify(rewriteConfig)}`);
 	}
 
+	if (rewriteConfig?.run && !validCloudRunServiceId(rewriteConfig.run.serviceId)) {
+		throw new Error(`Error with config ${firebaseJson}. The "serviceId":"${rewriteConfig.run.serviceId}" must use only lowercase alphanumeric characters and dashes, cannot begin or end with a dash, and cannot be longer than 63 characters.`);
+	}
+
 	if (rewriteConfig?.run && rewriteConfig?.run?.region && rewriteConfig.run.region !== 'us-central1') {
 		throw new Error(`Error with config ${firebaseJson}. Firebase Hosting rewrites only support "regions":"us-central1" (docs - https://firebase.google.com/docs/functions/locations#http_and_client-callable_functions). Change "${rewriteConfig.run.region}" accordingly.`);
 	}
@@ -85,4 +89,16 @@ export function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, fir
 		} : false,
 		publicDir: hostingConfig.public
 	};
+}
+
+/**
+ * Cloud Run Service ID rules:
+ * - only lowercase alphanumeric characters and dashes
+ * - cannot begin or end with a dash
+ * - cannot be longer than 63 characters
+ * @param {string} serviceId
+ * @returns {boolean} `true` if valid
+ */
+export function validCloudRunServiceId(serviceId) {
+	return /^[a-z\d][a-z\d-]+[a-z\d]$/gm.test(serviceId) && serviceId.length < 64;
 }
