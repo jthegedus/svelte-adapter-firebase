@@ -563,7 +563,6 @@ npm i
 
 ### todo
 
-- remove dependency on Joi?
 - examples? use examples as e2e tests?
 - copy app package.json.deps to cloud run service package.json.deps on adapt for Cloud Run target?
 - use `@sveltejs/adapter-node` internally?
