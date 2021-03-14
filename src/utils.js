@@ -1,7 +1,12 @@
 import {existsSync, readFileSync} from 'fs';
 
-function isString(s) {
-	return (typeof s === 'string' || s instanceof String);
+/**
+ *
+ * @param {any} param
+ * @returns {boolean} true if param is a string
+ */
+function isString(parameter) {
+	return (typeof parameter === 'string' || parameter instanceof String);
 }
 
 /**
