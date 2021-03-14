@@ -29,9 +29,11 @@ export function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, fir
 	const firebaseHostingConfig = Array.isArray(firebaseConfig.hosting) ? firebaseConfig.hosting : [{...firebaseConfig.hosting}];
 
 	// Force "site" field to be included in "hosting" if more than 1 hosting site config
-	for (const item of firebaseHostingConfig) {
-		if (firebaseHostingConfig.length > 1 && !item.site) {
-			throw new Error(`Error with config ${firebaseJson}. "hosting" configs should identify their "site" name as Firebase supports multiple sites. This site config does not ${JSON.stringify(item)}`);
+	if (firebaseHostingConfig.length > 1) {
+		for (const item of firebaseHostingConfig) {
+			if (!item.site) {
+				throw new Error(`Error with config ${firebaseJson}. "hosting" configs should identify their "site" name as Firebase supports multiple sites. This site config does not ${JSON.stringify(item)}`);
+			}
 		}
 	}
 
@@ -56,7 +58,7 @@ export function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, fir
 	});
 
 	if (!rewriteConfig) {
-		throw new Error(`Error with config ${firebaseJson}. "hosting[].rewrites[*]" does not contain a config with "source":"${sourceRewriteMatch}" and either "function" or "run". Is your sourceRewriteMatch in svelte'config.js correct?`);
+		throw new Error(`Error with config ${firebaseJson}. "hosting[].rewrites[*]" does not contain a config with "source":"${sourceRewriteMatch}" and either "function" or "run". Is your "sourceRewriteMatch" in svelte.config.js correct?`);
 	}
 
 	if (rewriteConfig?.run && (!rewriteConfig.run.serviceId || !isString(rewriteConfig.run.serviceId))) {
@@ -64,7 +66,7 @@ export function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, fir
 	}
 
 	if (rewriteConfig?.run && rewriteConfig?.run?.region && rewriteConfig.run.region !== 'us-central1') {
-		throw new Error(`Error with config ${firebaseJson}. Firebase Hosting rewrites only support "regions":"us-central1". Change ${rewriteConfig.run.region} accordingly.`);
+		throw new Error(`Error with config ${firebaseJson}. Firebase Hosting rewrites only support "regions":"us-central1" (docs - https://firebase.google.com/docs/functions/locations#http_and_client-callable_functions). Change "${rewriteConfig.run.region}" accordingly.`);
 	}
 
 	if (rewriteConfig?.function && // If function, ensure function root-level field is present

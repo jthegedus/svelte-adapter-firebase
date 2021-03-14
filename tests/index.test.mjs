@@ -75,29 +75,11 @@ test.serial(
 );
 
 test.serial(
-	'firebase config w Cloud Functions & single site missing top-level functions',
+	'firebase config w multiple sites missing "site" identifier',
 	t => {
-		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: './tests/fixtures/failures/cf_site_missing_functions.json'};
+		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: './tests/fixtures/failures/sites_missing_rewrites.json'};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'Error with config ./tests/fixtures/failures/cf_site_missing_functions.json. If you\'re using Cloud Functions for your SSR rewrite rule, you need to define a "functions.source" field (of type string) at your config root.');
-	}
-);
-
-test.serial(
-	'firebase config missing rewrites',
-	t => {
-		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: './tests/fixtures/failures/site_missing_rewrite.json'};
-		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'Error with config ./tests/fixtures/failures/site_missing_rewrite.json. "hosting[].rewrites" field  required in hosting config and should be an array of object(s). Hosting config with error: {"public":"app"}');
-	}
-);
-
-test.serial(
-	'firebase config rewrite mismatch',
-	t => {
-		const config = {hostingSite: undefined, sourceRewriteMatch: 'no_match', firebaseJson: './tests/fixtures/failures/cf_site_rewrite_mismatch.json'};
-		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'Error with config ./tests/fixtures/failures/cf_site_rewrite_mismatch.json. "hosting[].rewrites[*]" does not contain a config with "source":"no_match" and either "function" or "run". Is your sourceRewriteMatch in svelte\'config.js correct?');
+		t.is(error.message, 'Error with config ./tests/fixtures/failures/sites_missing_rewrites.json. "hosting" configs should identify their "site" name as Firebase supports multiple sites. This site config does not {"public":"some_dir"}');
 	}
 );
 
@@ -110,4 +92,57 @@ test.serial(
 	}
 );
 
-// TODO: more tests
+test.serial(
+	'firebase config w missing "public"',
+	t => {
+		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: './tests/fixtures/failures/site_missing_public.json'};
+		const error = t.throws(() => parseFirebaseConfiguration(config));
+		t.is(error.message, 'Error with config ./tests/fixtures/failures/site_missing_public.json. "hosting[].public" field is required and should be a string. Hosting config with error: {}');
+	}
+);
+
+test.serial(
+	'firebase config w site missing "rewrites"',
+	t => {
+		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: './tests/fixtures/failures/site_missing_rewrite.json'};
+		const error = t.throws(() => parseFirebaseConfiguration(config));
+		t.is(error.message, 'Error with config ./tests/fixtures/failures/site_missing_rewrite.json. "hosting[].rewrites" field  required in hosting config and should be an array of object(s). Hosting config with error: {"public":"app"}');
+	}
+);
+
+test.serial(
+	'firebase config w "rewrites" mismatch',
+	t => {
+		const config = {hostingSite: undefined, sourceRewriteMatch: 'no_match', firebaseJson: './tests/fixtures/failures/cf_site_rewrite_mismatch.json'};
+		const error = t.throws(() => parseFirebaseConfiguration(config));
+		t.is(error.message, 'Error with config ./tests/fixtures/failures/cf_site_rewrite_mismatch.json. "hosting[].rewrites[*]" does not contain a config with "source":"no_match" and either "function" or "run". Is your "sourceRewriteMatch" in svelte.config.js correct?');
+	}
+);
+
+test.serial(
+	'firebase config w Cloud Run missing required "serviceId" field',
+	t => {
+		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: './tests/fixtures/failures/cr_missing_serviceId.json'};
+		const error = t.throws(() => parseFirebaseConfiguration(config));
+		t.is(error.message, 'Error with config ./tests/fixtures/failures/cr_missing_serviceId.json. Cloud Run rewrite configuration missing required field "serviceId". Rewrite config with error: {"source":"**","run":{}}');
+	}
+);
+
+// incompatible cloudRun region
+test.serial(
+	'firebase config w Cloud Run incompatible region field',
+	t => {
+		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: './tests/fixtures/failures/cr_invalid_region.json'};
+		const error = t.throws(() => parseFirebaseConfiguration(config));
+		t.is(error.message, 'Error with config ./tests/fixtures/failures/cr_invalid_region.json. Firebase Hosting rewrites only support "regions":"us-central1" (docs - https://firebase.google.com/docs/functions/locations#http_and_client-callable_functions). Change "not-a-region" accordingly.');
+	}
+);
+
+test.serial(
+	'firebase config w Cloud Functions & single site missing top-level functions',
+	t => {
+		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: './tests/fixtures/failures/cf_site_missing_functions.json'};
+		const error = t.throws(() => parseFirebaseConfiguration(config));
+		t.is(error.message, 'Error with config ./tests/fixtures/failures/cf_site_missing_functions.json. If you\'re using Cloud Functions for your SSR rewrite rule, you need to define a "functions.source" field (of type string) at your config root.');
+	}
+);

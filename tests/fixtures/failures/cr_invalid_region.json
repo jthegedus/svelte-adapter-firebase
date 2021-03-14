@@ -1,0 +1,14 @@
+{
+	"hosting": {
+		"public": "app",
+		"rewrites": [
+			{
+				"source": "**",
+				"run": {
+					"serviceId": "someService",
+					"region": "not-a-region"
+				}
+			}
+		]
+	}
+}
