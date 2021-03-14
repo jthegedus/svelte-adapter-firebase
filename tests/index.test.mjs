@@ -128,7 +128,6 @@ test.serial(
 	}
 );
 
-// incompatible cloudRun region
 test.serial(
 	'firebase config w Cloud Run incompatible region field',
 	t => {
