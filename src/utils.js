@@ -1,0 +1,86 @@
+import {existsSync, readFileSync} from 'fs';
+
+function isString(s) {
+	return (typeof s === 'string' || s instanceof String);
+}
+
+/**
+ *
+ * @param {{hostingSite:string|undefined, sourceRewriteMatch:string, firebaseJson:string}} param0
+* @returns {{functions: boolean | {name: string, source: string}, cloudrun: boolean | {serviceId: string, region: string}, publicDir: string}}
+ */
+export function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJson}) {
+	if (!existsSync(firebaseJson)) {
+		throw new Error(`File ${firebaseJson} does not exist. The provided file should exist and be a Firebase JSON config.`);
+	}
+
+	let firebaseConfig;
+	try {
+		firebaseConfig = JSON.parse(readFileSync(firebaseJson));
+	} catch (error) {
+		throw new Error(`Error parsing ${firebaseJson}. ${error.message}`);
+	}
+
+	if (!firebaseConfig?.hosting) {
+		throw new TypeError(`Error with config ${firebaseJson}. "hosting" field required.`);
+	}
+
+	// Force "hosting" field to be array
+	const firebaseHostingConfig = Array.isArray(firebaseConfig.hosting) ? firebaseConfig.hosting : [{...firebaseConfig.hosting}];
+
+	// Force "site" field to be included in "hosting" if more than 1 hosting site config
+	for (const item of firebaseHostingConfig) {
+		if (firebaseHostingConfig.length > 1 && !item.site) {
+			throw new Error(`Error with config ${firebaseJson}. "hosting" configs should identify their "site" name as Firebase supports multiple sites. This site config does not ${JSON.stringify(item)}`);
+		}
+	}
+
+	const hostingConfig = firebaseHostingConfig.length === 1 ?
+		firebaseHostingConfig[0] :
+		firebaseHostingConfig.find(item => item.site === hostingSite);
+
+	if (!hostingConfig) {
+		throw new Error(`Error with config ${firebaseJson}. No "hosting[].site" match for ${hostingSite}. Ensure your svelte.config.js adapter config "hostingSite" matches an item in your Firebase config.`);
+	}
+
+	if (!hostingConfig?.public || !isString(hostingConfig.public)) {
+		throw new Error(`Error with config ${firebaseJson}. "hosting[].public" field is required and should be a string. Hosting config with error: ${JSON.stringify(hostingConfig)}`);
+	}
+
+	if (!hostingConfig?.rewrites || !Array.isArray(hostingConfig?.rewrites)) {
+		throw new Error(`Error with config ${firebaseJson}. "hosting[].rewrites" field  required in hosting config and should be an array of object(s). Hosting config with error: ${JSON.stringify(hostingConfig)}`);
+	}
+
+	const rewriteConfig = hostingConfig.rewrites.find(item => {
+		return item.source === sourceRewriteMatch && (item.function || item.run);
+	});
+
+	if (!rewriteConfig) {
+		throw new Error(`Error with config ${firebaseJson}. "hosting[].rewrites[*]" does not contain a config with "source":"${sourceRewriteMatch}" and either "function" or "run". Is your sourceRewriteMatch in svelte'config.js correct?`);
+	}
+
+	if (rewriteConfig?.run && (!rewriteConfig.run.serviceId || !isString(rewriteConfig.run.serviceId))) {
+		throw new Error(`Error with config ${firebaseJson}. Cloud Run rewrite configuration missing required field "serviceId". Rewrite config with error: ${JSON.stringify(rewriteConfig)}`);
+	}
+
+	if (rewriteConfig?.run && rewriteConfig?.run?.region && rewriteConfig.run.region !== 'us-central1') {
+		throw new Error(`Error with config ${firebaseJson}. Firebase Hosting rewrites only support "regions":"us-central1". Change ${rewriteConfig.run.region} accordingly.`);
+	}
+
+	if (rewriteConfig?.function && // If function, ensure function root-level field is present
+		(!firebaseConfig?.functions || !firebaseConfig.functions?.source || !isString(firebaseConfig.functions.source))) {
+		throw new Error(`Error with config ${firebaseJson}. If you're using Cloud Functions for your SSR rewrite rule, you need to define a "functions.source" field (of type string) at your config root.`);
+	}
+
+	return {
+		functions: rewriteConfig?.function ? {
+			name: rewriteConfig.function,
+			source: firebaseConfig.functions.source
+		} : false,
+		cloudrun: rewriteConfig?.run ? {
+			serviceId: rewriteConfig.run.serviceId,
+			region: rewriteConfig.run?.region || 'us-central1'
+		} : false,
+		publicDir: hostingConfig.public
+	};
+}
