@@ -20,26 +20,27 @@ function adapter() {
 				cloudRunBuildDir: undefined
 			};
 			const config = {...defaultOptions, ...options};
-			const {functions, cloudrun, publicDir} = parseFirebaseConfiguration(config);
+			const {functions, cloudRun, publicDir} = parseFirebaseConfiguration(config);
 
 			if (functions !== false) {
 				throw new Error('Cloud Function SSR not supported at this time. Please use Cloud Run rewrite configuration - see docs https://firebase.google.com/docs/hosting/cloud-run#direct_requests_to_container');
 			}
 
-			if (cloudrun !== false) {
+			if (cloudRun !== false) {
 				const serverOutputDir = path.join(
-					config.cloudRunBuildDir || `.${cloudrun.serviceId}`
+					config.cloudRunBuildDir || `.${cloudRun.serviceId}`
 				);
 
 				builder.log.minor(`Writing Cloud Run service to ./${serverOutputDir}`);
 				builder.copy_server_files(serverOutputDir);
-				// TODO: copy fils/* required for Cloud Run
+				// TODO: copy files/* required for Cloud Run
 				// "build:cloudrun": "mkdir -p dist/files && cp -p src/files/cloud_run_package.json dist/files/package.json",
 				builder.log.warn(
-					`To deploy your Cloud Run service, run this command:
-		+--------------------------------------------------+
-		gcloud beta run --platform managed --region ${cloudrun.region} deploy ${cloudrun.serviceId} --source ${serverOutputDir} --allow-unauthenticated
-		+--------------------------------------------------+`
+					// eslint-disable-next-line indent
+`To deploy your Cloud Run service, run this command:
++--------------------------------------------------+
+gcloud beta run --platform managed --region ${cloudRun.region} deploy ${cloudRun.serviceId} --source ${serverOutputDir} --allow-unauthenticated
++--------------------------------------------------+`
 				);
 			}
 

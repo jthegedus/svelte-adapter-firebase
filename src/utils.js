@@ -7,7 +7,7 @@ function isString(s) {
 /**
  *
  * @param {{hostingSite:string|undefined, sourceRewriteMatch:string, firebaseJson:string}} param0
-* @returns {{functions: boolean | {name: string, source: string}, cloudrun: boolean | {serviceId: string, region: string}, publicDir: string}}
+* @returns {{functions: boolean | {name: string, source: string}, cloudRun: boolean | {serviceId: string, region: string}, publicDir: string}}
  */
 export function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJson}) {
 	if (!existsSync(firebaseJson)) {
@@ -77,7 +77,7 @@ export function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, fir
 			name: rewriteConfig.function,
 			source: firebaseConfig.functions.source
 		} : false,
-		cloudrun: rewriteConfig?.run ? {
+		cloudRun: rewriteConfig?.run ? {
 			serviceId: rewriteConfig.run.serviceId,
 			region: rewriteConfig.run?.region || 'us-central1'
 		} : false,
