@@ -14,7 +14,7 @@
 [Firebase](https://firebase.google.com/) adapter for [SvelteKit](https://github.com/sveltejs/kit). Supports:
 
 :x: SSR on [Cloud Functions](https://firebase.google.com/docs/hosting/functions)</br>
-:heavy_check_mark: SSR on [Cloud Run](https://firebase.google.com/docs/hosting/cloud-run)</br>
+:heavy_check_mark: SSR on [Cloud Run](https://firebase.google.com/docs/hosting/cloud-run) :information_source: recommended</br>
 :heavy_check_mark: [Multiple Hosting Sites](https://firebase.google.com/docs/hosting/multisites#add_additional_sites)</br>
 :x: Integrates with existing [JavaScript or TypeScript Cloud Functions](https://firebase.google.com/docs/functions/typescript)!</br>
 
