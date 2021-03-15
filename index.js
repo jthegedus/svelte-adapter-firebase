@@ -65,7 +65,7 @@ function adaptToCloudRun({builder, serviceId, region, cloudRunBuildDir}) {
 
 	// Prepare Cloud Run package.json - read SvelteKit App 'package.json', modify the JSON, write to serverOutputDir
 	const pkgjson = JSON.parse(readFileSync('package.json', 'utf-8'));
-	pkgjson.scripts.start = 'functions-framework --target=sveltekit_server';
+	pkgjson.scripts.start = 'functions-framework --target=svelteKit';
 	pkgjson.dependencies['@google-cloud/functions-framework'] = '^1.7.1'; // Peer-dep of this adapter instead?
 	pkgjson.engines = {node: '14'};
 	delete pkgjson.type;
