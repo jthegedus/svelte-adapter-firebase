@@ -52,7 +52,7 @@ In your standard SvelteKit project:
     target: "#svelte",
   }
   ```
-- `npm run build && npm run adapt`
+- `npm run build`
 - Follow further instructions output by the adapter to prepare for deployment.
 
 This adapter reads your `firebase.json` to determine if the Firebase Hosting site is using Cloud Functions or Cloud Run and outputs the server pieces accordingly. Static assets are output to the `public` directory for the Hosting site config.
@@ -561,12 +561,18 @@ Short version:
 ```
 git clone https://github.com/jthegedus/svelte-adapter-firebase.git
 asdf install
-npm i
+pnpm i
 ```
 
 ### todo
 
-- examples? use examples as e2e tests?
-- copy app package.json.deps to cloud run service package.json.deps on adapt for Cloud Run target?
-- use `@sveltejs/adapter-node` internally?
-- use `@sveltejs/adapter-node` for just the Cloud Run deployment?
+- fix Cloud Functions deployment
+- e2e test workflow
+  - on merge to `main`
+  - wait until `workflows/release.yml` is released
+  - use newly published package
+    - to deploy a Cloud Functions example
+    - to deploy a Cloud Run example
+  - test site availability with Playwright (or something similar)
+  - report Lighthouse statistics?
+  - site should be the docs for this adapter
