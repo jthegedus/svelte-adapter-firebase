@@ -1,3 +1,10 @@
+# [0.4.0](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.3.3...v0.4.0) (2021-03-15)
+
+
+### Features
+
+* SvelteKit CR update with better Firebase config parsing ([#18](https://github.com/jthegedus/svelte-adapter-firebase/issues/18)) ([42ddb0c](https://github.com/jthegedus/svelte-adapter-firebase/commit/42ddb0c5f5da6472c6a74786a14b1730ceefec58))
+
 ## [0.3.3](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.3.2...v0.3.3) (2021-03-04)
 
 
