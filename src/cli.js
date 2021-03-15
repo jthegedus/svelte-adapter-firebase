@@ -1,4 +1,4 @@
-import {readFileSync, renameSync, writeFileSync} from 'fs';
+import {existsSync, readFileSync, renameSync, writeFileSync} from 'fs';
 import path from 'path';
 import {fileURLToPath} from 'url';
 import {copy} from '@sveltejs/app-utils/files'; // eslint-disable-line node/file-extension-in-import
@@ -45,8 +45,50 @@ function adapter() {
  *
  * @param {{builder: any, name: string, source: string}} param0
  */
-function adaptToCloudFunctions({builder, name, source}) { // eslint-disable-line no-unused-vars
-	throw new Error('Cloud Function SSR not supported at this time. Please use Cloud Run rewrite configuration - see docs https://firebase.google.com/docs/hosting/cloud-run#direct_requests_to_container');
+function adaptToCloudFunctions({builder, name, source}) {
+	const functionsPackageJson = JSON.parse(readFileSync(path.join(source, 'package.json'), 'utf-8'));
+	const functionsMain = functionsPackageJson?.main;
+	if (!functionsMain) {
+		throw new Error(`Error reading ${functionsPackageJson}. Required field "main" missing.`);
+	}
+
+	const ssrDirname = name ?? 'svelteKit';
+	const serverOutputDir = path.join(source, path.dirname(functionsMain), ssrDirname);
+
+	builder.log.minor(`Writing Cloud Function server assets to ${serverOutputDir}`);
+	builder.copy_server_files(serverOutputDir);
+
+	// Prepare handler & entrypoint
+	renameSync(path.join(serverOutputDir, 'app.js'), path.join(serverOutputDir, 'app.mjs'));
+	copy(path.join(__dirname, 'files'), serverOutputDir);
+
+	// Prepare Cloud Function
+	const functionsEntrypoint = path.join(source, functionsMain);
+	try {
+		const ssrSvelteFunctionName = ssrDirname.replace(/\W/g, '').concat('Server');
+		if (existsSync(functionsEntrypoint) && !readFileSync(functionsEntrypoint, 'utf-8').includes(`${name} =`)) {
+			builder.log.warn(
+				// eslint-disable-next-line indent
+`Add the following Cloud Function to ${functionsEntrypoint}
++--------------------------------------------------+
+let ${ssrSvelteFunctionName};
+exports.${name} = functions.https.onRequest(
+	async (request, response) => {
+		if (!${ssrSvelteFunctionName}) {
+			functions.logger.info("Initializing SvelteKit SSR Handler");
+			${ssrSvelteFunctionName} = require("./${ssrDirname}/index").svelteKit;
+			functions.logger.info("SvelteKit SSR Handler initialised!");
+		}
+		return await ${ssrSvelteFunctionName}(request, response);
+	}
+);
++--------------------------------------------------+`
+			);
+		}
+	} catch (error) {
+		// TODO: fix
+		throw error;
+	}
 }
 
 /**

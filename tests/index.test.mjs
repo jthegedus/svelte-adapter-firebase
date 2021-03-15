@@ -150,6 +150,8 @@ test(
 	}
 );
 
+// TODO: test funciton name invalid
+
 test(
 	'Firebase config w Cloud Functions & single site missing top-level functions',
 	t => {
@@ -191,7 +193,9 @@ test('Cloud Run serviceId with invalid non-dash (_) symbol', t => {
 });
 
 test('Cloud Run serviceId with invalid length', t => {
-	const result = validCloudRunServiceId('onetwothreefourfiveonetwothreefourfiveonetwothreefourfiveonetwothreefourfive');
+	const result = validCloudRunServiceId('aCloudFunctionsFunctionNameThatIsSeventyFiveCharactersLongWhichIsMoreThan63');
 	t.is(result, false);
 });
 
+// ValidCloudFunctionName
+// TODO: test function name validation
