@@ -1,4 +1,5 @@
-import {existsSync, readFileSync} from 'fs';
+import {copyFileSync, existsSync, readFileSync} from 'fs';
+import path from 'path';
 
 /**
  *
@@ -106,4 +107,15 @@ export function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, fir
  */
 export function validCloudRunServiceId(serviceId) {
 	return /^[a-z\d][a-z\d-]+[a-z\d]$/gm.test(serviceId) && serviceId.length < 64;
+}
+
+/**
+ * Copy File If Exists (synchronously)
+ * @param {string} filename source file path
+ * @param {string} destDir destination directory
+ */
+export function copyFileIfExistsSync(filename, destDir) {
+	if (existsSync(filename)) {
+		copyFileSync(filename, path.join(destDir, filename));
+	}
 }

@@ -1,8 +1,8 @@
-import {copyFileSync, renameSync} from 'fs';
+import {readFileSync, renameSync, writeFileSync} from 'fs';
 import path from 'path';
 import {fileURLToPath} from 'url';
 import {copy} from '@sveltejs/app-utils/files'; // eslint-disable-line node/file-extension-in-import
-import {parseFirebaseConfiguration} from './utils.js';
+import {copyFileIfExistsSync, parseFirebaseConfiguration} from './utils.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -62,13 +62,21 @@ function adaptToCloudRun({builder, serviceId, region, cloudRunBuildDir}) {
 	// Prepare handler & entrypoint
 	renameSync(path.join(serverOutputDir, 'app.js'), path.join(serverOutputDir, 'app.mjs'));
 	copy(path.join(__dirname, 'dist'), serverOutputDir);
-	// Prepare Cloud Run package.json
-	copyFileSync('package.json', path.join(serverOutputDir, 'package.json'));
-	// TODO: copy lockfiles if they exist
-	// TODO: add "@google-cloud/functions-framework": "^1.7.1", to package.json
-	// TODO: add "start": "functions-framework --target=sveltekit_server" to package.json
-	// TODO: add "engines": {"node": "14"} to package.json
-	// TODO: remove "type": "module" from package.json
+
+	// Prepare Cloud Run package.json - read SvelteKit App 'package.json', modify the JSON, write to serverOutputDir
+	const pkgjson = JSON.parse(readFileSync('package.json', 'utf-8'));
+	pkgjson.scripts.start = 'functions-framework --target=sveltekit_server';
+	pkgjson.dependencies['@google-cloud/functions-framework'] = '^1.7.1'; // Peer-dep of this adapter instead?
+	pkgjson.engines = {node: '14'};
+	delete pkgjson.type;
+	const data = JSON.stringify(pkgjson, null, 2);
+	writeFileSync(path.join(serverOutputDir, 'package.json'), data);
+
+	// Copy lockfile for deps install during image build
+	copyFileIfExistsSync('package-lock.json', serverOutputDir);
+	copyFileIfExistsSync('npm-shrinkwrap.json', serverOutputDir);
+	copyFileIfExistsSync('yarn.lock', serverOutputDir);
+	copyFileIfExistsSync('pnpm-lock.yaml', serverOutputDir);
 
 	builder.log.warn(
 		// eslint-disable-next-line indent
