@@ -31,11 +31,11 @@ function adapter() {
 				adaptToCloudRun({builder, ...cloudRun, cloudRunBuildDir: config.cloudRunBuildDir});
 			}
 
-			builder.log.warn(`Writing client application to ${publicDir}`);
+			builder.log.info(`Writing client application to ${publicDir}`);
 			builder.copy_static_files(publicDir);
 			builder.copy_client_files(publicDir);
 
-			builder.log.warn(`Prerendering static pages to ${publicDir}`);
+			builder.log.info(`Prerendering static pages to ${publicDir}`);
 			await builder.prerender({dest: publicDir});
 		}
 	};
@@ -56,12 +56,12 @@ function adaptToCloudFunctions({builder, name, source}) { // eslint-disable-line
 function adaptToCloudRun({builder, serviceId, region, cloudRunBuildDir}) {
 	const serverOutputDir = path.join(cloudRunBuildDir || `.${serviceId}`);
 
-	builder.log.warn(`Writing Cloud Run service to ./${serverOutputDir}`);
+	builder.log.info(`Writing Cloud Run service to ./${serverOutputDir}`);
 	builder.copy_server_files(serverOutputDir);
 
 	// Prepare handler & entrypoint
 	renameSync(path.join(serverOutputDir, 'app.js'), path.join(serverOutputDir, 'app.mjs'));
-	copy(path.join(__dirname, 'dist'), serverOutputDir);
+	copy(path.join(__dirname, 'files'), serverOutputDir);
 
 	// Prepare Cloud Run package.json - read SvelteKit App 'package.json', modify the JSON, write to serverOutputDir
 	const pkgjson = JSON.parse(readFileSync('package.json', 'utf-8'));
