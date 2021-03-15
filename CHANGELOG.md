@@ -1,3 +1,10 @@
+## [0.4.1](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.4.0...v0.4.1) (2021-03-15)
+
+
+### Bug Fixes
+
+* dir structure and rollup cli entrypoint ([#19](https://github.com/jthegedus/svelte-adapter-firebase/issues/19)) ([fd0c5f2](https://github.com/jthegedus/svelte-adapter-firebase/commit/fd0c5f2712445edf4f9aa91820b53098bd1cab88))
+
 # [0.4.0](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.3.3...v0.4.0) (2021-03-15)
 
 
