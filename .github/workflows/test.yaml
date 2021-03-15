@@ -8,8 +8,8 @@ jobs:
       - uses: asdf-vm/actions/install@v1
         with:
           before_install: bash -c '${ASDF_DATA_DIR:=$HOME/.asdf}/plugins/nodejs/bin/import-release-team-keyring'
-      - run: npm install
-      - run: npm run test
+      - run: pnpm install
+      - run: pnpm run test
   # integration:
   #   runs-on: ubuntu-latest
   #   steps:
