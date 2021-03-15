@@ -1,5 +1,5 @@
 import test from 'ava';
-import {parseFirebaseConfiguration, validCloudRunServiceId} from '../utils.js';
+import {parseFirebaseConfiguration, validCloudRunServiceId} from '../src/utils.js';
 
 // ParseFirebaseConfiguration: Valid configs
 test(

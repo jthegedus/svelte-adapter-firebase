@@ -3,9 +3,15 @@ import commonjs from '@rollup/plugin-commonjs';
 
 const config = [
 	{
-		input: 'src/handler.js',
+		input: 'src/cli.js',
 		output: {
-			file: 'dist/handler.mjs',
+			file: 'dist/cli.js'
+		}
+	},
+	{
+		input: 'src/files/handler.js',
+		output: {
+			file: 'dist/files/handler.mjs',
 			format: 'es',
 			sourcemap: true,
 			exports: 'default'
@@ -14,9 +20,9 @@ const config = [
 		external: [...require('module').builtinModules, './app.mjs']
 	},
 	{
-		input: 'src/index.cjs',
+		input: 'src/files/index.cjs',
 		output: {
-			file: 'dist/index.js'
+			file: 'dist/files/index.js'
 		},
 		external: './handler.mjs'
 	}
