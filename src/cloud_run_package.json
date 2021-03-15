@@ -9,7 +9,5 @@
 	"scripts": {
 		"start": "functions-framework --target=sveltekit_server"
 	},
-	"engines": {
-		"node": "14"
-	}
+	"engines": {"node": "14"}
 }

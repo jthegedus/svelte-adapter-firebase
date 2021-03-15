@@ -7,7 +7,7 @@
 				{
 					"source": "**",
 					"run": {
-						"serviceId": "some_service"
+						"serviceId": "some-service"
 					}
 				}
 			]

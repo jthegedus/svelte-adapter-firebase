@@ -1,0 +1,10 @@
+{
+	"hosting": [
+		{
+			"public": "some_dir"
+		},
+		{
+			"public": "another_dir"
+		}
+	]
+}

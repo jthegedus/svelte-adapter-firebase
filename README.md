@@ -1,7 +1,7 @@
 <div align="center">
 
-| :warning: WARNING: this project is considered alpha until SvelteKit is available for general use and the Adapter API is stable! |
-| ------------------------------------------------------------------------------------------------------------------------------- |
+| :warning: WARNING: this project is considered to be in ALPHA until SvelteKit is available for general use and the Adapter API is stable! |
+| ---------------------------------------------------------------------------------------------------------------------------------------- |
 
 ![SvelteKit adapter Firebase social preview](assets/github-preview-svelte-adapter-firebase.png)
 
@@ -13,15 +13,16 @@
 
 [Firebase](https://firebase.google.com/) adapter for [SvelteKit](https://github.com/sveltejs/kit). Supports:
 
-SSR on [Cloud Functions](https://firebase.google.com/docs/hosting/functions)</br>
-SSR on [Cloud Run](https://firebase.google.com/docs/hosting/cloud-run)</br>
-[Multiple Hosting Sites](https://firebase.google.com/docs/hosting/multisites#add_additional_sites)</br>
-Integrates with existing [JavaScript or TypeScript Cloud Functions](https://firebase.google.com/docs/functions/typescript)!</br>
+:heavy_check_mark: SSR on [Cloud Run](https://firebase.google.com/docs/hosting/cloud-run) :information_source: recommended</br>
+:heavy_check_mark: [Multiple Hosting Sites](https://firebase.google.com/docs/hosting/multisites#add_additional_sites)</br>
+:x: SSR on [Cloud Functions](https://firebase.google.com/docs/hosting/functions)</br>
+:x: Integrates with existing [JavaScript or TypeScript Cloud Functions](https://firebase.google.com/docs/functions/typescript)!</br>
+:x: Local production testing with [Firebase Emulator](https://firebase.google.com/docs/emulator-suite)</br>
 
 </div>
 
-| :warning: WARNING: Everything is broken due to https://github.com/jthegedus/svelte-adapter-firebase/issues/16 Check back later for version `0.4.0` which should have a functioning Cloud Run implementation |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| :warning: WARNING: Cloud Function support is broken due to https://github.com/jthegedus/svelte-adapter-firebase/issues/16  |
+| -------------------------------------------------------------------------------------------------------------------------- |
 
 ## Contents
 
@@ -89,7 +90,7 @@ The 3 step process is:
 
 ### `firebase.json` Configurations
 
-Due to the relaced rules of `firebase.json` we can have many valid configs. At a minimum, one or more Hosting sites is required with an associated Functions config if a Cloud Function rewrite is used. These are the combintations:
+Due to the relaxed rules of `firebase.json` we can have many valid configs. At a minimum, one or more Hosting sites is required with an associated Functions config if a Cloud Function rewrite is used. These are the combintations:
 
 <details>
 <summary>single Hosting site with Cloud Function rewrite</summary>
@@ -220,7 +221,7 @@ Detailed examples of the adapter configuration options.
 <details>
 <summary><code>hostingSite</code></summary>
 
-If the firebase.json.hosting is an array of sites, then you must provide a sitename with `hostingSite` to correctly match against. For example:
+If the firebase.json.hosting is an array of sites, then you must provide a `site` with `hostingSite` to correctly match against. For example:
 
 ```json
 // firebase.json
@@ -298,6 +299,7 @@ If the rewrite `source` pattern is not `**`, then `svelte.config.js` `sourceRewr
 If the `firebase.json` file is not within the directory to which you will run `svelte adapt`, then you can set a relative path in `svelte.config.js`:
 
 ```
+.gitignore
 firebase.json
 app/                    <-- svelte adapt run in this dir
 	package.json
@@ -332,7 +334,7 @@ By default, a Node.js Cloud Run service is output to the directory named after t
 // firebase.json
 {
   "hosting": {
-    "public": "<someDir>",
+    "public": "public",
     "rewrites": [
       {
         "source": "**",
@@ -348,7 +350,8 @@ By default, a Node.js Cloud Run service is output to the directory named after t
 will result in this output:
 
 ```
-.mySiteSSR/         <--- This contains the Cloud Run service code
+.mySiteSSR/         <--- Cloud Run service code
+public/             <--- Hosting static assets 
 firebase.json
 package.json
 svelte.config.js
@@ -563,7 +566,6 @@ npm i
 
 ### todo
 
-- remove dependency on Joi?
 - examples? use examples as e2e tests?
 - copy app package.json.deps to cloud run service package.json.deps on adapt for Cloud Run target?
 - use `@sveltejs/adapter-node` internally?

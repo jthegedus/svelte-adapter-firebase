@@ -1,15 +1,13 @@
-// Deps - inlined
-import {get_body as getBody} from '@sveltejs/app-utils/http';
-
-const app = require('./app.js');
+import {URL, URLSearchParams} from 'url';
+import {get_body as getBody} from '@sveltejs/app-utils/http'; // eslint-disable-line node/file-extension-in-import
 
 const svelteKit = async (request, response) => {
-	const {pathname, query = ''} = new URL(
-		request.url || '',
-		`https://${request.headers.host}/`
-	);
+	const host = `${request.headers['x-forwarded-proto']}://${request.headers.host}`;
+	const {pathname, query = ''} = new URL(request.url || '', host);
 
-	const rendered = await app.render({
+	const {render} = await import('./app.mjs');
+
+	const rendered = await render({
 		host: null,
 		method: request.method,
 		headers: request.headers,
