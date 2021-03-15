@@ -17,6 +17,7 @@
 :heavy_check_mark: [Multiple Hosting Sites](https://firebase.google.com/docs/hosting/multisites#add_additional_sites)</br>
 :x: SSR on [Cloud Functions](https://firebase.google.com/docs/hosting/functions)</br>
 :x: Integrates with existing [JavaScript or TypeScript Cloud Functions](https://firebase.google.com/docs/functions/typescript)!</br>
+:x: Local production testing with [Firebase Emulator](https://firebase.google.com/docs/emulator-suite)</br>
 
 </div>
 
