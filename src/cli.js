@@ -1,4 +1,4 @@
-import {existsSync, readFileSync, renameSync, writeFileSync} from 'fs';
+import {readFileSync, renameSync, writeFileSync} from 'fs';
 import path from 'path';
 import {fileURLToPath} from 'url';
 import {copy} from '@sveltejs/app-utils/files'; // eslint-disable-line node/file-extension-in-import
@@ -66,7 +66,7 @@ function adaptToCloudFunctions({builder, name, source}) {
 	const functionsEntrypoint = path.join(source, functionsMain);
 	try {
 		const ssrSvelteFunctionName = ssrDirname.replace(/\W/g, '').concat('Server');
-		if (existsSync(functionsEntrypoint) && !readFileSync(functionsEntrypoint, 'utf-8').includes(`${name} =`)) {
+		if (!readFileSync(functionsEntrypoint, 'utf-8').includes(`${name} =`)) {
 			builder.log.warn(
 				// eslint-disable-next-line indent
 `Add the following Cloud Function to ${functionsEntrypoint}
@@ -76,7 +76,7 @@ exports.${name} = functions.https.onRequest(
 	async (request, response) => {
 		if (!${ssrSvelteFunctionName}) {
 			functions.logger.info("Initializing SvelteKit SSR Handler");
-			${ssrSvelteFunctionName} = require("./${ssrDirname}/index").svelteKit;
+			${ssrSvelteFunctionName} = require("./${ssrDirname}/index").default;
 			functions.logger.info("SvelteKit SSR Handler initialised!");
 		}
 		return await ${ssrSvelteFunctionName}(request, response);
@@ -86,8 +86,7 @@ exports.${name} = functions.https.onRequest(
 			);
 		}
 	} catch (error) {
-		// TODO: fix
-		throw error;
+		throw new Error(`Error reading Cloud Function entrypoint file: ${functionsEntrypoint}. ${error.message}`);
 	}
 }
 
