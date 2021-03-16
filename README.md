@@ -566,6 +566,7 @@ pnpm i
 
 ### todo
 
+- document testing prod output locally with Firebase Emulator
 - create pros/cons comparison of Cloud Functions vs Cloud Run
 - e2e test workflow
   - on merge to `main`
