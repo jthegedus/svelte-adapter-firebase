@@ -106,7 +106,7 @@ function adaptToCloudRun({builder, serviceId, region, cloudRunBuildDir}) {
 
 	// Prepare Cloud Run package.json - read SvelteKit App 'package.json', modify the JSON, write to serverOutputDir
 	const pkgjson = JSON.parse(readFileSync('package.json', 'utf-8'));
-	pkgjson.scripts.start = 'functions-framework --target=svelteKit';
+	pkgjson.scripts.start = 'functions-framework --target=default';
 	pkgjson.dependencies['@google-cloud/functions-framework'] = '^1.7.1'; // Peer-dep of this adapter instead?
 	pkgjson.engines = {node: '14'};
 	delete pkgjson.type;
@@ -123,7 +123,7 @@ function adaptToCloudRun({builder, serviceId, region, cloudRunBuildDir}) {
 		// eslint-disable-next-line indent
 `To deploy your Cloud Run service, run this command:
 +--------------------------------------------------+
-gcloud beta run deploy ${serviceId} --platform managed --region ${region} --source ${serverOutputDir} --allow-unauthenticated --project <YOUR_PROJECT>
+gcloud beta run deploy ${serviceId} --platform managed --region ${region} --source ${serverOutputDir} --allow-unauthenticated
 +--------------------------------------------------+`
 	);
 }
