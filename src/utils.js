@@ -51,12 +51,12 @@ export function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, fir
 		throw new Error(`Error with config ${firebaseJson}. No "hosting[].site" match for ${hostingSite}. Ensure your svelte.config.js adapter config "hostingSite" matches an item in your Firebase config.`);
 	}
 
-	if (!hostingConfig?.public || !isString(hostingConfig.public)) {
+	if (!isString(hostingConfig?.public)) {
 		throw new Error(`Error with config ${firebaseJson}. "hosting[].public" field is required and should be a string. Hosting config with error: ${JSON.stringify(hostingConfig)}`);
 	}
 
-	if (!hostingConfig?.rewrites || !Array.isArray(hostingConfig?.rewrites)) {
-		throw new Error(`Error with config ${firebaseJson}. "hosting[].rewrites" field  required in hosting config and should be an array of object(s). Hosting config with error: ${JSON.stringify(hostingConfig)}`);
+	if (!Array.isArray(hostingConfig?.rewrites)) {
+		throw new TypeError(`Error with config ${firebaseJson}. "hosting[].rewrites" field  required in hosting config and should be an array of object(s). Hosting config with error: ${JSON.stringify(hostingConfig)}`);
 	}
 
 	const rewriteConfig = hostingConfig.rewrites.find(item => {
@@ -79,8 +79,12 @@ export function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, fir
 		throw new Error(`Error with config ${firebaseJson}. Firebase Hosting rewrites only support "regions":"us-central1" (docs - https://firebase.google.com/docs/functions/locations#http_and_client-callable_functions). Change "${rewriteConfig.run.region}" accordingly.`);
 	}
 
-	if (rewriteConfig?.function && // If function, ensure function root-level field is present
-		(!firebaseConfig?.functions || !firebaseConfig.functions?.source || !isString(firebaseConfig.functions.source))) {
+	if (rewriteConfig?.function && !validCloudFunctionName(rewriteConfig.function)) {
+		throw new Error(`Error with config ${firebaseJson}. The "serviceId":"${rewriteConfig.function}" must use only alphanumeric characters and underscores and cannot be longer than 62 characters.`);
+	}
+
+	// If function, ensure function root-level field is present
+	if (rewriteConfig?.function && (!firebaseConfig?.functions || !firebaseConfig.functions?.source || !isString(firebaseConfig.functions.source))) {
 		throw new Error(`Error with config ${firebaseJson}. If you're using Cloud Functions for your SSR rewrite rule, you need to define a "functions.source" field (of type string) at your config root.`);
 	}
 
@@ -107,6 +111,22 @@ export function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, fir
  */
 export function validCloudRunServiceId(serviceId) {
 	return /^[a-z\d][a-z\d-]+[a-z\d]$/gm.test(serviceId) && serviceId.length < 64;
+}
+
+/**
+ * Cloud Function name rules:
+ * - alphanumeric
+ * - underscore
+ * - max length 62 chars
+ * @param {string} name
+ * @returns {boolean} `true` if valid
+ *
+ * Rules a combination of
+ * - https://github.com/firebase/firebase-tools/blob/1633f4fccbbc1bcbc6216fe13b8e888c8940bde4/src/deploy/functions/validate.ts#L38
+ * - https://github.com/firebase/firebase-tools/blob/2dc7216a498dee2ca7e2acc33d6ba16d5647e27f/src/extractTriggers.js#L18
+ */
+export function validCloudFunctionName(name) {
+	return /^\w{1,62}$/.test(name);
 }
 
 /**

@@ -15,7 +15,7 @@
 
 :heavy_check_mark: SSR on [Cloud Run](https://firebase.google.com/docs/hosting/cloud-run) :information_source: recommended</br>
 :heavy_check_mark: [Multiple Hosting Sites](https://firebase.google.com/docs/hosting/multisites#add_additional_sites)</br>
-:x: SSR on [Cloud Functions](https://firebase.google.com/docs/hosting/functions)</br>
+:heavy_check_mark: SSR on [Cloud Functions](https://firebase.google.com/docs/hosting/functions)</br>
 :x: Integrates with existing [JavaScript or TypeScript Cloud Functions](https://firebase.google.com/docs/functions/typescript)!</br>
 :x: Local production testing with [Firebase Emulator](https://firebase.google.com/docs/emulator-suite)</br>
 
@@ -566,7 +566,7 @@ pnpm i
 
 ### todo
 
-- fix Cloud Functions deployment
+- create pros/cons comparison of Cloud Functions vs Cloud Run
 - e2e test workflow
   - on merge to `main`
   - wait until `workflows/release.yml` is released
@@ -576,3 +576,7 @@ pnpm i
   - test site availability with Playwright (or something similar)
   - report Lighthouse statistics?
   - site should be the docs for this adapter
+
+#### external
+
+- Cloud Function validation linked in `utils.js` to two different sources indicates that it is being validated by `firebase-tools` in two separate places. PR a fix there.
