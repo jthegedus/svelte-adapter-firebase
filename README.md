@@ -16,13 +16,10 @@
 :heavy_check_mark: SSR on [Cloud Run](https://firebase.google.com/docs/hosting/cloud-run) :information_source: recommended</br>
 :heavy_check_mark: [Multiple Hosting Sites](https://firebase.google.com/docs/hosting/multisites#add_additional_sites)</br>
 :heavy_check_mark: SSR on [Cloud Functions](https://firebase.google.com/docs/hosting/functions)</br>
-:x: Integrates with existing [JavaScript or TypeScript Cloud Functions](https://firebase.google.com/docs/functions/typescript)!</br>
-:x: Local production testing with [Firebase Emulator](https://firebase.google.com/docs/emulator-suite)</br>
+:heavy_check_mark: Integrates with existing [JavaScript ~or TypeScript~ Cloud Functions](https://firebase.google.com/docs/functions/typescript)!</br>
+:heavy_check_mark: Local production testing with [Firebase Emulator](https://firebase.google.com/docs/emulator-suite)</br>
 
 </div>
-
-| :warning: WARNING: Cloud Function support is broken due to https://github.com/jthegedus/svelte-adapter-firebase/issues/16  |
-| -------------------------------------------------------------------------------------------------------------------------- |
 
 ## Contents
 
