@@ -1,3 +1,10 @@
+# [0.5.0](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.4.1...v0.5.0) (2021-03-16)
+
+
+### Features
+
+* cloud function support ([#21](https://github.com/jthegedus/svelte-adapter-firebase/issues/21)) ([2437374](https://github.com/jthegedus/svelte-adapter-firebase/commit/2437374b5b3517f6183e5d7ad8b5f5fe448ed61f))
+
 ## [0.4.1](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.4.0...v0.4.1) (2021-03-15)
 
 
