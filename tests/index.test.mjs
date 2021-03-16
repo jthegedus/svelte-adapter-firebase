@@ -1,7 +1,7 @@
 import test from 'ava';
 import path from 'path';
 import {fileURLToPath} from 'url';
-import {parseFirebaseConfiguration, validCloudRunServiceId} from '../src/utils.js';
+import {parseFirebaseConfiguration, validCloudFunctionName, validCloudRunServiceId} from '../src/utils.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -150,7 +150,14 @@ test(
 	}
 );
 
-// TODO: test funciton name invalid
+test(
+	'Firebase config w Cloud Function invalid name',
+	t => {
+		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: path.join(__dirname, 'fixtures/failures/cf_invalid_function_name.json')};
+		const error = t.throws(() => parseFirebaseConfiguration(config));
+		t.is(error.message, `Error with config ${__dirname}/fixtures/failures/cf_invalid_function_name.json. The "serviceId":"invalid-func-name" must use only alphanumeric characters and underscores and cannot be longer than 62 characters.`);
+	}
+);
 
 test(
 	'Firebase config w Cloud Functions & single site missing top-level functions',
@@ -198,4 +205,17 @@ test('Cloud Run serviceId with invalid length', t => {
 });
 
 // ValidCloudFunctionName
-// TODO: test function name validation
+test('Cloud Function name with valid chars', t => {
+	const result = validCloudFunctionName('lowercase_UPPERCASE_0123456789');
+	t.is(result, true);
+});
+
+test('Cloud Function name with invalid dash', t => {
+	const result = validCloudFunctionName('is-invalid');
+	t.is(result, false);
+});
+
+test('Cloud Function name with invalid length', t => {
+	const result = validCloudFunctionName('aCloudFunctionsFunctionNameThatIsSeventyFiveCharactersLongWhichIsMoreThan63');
+	t.is(result, false);
+});
