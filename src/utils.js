@@ -1,9 +1,9 @@
-import {copyFileSync, existsSync, readFileSync} from 'fs';
-import path from 'path';
+const {copyFileSync, existsSync, readFileSync} = require('fs');
+const path = require('path');
 
 /**
  *
- * @param {any} param
+ * @param {any} parameter
  * @returns {boolean} true if param is a string
  */
 function isString(parameter) {
@@ -12,8 +12,16 @@ function isString(parameter) {
 
 /**
  *
- * @param {{hostingSite:string|undefined, sourceRewriteMatch:string, firebaseJson:string}} param0
-* @returns {{functions: boolean | {name: string, source: string}, cloudRun: boolean | {serviceId: string, region: string}, publicDir: string}}
+ * @param {{
+ * 	hostingSite: string|undefined;
+ * 	sourceRewriteMatch: string;
+ * 	firebaseJson: string
+ * }} param
+ * @returns {{
+ * 	functions: false | { name: string, source: string };
+ * 	cloudRun: false | { serviceId: string, region: string };
+ * 	publicDir: string
+ * }}
  */
 export function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJson}) {
 	if (!existsSync(firebaseJson)) {
@@ -22,7 +30,7 @@ export function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, fir
 
 	let firebaseConfig;
 	try {
-		firebaseConfig = JSON.parse(readFileSync(firebaseJson));
+		firebaseConfig = JSON.parse(readFileSync(firebaseJson, 'utf-8'));
 	} catch (error) {
 		throw new Error(`Error parsing ${firebaseJson}. ${error.message}`);
 	}
