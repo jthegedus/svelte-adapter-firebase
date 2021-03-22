@@ -1,3 +1,10 @@
+## [0.5.1](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.5.0...v0.5.1) (2021-03-22)
+
+
+### Bug Fixes
+
+* align adapter API with SvelteKit v1.0.0-next.54 ([#23](https://github.com/jthegedus/svelte-adapter-firebase/issues/23)) ([abe68f1](https://github.com/jthegedus/svelte-adapter-firebase/commit/abe68f19a293758574893984ebbb0c36b0a448ae))
+
 # [0.5.0](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.4.1...v0.5.0) (2021-03-16)
 
 
