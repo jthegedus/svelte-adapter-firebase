@@ -1,9 +1,9 @@
-import {copyFileSync, existsSync, readFileSync} from 'fs';
-import path from 'path';
+const {copyFileSync, existsSync, readFileSync} = require('fs');
+const path = require('path');
 
 /**
  *
- * @param {any} param
+ * @param {any} parameter
  * @returns {boolean} true if param is a string
  */
 function isString(parameter) {
@@ -12,17 +12,25 @@ function isString(parameter) {
 
 /**
  *
- * @param {{hostingSite:string|undefined, sourceRewriteMatch:string, firebaseJson:string}} param0
-* @returns {{functions: boolean | {name: string, source: string}, cloudRun: boolean | {serviceId: string, region: string}, publicDir: string}}
+ * @param {{
+ * 	hostingSite: string|undefined;
+ * 	sourceRewriteMatch: string;
+ * 	firebaseJson: string
+ * }} param
+ * @returns {{
+ * 	functions: false | { name: string, source: string };
+ * 	cloudRun: false | { serviceId: string, region: string };
+ * 	publicDir: string
+ * }}
  */
-export function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJson}) {
+function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJson}) {
 	if (!existsSync(firebaseJson)) {
 		throw new Error(`File ${firebaseJson} does not exist. The provided file should exist and be a Firebase JSON config.`);
 	}
 
 	let firebaseConfig;
 	try {
-		firebaseConfig = JSON.parse(readFileSync(firebaseJson));
+		firebaseConfig = JSON.parse(readFileSync(firebaseJson, 'utf-8'));
 	} catch (error) {
 		throw new Error(`Error parsing ${firebaseJson}. ${error.message}`);
 	}
@@ -109,7 +117,7 @@ export function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, fir
  * @param {string} serviceId
  * @returns {boolean} `true` if valid
  */
-export function validCloudRunServiceId(serviceId) {
+function validCloudRunServiceId(serviceId) {
 	return /^[a-z\d][a-z\d-]+[a-z\d]$/gm.test(serviceId) && serviceId.length < 64;
 }
 
@@ -125,7 +133,7 @@ export function validCloudRunServiceId(serviceId) {
  * - https://github.com/firebase/firebase-tools/blob/1633f4fccbbc1bcbc6216fe13b8e888c8940bde4/src/deploy/functions/validate.ts#L38
  * - https://github.com/firebase/firebase-tools/blob/2dc7216a498dee2ca7e2acc33d6ba16d5647e27f/src/extractTriggers.js#L18
  */
-export function validCloudFunctionName(name) {
+function validCloudFunctionName(name) {
 	return /^\w{1,62}$/.test(name);
 }
 
@@ -134,8 +142,15 @@ export function validCloudFunctionName(name) {
  * @param {string} filename source file path
  * @param {string} destDir destination directory
  */
-export function copyFileIfExistsSync(filename, destDir) {
+function copyFileIfExistsSync(filename, destDir) {
 	if (existsSync(filename)) {
 		copyFileSync(filename, path.join(destDir, filename));
 	}
 }
+
+module.exports = {
+	parseFirebaseConfiguration,
+	validCloudRunServiceId,
+	validCloudFunctionName,
+	copyFileIfExistsSync
+};

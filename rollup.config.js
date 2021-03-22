@@ -5,8 +5,11 @@ const config = [
 	{
 		input: 'src/cli.js',
 		output: {
+			format: 'cjs',
+			exports: 'default',
 			file: 'dist/cli.js'
-		}
+		},
+		plugins: [nodeResolve(), commonjs()]
 	},
 	{
 		input: 'src/files/handler.js',

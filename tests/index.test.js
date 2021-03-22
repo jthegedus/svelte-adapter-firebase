@@ -1,9 +1,6 @@
-import test from 'ava';
-import path from 'path';
-import {fileURLToPath} from 'url';
-import {parseFirebaseConfiguration, validCloudFunctionName, validCloudRunServiceId} from '../src/utils.js';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const test = require('ava');
+const path = require('path');
+const {parseFirebaseConfiguration, validCloudFunctionName, validCloudRunServiceId} = require('../src/utils.js');
 
 // ParseFirebaseConfiguration: Valid configs
 test(
@@ -65,7 +62,7 @@ test(
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: path.join(__dirname, 'fixtures/failures/invalid.json')};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, `Error parsing ${__dirname}/fixtures/failures/invalid.json. Unexpected token } in JSON at position 28`);
+		t.is(error.message, `Error parsing ${path.join(__dirname, 'fixtures/failures/invalid.json')}. Unexpected token } in JSON at position 28`);
 	}
 );
 
@@ -74,7 +71,7 @@ test(
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: path.join(__dirname, 'fixtures/failures/missing_hosting.json')};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, `Error with config ${__dirname}/fixtures/failures/missing_hosting.json. "hosting" field required.`);
+		t.is(error.message, `Error with config ${path.join(__dirname, 'fixtures/failures/missing_hosting.json')}. "hosting" field required.`);
 	}
 );
 
@@ -83,7 +80,7 @@ test(
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: path.join(__dirname, 'fixtures/failures/sites_missing_rewrites.json')};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, `Error with config ${__dirname}/fixtures/failures/sites_missing_rewrites.json. "hosting" configs should identify their "site" name as Firebase supports multiple sites. This site config does not {"public":"some_dir"}`);
+		t.is(error.message, `Error with config ${path.join(__dirname, 'fixtures/failures/sites_missing_rewrites.json')}. "hosting" configs should identify their "site" name as Firebase supports multiple sites. This site config does not {"public":"some_dir"}`);
 	}
 );
 
@@ -92,7 +89,7 @@ test(
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: path.join(__dirname, 'fixtures/failures/cf_multi_site_requires_hostingSite.json')};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, `Error with config ${__dirname}/fixtures/failures/cf_multi_site_requires_hostingSite.json. No "hosting[].site" match for undefined. Ensure your svelte.config.js adapter config "hostingSite" matches an item in your Firebase config.`);
+		t.is(error.message, `Error with config ${path.join(__dirname, 'fixtures/failures/cf_multi_site_requires_hostingSite.json')}. No "hosting[].site" match for undefined. Ensure your svelte.config.js adapter config "hostingSite" matches an item in your Firebase config.`);
 	}
 );
 
@@ -101,7 +98,7 @@ test(
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: path.join(__dirname, 'fixtures/failures/site_missing_public.json')};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, `Error with config ${__dirname}/fixtures/failures/site_missing_public.json. "hosting[].public" field is required and should be a string. Hosting config with error: {}`);
+		t.is(error.message, `Error with config ${path.join(__dirname, 'fixtures/failures/site_missing_public.json')}. "hosting[].public" field is required and should be a string. Hosting config with error: {}`);
 	}
 );
 
@@ -110,7 +107,7 @@ test(
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: path.join(__dirname, 'fixtures/failures/site_missing_rewrite.json')};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, `Error with config ${__dirname}/fixtures/failures/site_missing_rewrite.json. "hosting[].rewrites" field  required in hosting config and should be an array of object(s). Hosting config with error: {"public":"app"}`);
+		t.is(error.message, `Error with config ${path.join(__dirname, 'fixtures/failures/site_missing_rewrite.json')}. "hosting[].rewrites" field  required in hosting config and should be an array of object(s). Hosting config with error: {"public":"app"}`);
 	}
 );
 
@@ -119,7 +116,7 @@ test(
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: 'no_match', firebaseJson: path.join(__dirname, 'fixtures/failures/cf_site_rewrite_mismatch.json')};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, `Error with config ${__dirname}/fixtures/failures/cf_site_rewrite_mismatch.json. "hosting[].rewrites[*]" does not contain a config with "source":"no_match" and either "function" or "run". Is your "sourceRewriteMatch" in svelte.config.js correct?`);
+		t.is(error.message, `Error with config ${path.join(__dirname, 'fixtures/failures/cf_site_rewrite_mismatch.json')}. "hosting[].rewrites[*]" does not contain a config with "source":"no_match" and either "function" or "run". Is your "sourceRewriteMatch" in svelte.config.js correct?`);
 	}
 );
 
@@ -128,7 +125,7 @@ test(
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: path.join(__dirname, 'fixtures/failures/cr_missing_serviceId.json')};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, `Error with config ${__dirname}/fixtures/failures/cr_missing_serviceId.json. Cloud Run rewrite configuration missing required field "serviceId". Rewrite config with error: {"source":"**","run":{}}`);
+		t.is(error.message, `Error with config ${path.join(__dirname, 'fixtures/failures/cr_missing_serviceId.json')}. Cloud Run rewrite configuration missing required field "serviceId". Rewrite config with error: {"source":"**","run":{}}`);
 	}
 );
 
@@ -137,7 +134,7 @@ test(
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: path.join(__dirname, 'fixtures/failures/cr_invalid_serviceId.json')};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, `Error with config ${__dirname}/fixtures/failures/cr_invalid_serviceId.json. "hosting[].public" field is required and should be a string. Hosting config with error: {"rewrites":[{"source":"**","run":{"serviceId":"anInvalidServiceId"}}]}`);
+		t.is(error.message, `Error with config ${path.join(__dirname, 'fixtures/failures/cr_invalid_serviceId.json')}. "hosting[].public" field is required and should be a string. Hosting config with error: {"rewrites":[{"source":"**","run":{"serviceId":"anInvalidServiceId"}}]}`);
 	}
 );
 
@@ -146,7 +143,7 @@ test(
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: path.join(__dirname, 'fixtures/failures/cr_invalid_region.json')};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, `Error with config ${__dirname}/fixtures/failures/cr_invalid_region.json. Firebase Hosting rewrites only support "regions":"us-central1" (docs - https://firebase.google.com/docs/functions/locations#http_and_client-callable_functions). Change "not-a-region" accordingly.`);
+		t.is(error.message, `Error with config ${path.join(__dirname, 'fixtures/failures/cr_invalid_region.json')}. Firebase Hosting rewrites only support "regions":"us-central1" (docs - https://firebase.google.com/docs/functions/locations#http_and_client-callable_functions). Change "not-a-region" accordingly.`);
 	}
 );
 
@@ -155,7 +152,7 @@ test(
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: path.join(__dirname, 'fixtures/failures/cf_invalid_function_name.json')};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, `Error with config ${__dirname}/fixtures/failures/cf_invalid_function_name.json. The "serviceId":"invalid-func-name" must use only alphanumeric characters and underscores and cannot be longer than 62 characters.`);
+		t.is(error.message, `Error with config ${path.join(__dirname, 'fixtures/failures/cf_invalid_function_name.json')}. The "serviceId":"invalid-func-name" must use only alphanumeric characters and underscores and cannot be longer than 62 characters.`);
 	}
 );
 
@@ -164,7 +161,7 @@ test(
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: path.join(__dirname, 'fixtures/failures/cf_site_missing_functions.json')};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, `Error with config ${__dirname}/fixtures/failures/cf_site_missing_functions.json. If you're using Cloud Functions for your SSR rewrite rule, you need to define a "functions.source" field (of type string) at your config root.`);
+		t.is(error.message, `Error with config ${path.join(__dirname, 'fixtures/failures/cf_site_missing_functions.json')}. If you're using Cloud Functions for your SSR rewrite rule, you need to define a "functions.source" field (of type string) at your config root.`);
 	}
 );
 

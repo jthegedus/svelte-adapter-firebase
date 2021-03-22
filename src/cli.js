@@ -1,34 +1,33 @@
-import {readFileSync, renameSync, writeFileSync} from 'fs';
-import path from 'path';
-import {fileURLToPath} from 'url';
-import {copy} from '@sveltejs/app-utils/files'; // eslint-disable-line node/file-extension-in-import
-import {copyFileIfExistsSync, parseFirebaseConfiguration} from './utils.js';
+const {copyFileSync, readFileSync, renameSync, writeFileSync} = require('fs');
+const path = require('path');
+const {copyFileIfExistsSync, parseFirebaseConfiguration} = require('./utils.js');
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-function adapter() {
-	return {
-		/**
-		 *
-		 * @param {*} builder
-		 * @param {{hostingSite: string|undefined,sourceRewriteMatch: string|undefined, firebaseJson: string|undefined, cloudRunBuildDir: string|undefined}|undefined} options
-		 */
-		async adapt(builder, options) {
-			const defaultOptions = {
-				firebaseJson: 'firebase.json',
-				hostingSite: undefined,
-				sourceRewriteMatch: '**',
-				cloudRunBuildDir: undefined
-			};
-			const config = {...defaultOptions, ...options};
-			const {functions, cloudRun, publicDir} = parseFirebaseConfiguration(config);
+/**
+ * @param {{
+ * 	hostingSite?: string;
+ * 	sourceRewriteMatch?: string,
+ * 	firebaseJson?: string,
+ * 	cloudRunBuildDir?: string
+ * }} options
+ */
+module.exports = function ({
+	firebaseJson = 'firebase.json',
+	hostingSite = undefined,
+	sourceRewriteMatch = '**',
+	cloudRunBuildDir = undefined
+} = {}) {
+	/** @type {import('@sveltejs/kit').Adapter} */
+	const adapter = {
+		name: 'svelte-adapter-firebase',
+		async adapt(builder) {
+			const {functions, cloudRun, publicDir} = parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJson});
 
 			if (functions !== false) {
 				adaptToCloudFunctions({builder, ...functions});
 			}
 
 			if (cloudRun !== false) {
-				adaptToCloudRun({builder, ...cloudRun, cloudRunBuildDir: config.cloudRunBuildDir});
+				adaptToCloudRun({builder, ...cloudRun, cloudRunBuildDir});
 			}
 
 			builder.log.info(`Writing client application to ${publicDir}`);
@@ -39,11 +38,17 @@ function adapter() {
 			await builder.prerender({dest: publicDir});
 		}
 	};
-}
+
+	return adapter;
+};
 
 /**
  *
- * @param {{builder: any, name: string, source: string}} param0
+ * @param {{
+ * 	builder: any;
+ * 	name: string;
+ * 	source: string;
+ * }} param
  */
 function adaptToCloudFunctions({builder, name, source}) {
 	const functionsPackageJson = JSON.parse(readFileSync(path.join(source, 'package.json'), 'utf-8'));
@@ -60,7 +65,9 @@ function adaptToCloudFunctions({builder, name, source}) {
 
 	// Prepare handler & entrypoint
 	renameSync(path.join(serverOutputDir, 'app.js'), path.join(serverOutputDir, 'app.mjs'));
-	copy(path.join(__dirname, 'files'), serverOutputDir);
+	copyFileSync(path.join(__dirname, 'files', 'index.js'), path.join(serverOutputDir, 'index.js'));
+	copyFileSync(path.join(__dirname, 'files', 'handler.mjs'), path.join(serverOutputDir, 'handler.mjs'));
+	copyFileSync(path.join(__dirname, 'files', 'handler.mjs.map'), path.join(serverOutputDir, 'handler.mjs.map'));
 
 	// Prepare Cloud Function
 	const functionsEntrypoint = path.join(source, functionsMain);
@@ -72,16 +79,14 @@ function adaptToCloudFunctions({builder, name, source}) {
 `Add the following Cloud Function to ${functionsEntrypoint}
 +--------------------------------------------------+
 let ${ssrSvelteFunctionName};
-exports.${name} = functions.https.onRequest(
-	async (request, response) => {
-		if (!${ssrSvelteFunctionName}) {
-			functions.logger.info("Initializing SvelteKit SSR Handler");
-			${ssrSvelteFunctionName} = require("./${ssrDirname}/index").default;
-			functions.logger.info("SvelteKit SSR Handler initialised!");
-		}
-		return await ${ssrSvelteFunctionName}(request, response);
+exports.${name} = functions.https.onRequest(async (request, response) => {
+	if (!${ssrSvelteFunctionName}) {
+		functions.logger.info("Initializing SvelteKit SSR Handler");
+		${ssrSvelteFunctionName} = require("./${ssrDirname}/index").default;
+		functions.logger.info("SvelteKit SSR Handler initialised!");
 	}
-);
+	return await ${ssrSvelteFunctionName}(request, response);
+});
 +--------------------------------------------------+`
 			);
 		}
@@ -92,7 +97,12 @@ exports.${name} = functions.https.onRequest(
 
 /**
  *
- * @param {{builder: any, serviceId: string, region: string, cloudRunBuildDir: string|undefined}} param0
+ * @param {{
+ * 	builder: any;
+ * 	serviceId: string;
+ * 	region: string;
+ * 	cloudRunBuildDir: string|undefined
+ * }} param
  */
 function adaptToCloudRun({builder, serviceId, region, cloudRunBuildDir}) {
 	const serverOutputDir = path.join(cloudRunBuildDir || `.${serviceId}`);
@@ -102,7 +112,9 @@ function adaptToCloudRun({builder, serviceId, region, cloudRunBuildDir}) {
 
 	// Prepare handler & entrypoint
 	renameSync(path.join(serverOutputDir, 'app.js'), path.join(serverOutputDir, 'app.mjs'));
-	copy(path.join(__dirname, 'files'), serverOutputDir);
+	copyFileSync(path.join(__dirname, 'files', 'index.js'), path.join(serverOutputDir, 'index.js'));
+	copyFileSync(path.join(__dirname, 'files', 'handler.mjs'), path.join(serverOutputDir, 'handler.mjs'));
+	copyFileSync(path.join(__dirname, 'files', 'handler.mjs.map'), path.join(serverOutputDir, 'handler.mjs.map'));
 
 	// Prepare Cloud Run package.json - read SvelteKit App 'package.json', modify the JSON, write to serverOutputDir
 	const pkgjson = JSON.parse(readFileSync('package.json', 'utf-8'));
@@ -127,5 +139,3 @@ gcloud beta run deploy ${serviceId} --platform managed --region ${region} --sour
 +--------------------------------------------------+`
 	);
 }
-
-export default adapter;
