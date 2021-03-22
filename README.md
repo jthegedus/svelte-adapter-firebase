@@ -7,8 +7,6 @@
 
 # svelte-adapter-firebase
 
-<!-- TODO: GitHub Actions badges, NPM badges/links -->
-
 [![GitHub Release](https://img.shields.io/github/release/jthegedus/svelte-adapter-firebase.svg?color=green)](https://github.com/jthegedus/svelte-adapter-firebase/releases) [![npm](https://img.shields.io/npm/v/svelte-adapter-firebase?color=green)](https://www.npmjs.com/package/svelte-adapter-firebase) [![Test](https://github.com/jthegedus/svelte-adapter-firebase/actions/workflows/test.yaml/badge.svg)](https://github.com/jthegedus/svelte-adapter-firebase/actions/workflows/test.yaml) [![CodeQL](https://github.com/jthegedus/svelte-adapter-firebase/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/jthegedus/svelte-adapter-firebase/actions/workflows/codeql-analysis.yml)
 
 [Firebase](https://firebase.google.com/) adapter for [SvelteKit](https://github.com/sveltejs/kit). Supports:
@@ -34,7 +32,7 @@
   - [Cloud Run](#cloud-run)
     - [Cloud Run Deployment](#cloud-run-deployment)
 - [FAQ](#faq)
-- [Caveats](#caveats) 
+- [Caveats](#caveats)
   - [Firebase libs in SvelteKit routes](#firebase-libs-in-sveltekit-routes)
 - [Contributing](#contributing)
   - [todo](#todo)
@@ -44,13 +42,21 @@
 In your standard SvelteKit project:
 
 - `npm i -D svelte-adapter-firebase`
-- add adapter to `svelte.config.js`:
+- add adapter to `svelte.config.cjs`:
+
+  ```js
+  const firebaseAdapter = require("svelte-adapter-firebase");
+  const pkg = require("./package.json");
+
+  /** @type {import('@sveltejs/kit').Config} */
+  module.exports = {
+    kit: {
+      adapter: firebaseAdapter(),
+      target: "#svelte",
+    },
+  };
   ```
-  kit: {
-    adapter: ["svelte-adapter-firebase"],
-    target: "#svelte",
-  }
-  ```
+
 - `npm run build`
 - Follow further instructions output by the adapter to prepare for deployment.
 
@@ -350,7 +356,7 @@ will result in this output:
 
 ```
 .mySiteSSR/         <--- Cloud Run service code
-public/             <--- Hosting static assets 
+public/             <--- Hosting static assets
 firebase.json
 package.json
 svelte.config.js
@@ -574,20 +580,6 @@ asdf install
 pnpm i
 ```
 
-### todo
+### external contributions
 
-- document testing prod output locally with Firebase Emulator
-- create pros/cons comparison of Cloud Functions vs Cloud Run
-- e2e test workflow
-  - on merge to `main`
-  - wait until `workflows/release.yml` is released
-  - use newly published package
-    - to deploy a Cloud Functions example
-    - to deploy a Cloud Run example
-  - test site availability with Playwright (or something similar)
-  - report Lighthouse statistics?
-  - site should be the docs for this adapter
-
-#### external
-
-- Cloud Function validation linked in `utils.js` to two different sources indicates that it is being validated by `firebase-tools` in two separate places. PR a fix there.
+- Cloud Function validation code linked in `utils.js` is from two different sources which indicates that it is being validated by `firebase-tools` in two separate places. PR a fix there.
