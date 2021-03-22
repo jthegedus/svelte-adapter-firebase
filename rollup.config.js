@@ -6,6 +6,7 @@ const config = [
 		input: 'src/cli.js',
 		output: {
 			format: 'cjs',
+			exports: 'default',
 			file: 'dist/cli.js'
 		},
 		plugins: [nodeResolve(), commonjs()]

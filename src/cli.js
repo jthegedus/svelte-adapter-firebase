@@ -44,7 +44,11 @@ module.exports = function ({
 
 /**
  *
- * @param {{builder: any, name: string, source: string}} param0
+ * @param {{
+ * 	builder: any;
+ * 	name: string;
+ * 	source: string;
+ * }} param
  */
 function adaptToCloudFunctions({builder, name, source}) {
 	const functionsPackageJson = JSON.parse(readFileSync(path.join(source, 'package.json'), 'utf-8'));
@@ -93,7 +97,12 @@ exports.${name} = functions.https.onRequest(async (request, response) => {
 
 /**
  *
- * @param {{builder: any, serviceId: string, region: string, cloudRunBuildDir: string|undefined}} param0
+ * @param {{
+ * 	builder: any;
+ * 	serviceId: string;
+ * 	region: string;
+ * 	cloudRunBuildDir: string|undefined
+ * }} param
  */
 function adaptToCloudRun({builder, serviceId, region, cloudRunBuildDir}) {
 	const serverOutputDir = path.join(cloudRunBuildDir || `.${serviceId}`);
