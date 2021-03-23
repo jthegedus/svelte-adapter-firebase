@@ -549,25 +549,39 @@ functions/
 	index.js
 ```
 
-An SSR Cloud Run service is much more simple to manage than an SSR Cloud Function as the build & deploy pipeline is entirely independent and not subject to the same [caveats](#cloud-function-caveats) noted above.
-
 See the [official Hosting/Cloud Run docs here](https://firebase.google.com/docs/hosting/cloud-run) for more setup information (enabling required APIs etc).
+
+For those interested, we support Cloud Run with the same JS code as Cloud Functions, via the NodeJS [Functions Framework](https://github.com/GoogleCloudPlatform/functions-framework-nodejs) and reliance on the [Node.js 14 Buildpacks](https://github.com/GoogleCloudPlatform/buildpacks/tree/main/builders/gcf/nodejs14), which is what essentially powers Cloud Functions.
 
 ### Cloud Run Local Testing
 
-_Cloud Run cannot be tested locally with the Firebase Emulator. Though you can build and run it locally with `gcloud` cli - https://cloud.google.com/run/docs/testing/local#cloud-sdk_
+Cloud Run cannot be tested locally with the Firebase Emulator. However, you can still build and run it locally with `gcloud` cli:
+
+```shell
+gcloud beta code dev --builder
+```
+
+This will build the container using the Google Node 14 buildpack image, run the image locally, and rebuild the image on code changes. For more details, see - https://cloud.google.com/run/docs/testing/local#cloud-sdk_
+
+When you route to the hosted image you should be able to navigate your Cloud Run app but your CDN hosted resources (css, images, etc) will not load properly. This can be used as a sanity check
 
 ### Cloud Run Deployment
 
-`gcloud` CLI is required to build & deploy Cloud Run services. The specific command required to build & deploy the Cloud Run service will be output when the adapter is run. (I am not listing the command here as it will differ depending on your `serviceId`, output dir etc, but the adapter will output it :+1:)
+`gcloud` CLI is required to build & deploy Cloud Run services. The recommended build & deploy command for Cloud Run will be output when the adapter is run.
 
-The container is Googles hardend Ubuntu with Node.js 14 as the runtime.
+```shell
+gcloud beta run deploy ${serviceId} --platform managed --region ${region} --source ${serverOutputDir} --allow-unauthenticated
+```
 
-For those interested, this build & deploy command uses [Cloud Build](https://cloud.google.com/cloud-build), [Buildpacks](https://cloud.google.com/blog/products/containers-kubernetes/google-cloud-now-supports-buildpacks) and the [Functions Framework](https://github.com/GoogleCloudPlatform/functions-framework-nodejs).
+Notably, this command **builds** and **deploys** your container, which is traditionally a two step process for container runtimes. You can orchestrate your deployment however you wish. Feel free to modify the command with any other Cloud Run features you may want to use, like increasing the `concurrency` or setting `min_instances`
+
+This deploy command uses [Cloud Build](https://cloud.google.com/cloud-build) and the aforementioned [Buildpacks](https://cloud.google.com/blog/products/containers-kubernetes/google-cloud-now-supports-buildpacks) and [Functions Framework](https://github.com/GoogleCloudPlatform/functions-framework-nodejs).
+
+:warning: Each build of your app will require both `firebase deploy --only hosting` alongside your Cloud Run deployment
 
 ### Cloud Run Caveats
 
-TODO
+- testing of a Cloud Run service with Firebase Hosting CDN and other backend features (PubSub/Cloud Functions) will require a full deployment to a Firebase project. The suggestion is a `dev` project per engineer and manual deployments to each env to test. No environment per PR here.
 
 ## Function vs Run
 
