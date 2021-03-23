@@ -11,7 +11,7 @@
 
 [Firebase](https://firebase.google.com/) adapter for [SvelteKit](https://github.com/sveltejs/kit). Supports:
 
-:heavy_check_mark: SSR on [Cloud Run](https://firebase.google.com/docs/hosting/cloud-run) :information_source: recommended</br>
+:heavy_check_mark: SSR on [Cloud Run](https://firebase.google.com/docs/hosting/cloud-run)</br>
 :heavy_check_mark: [Multiple Hosting Sites](https://firebase.google.com/docs/hosting/multisites#add_additional_sites)</br>
 :heavy_check_mark: SSR on [Cloud Functions](https://firebase.google.com/docs/hosting/functions)</br>
 :heavy_check_mark: Integrates with existing [JavaScript ~or TypeScript~ Cloud Functions](https://firebase.google.com/docs/functions/typescript)!</br>
@@ -26,16 +26,19 @@
 - [Details](#details)
   - [`firebase.json` Configurations](#firebasejson-configurations)
   - [Adapter Configurations](#adapter-configurations)
-  - [Cloud Function](#cloud-function)
-    - [Cloud Function Deployment](#cloud-function-deployment)
-    - [Cloud Function Caveats](#cloud-function-caveats)
-  - [Cloud Run](#cloud-run)
-    - [Cloud Run Deployment](#cloud-run-deployment)
+- [Cloud Function](#cloud-function)
+  - [Firebase Emulator local Testing](#cloud-function-firebase-emulator-local-testing)
+  - [Deployment](#cloud-function-deployment)
+  - [Caveats](#cloud-function-caveats)
+- [Cloud Run](#cloud-run)
+  - [Local Testing](#cloud-run-local-testing)
+  - [Deployment](#cloud-run-deployment)
+  - [Caveats](#cloud-run-caveats)
+- [Function vs Run](#function-vs-run)
+- [Non-Goals](#non-goals)
 - [FAQ](#faq)
 - [Caveats](#caveats)
-  - [Firebase libs in SvelteKit routes](#firebase-libs-in-sveltekit-routes)
 - [Contributing](#contributing)
-  - [todo](#todo)
 
 ## Quickstart
 
@@ -46,7 +49,6 @@ In your standard SvelteKit project:
 
   ```js
   const firebaseAdapter = require("svelte-adapter-firebase");
-  const pkg = require("./package.json");
 
   /** @type {import('@sveltejs/kit').Config} */
   module.exports = {
@@ -64,8 +66,6 @@ This adapter reads your `firebase.json` to determine if the Firebase Hosting sit
 
 Please read the docs carefully!
 
-:information_source: I recommend using a [Cloud Run](#cloud-run) service for SSR instead of Cloud Functions.
-
 ## Configuration Overview
 
 Adapter options:
@@ -77,7 +77,7 @@ Adapter options:
   - used to lookup the rewrite rule used for SSR
   - default: `**`
 - `firebaseJson`
-  - path to your `firebase.json`, relative from where `svelte adapt` is called
+  - path to your `firebase.json`, relative from where `svelte build` is called
   - default: `./firebase.json`
 - `cloudRunBuildDir`
   - output dir of Cloud Run service, relative from your svelte app
@@ -145,16 +145,18 @@ Due to the relaxed rules of `firebase.json` we can have many valid configs. At a
 }
 ```
 
-To correctly lookup the `blog` site, `hostingSite` will need to be set in `svelte.config.js`:
+To correctly lookup the `blog` site, `hostingSite` will need to be set in `svelte.config.cjs`:
 
-```javascript
-// svelte.config.js
+```js
+const firebaseAdapter = require("svelte-adapter-firebase");
+
+/** @type {import('@sveltejs/kit').Config} */
+module.exports = {
   kit: {
-    adapter: ["svelte-adapter-firebase", {
-        "hostingSite": "blog"
-    }],
+    adapter: firebaseAdapter({ hostingSite: "blog" }),
     target: "#svelte",
-  }
+  },
+};
 ```
 
 </details>
@@ -205,16 +207,18 @@ To correctly lookup the `blog` site, `hostingSite` will need to be set in `svelt
 }
 ```
 
-To correctly lookup the `blog` site, `hostingSite` will need to be set in `svelte.config.js`:
+To correctly lookup the `blog` site, `hostingSite` will need to be set in `svelte.config.cjs`:
 
-```javascript
-// svelte.config.js
+```js
+const firebaseAdapter = require("svelte-adapter-firebase");
+
+/** @type {import('@sveltejs/kit').Config} */
+module.exports = {
   kit: {
-    adapter: ["svelte-adapter-firebase", {
-        "hostingSite": "blog"
-    }],
+    adapter: firebaseAdapter({ hostingSite: "blog" }),
     target: "#svelte",
-  }
+  },
+};
 ```
 
 </details>
@@ -252,14 +256,16 @@ If the firebase.json.hosting is an array of sites, then you must provide a `site
 }
 ```
 
-```javascript
-// svelte.config.js
+```js
+const firebaseAdapter = require("svelte-adapter-firebase");
+
+/** @type {import('@sveltejs/kit').Config} */
+module.exports = {
   kit: {
-    adapter: ["svelte-adapter-firebase", {
-        "hostingSite": "blog"
-    }],
+    adapter: firebaseAdapter({ hostingSite: "blog" }),
     target: "#svelte",
-  }
+  },
+};
 ```
 
 </details>
@@ -267,7 +273,7 @@ If the firebase.json.hosting is an array of sites, then you must provide a `site
 <details>
 <summary><code>sourceRewriteMatch</code></summary>
 
-If the rewrite `source` pattern is not `**`, then `svelte.config.js` `sourceRewriteMatch` will need to be set to match your desired rewrite rule. For example:
+If the rewrite `source` pattern is not `**`, then `svelte.config.cjs` `sourceRewriteMatch` will need to be set to match your desired rewrite rule. For example:
 
 ```json
 // firebase.json
@@ -286,14 +292,16 @@ If the rewrite `source` pattern is not `**`, then `svelte.config.js` `sourceRewr
 }
 ```
 
-```javascript
-// svelte.config.js
+```js
+const firebaseAdapter = require("svelte-adapter-firebase");
+
+/** @type {import('@sveltejs/kit').Config} */
+module.exports = {
   kit: {
-    adapter: ["svelte-adapter-firebase", {
-        "sourceRewriteMatch": "/blog/**"
-    }],
+    adapter: firebaseAdapter({ sourceRewriteMatch: "/blog/**" }),
     target: "#svelte",
-  }
+  },
+};
 ```
 
 </details>
@@ -301,14 +309,14 @@ If the rewrite `source` pattern is not `**`, then `svelte.config.js` `sourceRewr
 <details>
 <summary><code>firebaseJson</code></summary>
 
-If the `firebase.json` file is not within the directory to which you will run `svelte adapt`, then you can set a relative path in `svelte.config.js`:
+If the `firebase.json` file is not in the directory you run `svelte build`, then you can set a relative path in `svelte.config.cjs`:
 
 ```
 .gitignore
 firebase.json
-app/                    <-- svelte adapt run in this dir
+app/                    <-- svelte build run in this dir
 	package.json
-	svelte.config.js
+	svelte.config.cjs
 	src/
 anotherApp/
 	index.html
@@ -318,14 +326,16 @@ functions/
 	index.js
 ```
 
-```javascript
-// app/svelte.config.js
+```js
+const firebaseAdapter = require("svelte-adapter-firebase");
+
+/** @type {import('@sveltejs/kit').Config} */
+module.exports = {
   kit: {
-    adapter: ["svelte-adapter-firebase", {
-        "firebaseJson": "../firebase.json"
-    }],
+    adapter: firebaseAdapter({ firebaseJson: "../firebase.json" }),
     target: "#svelte",
-  }
+  },
+};
 ```
 
 </details>
@@ -333,7 +343,7 @@ functions/
 <details>
 <summary><code>cloudRunBuildDir</code></summary>
 
-By default, a Node.js Cloud Run service is output to the directory named after the `run.serviceId` prefixed with a `.` relative to the dir in which `svelte adapt` was executed. IE: `./.${run.serviceId}`. So with this config:
+By default, a Node.js Cloud Run service is output to the directory named after the `run.serviceId` prefixed with a `.` relative to the dir in which `svelte build` was executed. IE: `./.${run.serviceId}`. So with this config:
 
 ```json
 // firebase.json
@@ -359,7 +369,7 @@ will result in this output:
 public/             <--- Hosting static assets
 firebase.json
 package.json
-svelte.config.js
+svelte.config.cjs
 src/
 	app.html
 	routes/
@@ -371,19 +381,21 @@ functions/
 
 If you wish to customise this output dir, then you can specify it in the adapter config:
 
-```javascript
-// svelte.config.js
+```js
+const firebaseAdapter = require("svelte-adapter-firebase");
+
+/** @type {import('@sveltejs/kit').Config} */
+module.exports = {
   kit: {
-    adapter: ["svelte-adapter-firebase", {
-        "cloudRunBuildDir": ".special/ssr/output/dir"
-    }],
+    adapter: firebaseAdapter({ cloudRunBuildDir: ".special/ssr/output/dir" }),
     target: "#svelte",
-  }
+  },
+};
 ```
 
 </details>
 
-### Cloud Function
+## Cloud Function
 
 With this `firebase.json` and `functions/` dir in a standard SvelteKit app structure and default `svelte-adapter-firebase` config:
 
@@ -409,7 +421,7 @@ With this `firebase.json` and `functions/` dir in a standard SvelteKit app struc
 ```
 firebase.json ("public": "myApp")
 package.json
-svelte.config.js
+svelte.config.cjs
 src/
 	app.html
 	routes/
@@ -431,7 +443,7 @@ Because we use the above method to determine the output dir the server assets ar
 ```
 firebase.json ("public": "myApp")
 package.json
-svelte.config.js
+svelte.config.cjs
 src/
 	app.html
 	routes/
@@ -455,7 +467,7 @@ In a multi-site setup, the `site` name from hosting config in `firebase.json` is
 ```
 firebase.json ("site": "myCoolSite","public": "myApp")
 package.json
-svelte.config.js
+svelte.config.cjs
 src/
 	app.html
 	routes/
@@ -469,40 +481,27 @@ myApp/				<-- Static assets to go to Firebase Hosting CDN
 
 </details>
 
-The final piece is to write the actual Cloud Function source code to reference the output server assets. The code is printed during `svelte adapt` and should be placed in your `index.js` or `index.ts` manually.
+The final piece is to write the actual Cloud Function source code to reference the output server assets. The code is printed during `svelte build` and should be placed in your `index.js` or `index.ts` manually.
 
 This is a flexible solution that allows integrating with other Cloud Functions in your project. You can edit the provided code as you see fit. The import/require of the generated code will not change unless you change the `firebase.json.hosting.site` or `package.json.main` fields, so you shouldn't need to update this code after adding it.
 
-Additionally, the current SvelteKit server output requires the dep `@sveltejs/app-utils`, so ensure to add this to your Cloud Functions as well.
+### Cloud Function Firebase Emulator local Testing
 
-#### Cloud Function Deployment
+Test your production build locally before pushing to git or deploying!
 
-After `svelte adapt` and updating your Cloud Functions with the printed code you should be able to perform a normal `firebase deploy` to deploy your app.
+- build your app: `svelte-kit build`
+- install Function dependencies: `pnpm install --prefix functions`
+- start the emulator: `firebase emulators:start
 
-A [`firebase.json.hosting.predeploy`](https://firebase.google.com/docs/cli#hooks) script to perform `svelte-kit build && svelte-kit adapt` would ensure you always get the latest code for your server output before deployment.
+### Cloud Function Deployment
 
-#### Cloud Function Caveats
+`firebase deploy`, that is all.
 
-```
-firebase.json ("site": "myCoolSite","public": "myApp")
-package.json
-svelte.config.js
-src/
-	app.html
-	routes/
-		index.svelte
-functions/
-	package.json
-	index.js
-	myCoolSite/		<-- Server assets
-myApp/				<-- Static assets to go to Firebase Hosting CDN
-```
+### Cloud Function Caveats
 
-As `package.json` gains dependencies for your Svelte app you may need to copy some of these to `functions/package.json` depending on the server-side functionality and how SvelteKit bundles your dependencies.
+As `package.json` gains dependencies for your Svelte app you may need to copy some of these to `functions/package.json` depending on the server-side functionality and how SvelteKit bundles your dependencies. :information_source: This should be re-evaluated again in the future as it changes depending on SvelteKit and may not exist as a caveat in `1.0.0` release.
 
-This is a core reason for recommending Cloud Run for SSR as it's built & deployed separately from the rest of your Cloud Functions. This isolation enables dependency syncing etc.
-
-### Cloud Run
+## Cloud Run
 
 With this `firebase.json` a standard SvelteKit app structure and default `svelte-adapter-firebase` config:
 
@@ -529,7 +528,7 @@ will result in this output:
 .mySiteSSR/         <--- This contains the Cloud Run service code
 firebase.json
 package.json
-svelte.config.js
+svelte.config.cjs
 src/
 	app.html
 	routes/
@@ -539,34 +538,95 @@ functions/
 	index.js
 ```
 
-An SSR Cloud Run service is much more simple to manage than an SSR Cloud Function as the build & deploy pipeline is entirely independent and not subject to the same [caveats](#cloud-function-caveats) noted above.
-
 See the [official Hosting/Cloud Run docs here](https://firebase.google.com/docs/hosting/cloud-run) for more setup information (enabling required APIs etc).
 
-#### Cloud Run Deployment
+For those interested, we support Cloud Run with the same JS code as Cloud Functions, via the NodeJS [Functions Framework](https://github.com/GoogleCloudPlatform/functions-framework-nodejs) and reliance on the [Node.js 14 Buildpacks](https://github.com/GoogleCloudPlatform/buildpacks/tree/main/builders/gcf/nodejs14), which is what essentially powers Cloud Functions.
 
-`gcloud` CLI is required to build & deploy Cloud Run services. The specific command required to build & deploy the Cloud Run service will be output when the adapter is run. (I am not listing the command here as it will differ depending on your `serviceId`, output dir etc, but the adapter will output it :+1:)
+### Cloud Run Local Testing
 
-The container is Googles hardend Ubuntu with Node.js 14 as the runtime.
+Cloud Run cannot be tested locally with the Firebase Emulator. However, you can still build and run it locally with `gcloud` cli:
 
-For those interested, this build & deploy command uses [Cloud Build](https://cloud.google.com/cloud-build), [Buildpacks](https://cloud.google.com/blog/products/containers-kubernetes/google-cloud-now-supports-buildpacks) and the [Functions Framework](https://github.com/GoogleCloudPlatform/functions-framework-nodejs).
+```shell
+gcloud beta code dev --builder
+```
+
+This will build the container using the Google Node 14 buildpack image, run the image locally, and rebuild the image on code changes. For more details, see - https://cloud.google.com/run/docs/testing/local#cloud-sdk_
+
+When you route to the hosted image you should be able to navigate your Cloud Run app but your CDN hosted resources (css, images, etc) will not load properly. This can be used as a sanity check
+
+### Cloud Run Deployment
+
+`gcloud` CLI is required to build & deploy Cloud Run services. The recommended build & deploy command for Cloud Run will be output when the adapter is run.
+
+```shell
+gcloud beta run deploy ${serviceId} --platform managed --region ${region} --source ${serverOutputDir} --allow-unauthenticated
+```
+
+Notably, this command **builds** and **deploys** your container, which is traditionally a two step process for container runtimes. You can orchestrate your deployment however you wish. Feel free to modify the command with any other Cloud Run features you may want to use, like increasing the `concurrency` or setting `min_instances`
+
+This deploy command uses [Cloud Build](https://cloud.google.com/cloud-build) and the aforementioned [Buildpacks](https://cloud.google.com/blog/products/containers-kubernetes/google-cloud-now-supports-buildpacks) and [Functions Framework](https://github.com/GoogleCloudPlatform/functions-framework-nodejs).
+
+:warning: Each build of your app will require `firebase deploy --only hosting` alongside your Cloud Run deployment as your CDN content will need to be updated as the filename hashes of static resources is rewritten on each `svelte-kit build`
+
+### Cloud Run Caveats
+
+- testing of a Cloud Run service with Firebase Hosting CDN and other backend features (PubSub/Cloud Functions) will require a full deployment to a Firebase project. The suggestion is a `dev` project per engineer and manual deployments to each env to test. No environment per PR here.
+
+## Function vs Run
+
+Choice is a good thing, hopefully this comparison table helps you decide which compute environment is best for your application:
+
+| Feature                                             | Functions          | Run                |
+| --------------------------------------------------- | ------------------ | ------------------ |
+| Firebase Emulator Integration                       | :heavy_check_mark: | :x:                |
+| Hosting CDN content deployed with Compute resources | :heavy_check_mark: | :x:                |
+| Cold start mitigations                              | :x:                | :heavy_check_mark: |
+
+Cloud Functions seems do be a better default.
+
+## Non-goals
+
+> Write Cloud Function code directly into `.js` file instead of printing in console.
+
+Firebase Cloud Functions have a long history of people configuring their index files completely differently, some even generating them from directories. Accommodating these would be a headache. Instead, all we look for is a match against this string, `${name} =`, where `name` is your Cloud Functions name. We may make this configurable to a specific file in future.
+
+Additionally, this allows for users to customise their Firebase Cloud Function API like `runWith()` options for memory/CPU and VPC/Ingress/Egress configuration settings, without complex support for options in the adapter. This keeps the Function config where it should, close to the executing code.
+
+> Handle the deployment of the app to Firebase.
+
+Firebase apps consist of many different services with the CLI providing optional deployments. We do not want to dictate full deployments with your frontend nor perform partial deployments if it does not fit your app. The only option then is to leave it to you :tada:
+
+> Custom Docker images
+
+We support Cloud Run with the same JS code as Cloud Functions, via the NodeJS [Functions Framework](https://github.com/GoogleCloudPlatform/functions-framework-nodejs) and reliance on the [Node14 Buildpacks](https://github.com/GoogleCloudPlatform/buildpacks/tree/main/builders/gcf/nodejs14), which is what essentially powers Cloud Functions. Diverging from this would make supporting Cloud Run more difficult. The idea behind the support is to allow usage of Cloud Run features, for example, [`min_instances`](https://cloud.google.com/run/docs/configuring/min-instances) and [concurrent requests](https://cloud.google.com/run/docs/about-concurrency) which both reduce cold starts (if that matters to you, use the CDN!)
+
+We are open to discussion on this topic, but it was not a goal when setting out to build this adapter (consider the cost/benefit).
 
 ## FAQ
 
-- Q: Why is the Cloud Function code output to the terminal for me to add manually instead of being written to `functions/index.js`?
-  - A: This method allow the user to consume other aspects of the Firebase Cloud Function API like `runWith()` options for memory/CPU and VPC/Ingress/Egress configuration settings, without complex support for options in the adapter. This keeps the Function config where it should, close to the executing code.
+> Why is the Cloud Function code output to the terminal for me to add manually instead of being written to `functions/index.js`?
+
+See [non-goals](#non-goals) _Write Cloud Function code directly into `.js` file instead of printing in console._
+
+> Firebase libs in SvelteKit routes
+
+This adapter does not try to solve the issue of using Firebase libraries in SvelteKit routes. These routes are compiled by the SvelteKit pipeline and there are many issues as ESM support in Firebase libs is not released and won't be for a long time.
+
+Using Firebase libs in SvelteKit `endpoints`/`routes` may have been resolved with https://github.com/sveltejs/kit/pull/490, however this does not mean the output is compatible with the Cloud Function runtime (investigation pending) and therefore compatible with `svelte-adapter-firebase`. Our recommendation is to prefer using Firebase Cloud Functions for API routes over SvelteKit routes.
+
+> Cold Starts
+
+Depends on your application load. Typically, Cloud Functions will require more instances to handle the same number of requests as each Cloud Run as each CR instance can handle up to 250 (default maximum at the time of writing). Though in my experience, bumping the memory/cpu configuration dramatically reduces the response times.
+
+Since the purpose of using this adapter is to leverage the Firebase Hosting CDN, you should consider improving the user experience with targetted caching/TTLs.
+
+If cold starts are still an issue for your application, Cloud Run has support for [`min_instances`](https://cloud.google.com/run/docs/configuring/min-instances) which will keep `x` number of instances warm. This incurs additional costs. See the Cloud Run documentation for more.
 
 ## Caveats
 
 - [Firebase Hosting Preview Channels](https://firebase.google.com/docs/hosting/test-preview-deploy) currently lacks first-party support for SSR applications. This adapter doesn't attempt to remedy this issue and doesn't produce a different SSR Function/Run for preview channel deployments.
 - :warning: while you can specify the region for both, Cloud Run in `firebase.json` and Cloud Functions in `runWith({})` config, **`us-central1` is the only valid region for Firebase Hosting rewrites**, other regions will error. The official warning about this can be found in [these docs](https://firebase.google.com/docs/hosting/functions).
 - `1.0.0` will not be published until the SvelteKit Adapter API is declared stable and SvelteKit is released for general use.
-
-### Firebase libs in SvelteKit routes
-
-This adapter does not try to solve the issue of using Firebase libraries in SvelteKit routes. These routes are compiled by the SvelteKit pipeline and there are many issues as ESM support in Firebase libs is not released and won't be for a long time.
-
-Using Firebase libs in SvelteKit `endpoints`/`routes` may have been resolved with https://github.com/sveltejs/kit/pull/490, however this does not mean the output is compatible with the Cloud Function runtime (investigation pending) and therefore compatible with `svelte-adapter-firebase`. Still prefer using Firebase Cloud Functions for API routes over SvelteKit routes.
 
 ## Contributing
 
