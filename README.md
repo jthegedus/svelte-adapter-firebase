@@ -27,12 +27,12 @@
   - [`firebase.json` Configurations](#firebasejson-configurations)
   - [Adapter Configurations](#adapter-configurations)
 - [Cloud Function](#cloud-function)
-  - [Deployment](#cloud-function-deployment)
   - [Firebase Emulator local Testing](#cloud-function-firebase-emulator-local-testing)
+  - [Deployment](#cloud-function-deployment)
   - [Caveats](#cloud-function-caveats)
 - [Cloud Run](#cloud-run)
-  - [Deployment](#cloud-run-deployment)
   - [Local Testing](#cloud-run-local-testing)
+  - [Deployment](#cloud-run-deployment)
   - [Caveats](#cloud-run-caveats)
 - [Function vs Run](#function-vs-run)
 - [Non-Goals](#non-goals)
@@ -485,32 +485,21 @@ The final piece is to write the actual Cloud Function source code to reference t
 
 This is a flexible solution that allows integrating with other Cloud Functions in your project. You can edit the provided code as you see fit. The import/require of the generated code will not change unless you change the `firebase.json.hosting.site` or `package.json.main` fields, so you shouldn't need to update this code after adding it.
 
-Additionally, the current SvelteKit server output requires the dep `@sveltejs/app-utils`, so ensure to add this to your Cloud Functions as well.
+### Cloud Function Firebase Emulator local Testing
+
+Test your production build locally before pushing to git or deploying!
+
+- build your app: `svelte-kit build`
+- install Function dependencies: `pnpm install --prefix functions`
+- start the emulator: `firebase emulators:start
 
 ### Cloud Function Deployment
 
-TODO
+`firebase deploy`, that is all.
 
 ### Cloud Function Caveats
 
-```
-firebase.json ("site": "myCoolSite","public": "myApp")
-package.json
-svelte.config.cjs
-src/
-	app.html
-	routes/
-		index.svelte
-functions/
-	package.json
-	index.js
-	myCoolSite/		<-- Server assets
-myApp/				<-- Static assets to go to Firebase Hosting CDN
-```
-
-As `package.json` gains dependencies for your Svelte app you may need to copy some of these to `functions/package.json` depending on the server-side functionality and how SvelteKit bundles your dependencies.
-
-This is a core reason for recommending Cloud Run for SSR as it's built & deployed separately from the rest of your Cloud Functions. This isolation enables dependency syncing etc.
+As `package.json` gains dependencies for your Svelte app you may need to copy some of these to `functions/package.json` depending on the server-side functionality and how SvelteKit bundles your dependencies. :information_source: This should be re-evaluated again in the future as it changes depending on SvelteKit and may not exist as a caveat in `1.0.0` release.
 
 ## Cloud Run
 
