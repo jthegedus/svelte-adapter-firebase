@@ -145,10 +145,10 @@ Due to the relaxed rules of `firebase.json` we can have many valid configs. At a
 }
 ```
 
-To correctly lookup the `blog` site, `hostingSite` will need to be set in `svelte.config.js`:
+To correctly lookup the `blog` site, `hostingSite` will need to be set in `svelte.config.cjs`:
 
 ```javascript
-// svelte.config.js
+// svelte.config.cjs
   kit: {
     adapter: ["svelte-adapter-firebase", {
         "hostingSite": "blog"
@@ -205,10 +205,10 @@ To correctly lookup the `blog` site, `hostingSite` will need to be set in `svelt
 }
 ```
 
-To correctly lookup the `blog` site, `hostingSite` will need to be set in `svelte.config.js`:
+To correctly lookup the `blog` site, `hostingSite` will need to be set in `svelte.config.cjs`:
 
 ```javascript
-// svelte.config.js
+// svelte.config.cjs
   kit: {
     adapter: ["svelte-adapter-firebase", {
         "hostingSite": "blog"
@@ -253,7 +253,7 @@ If the firebase.json.hosting is an array of sites, then you must provide a `site
 ```
 
 ```javascript
-// svelte.config.js
+// svelte.config.cjs
   kit: {
     adapter: ["svelte-adapter-firebase", {
         "hostingSite": "blog"
@@ -267,7 +267,7 @@ If the firebase.json.hosting is an array of sites, then you must provide a `site
 <details>
 <summary><code>sourceRewriteMatch</code></summary>
 
-If the rewrite `source` pattern is not `**`, then `svelte.config.js` `sourceRewriteMatch` will need to be set to match your desired rewrite rule. For example:
+If the rewrite `source` pattern is not `**`, then `svelte.config.cjs` `sourceRewriteMatch` will need to be set to match your desired rewrite rule. For example:
 
 ```json
 // firebase.json
@@ -287,7 +287,7 @@ If the rewrite `source` pattern is not `**`, then `svelte.config.js` `sourceRewr
 ```
 
 ```javascript
-// svelte.config.js
+// svelte.config.cjs
   kit: {
     adapter: ["svelte-adapter-firebase", {
         "sourceRewriteMatch": "/blog/**"
@@ -301,14 +301,14 @@ If the rewrite `source` pattern is not `**`, then `svelte.config.js` `sourceRewr
 <details>
 <summary><code>firebaseJson</code></summary>
 
-If the `firebase.json` file is not in the directory you run `svelte build`, then you can set a relative path in `svelte.config.js`:
+If the `firebase.json` file is not in the directory you run `svelte build`, then you can set a relative path in `svelte.config.cjs`:
 
 ```
 .gitignore
 firebase.json
 app/                    <-- svelte build run in this dir
 	package.json
-	svelte.config.js
+	svelte.config.cjs
 	src/
 anotherApp/
 	index.html
@@ -319,7 +319,7 @@ functions/
 ```
 
 ```javascript
-// app/svelte.config.js
+// app/svelte.config.cjs
   kit: {
     adapter: ["svelte-adapter-firebase", {
         "firebaseJson": "../firebase.json"
@@ -359,7 +359,7 @@ will result in this output:
 public/             <--- Hosting static assets
 firebase.json
 package.json
-svelte.config.js
+svelte.config.cjs
 src/
 	app.html
 	routes/
@@ -372,7 +372,7 @@ functions/
 If you wish to customise this output dir, then you can specify it in the adapter config:
 
 ```javascript
-// svelte.config.js
+// svelte.config.cjs
   kit: {
     adapter: ["svelte-adapter-firebase", {
         "cloudRunBuildDir": ".special/ssr/output/dir"
@@ -409,7 +409,7 @@ With this `firebase.json` and `functions/` dir in a standard SvelteKit app struc
 ```
 firebase.json ("public": "myApp")
 package.json
-svelte.config.js
+svelte.config.cjs
 src/
 	app.html
 	routes/
@@ -431,7 +431,7 @@ Because we use the above method to determine the output dir the server assets ar
 ```
 firebase.json ("public": "myApp")
 package.json
-svelte.config.js
+svelte.config.cjs
 src/
 	app.html
 	routes/
@@ -455,7 +455,7 @@ In a multi-site setup, the `site` name from hosting config in `firebase.json` is
 ```
 firebase.json ("site": "myCoolSite","public": "myApp")
 package.json
-svelte.config.js
+svelte.config.cjs
 src/
 	app.html
 	routes/
@@ -486,7 +486,7 @@ A [`firebase.json.hosting.predeploy`](https://firebase.google.com/docs/cli#hooks
 ```
 firebase.json ("site": "myCoolSite","public": "myApp")
 package.json
-svelte.config.js
+svelte.config.cjs
 src/
 	app.html
 	routes/
@@ -529,7 +529,7 @@ will result in this output:
 .mySiteSSR/         <--- This contains the Cloud Run service code
 firebase.json
 package.json
-svelte.config.js
+svelte.config.cjs
 src/
 	app.html
 	routes/
