@@ -587,17 +587,17 @@ We are open to discussion on this topic, but it was not a goal when setting out 
 
 See [non-goals](#non-goals) _Write Cloud Function code directly into `.js` file instead of printing in console._
 
+> Firebase libs in SvelteKit routes
+
+This adapter does not try to solve the issue of using Firebase libraries in SvelteKit routes. These routes are compiled by the SvelteKit pipeline and there are many issues as ESM support in Firebase libs is not released and won't be for a long time.
+
+Using Firebase libs in SvelteKit `endpoints`/`routes` may have been resolved with https://github.com/sveltejs/kit/pull/490, however this does not mean the output is compatible with the Cloud Function runtime (investigation pending) and therefore compatible with `svelte-adapter-firebase`. Our recommendation is to prefer using Firebase Cloud Functions for API routes over SvelteKit routes.
+
 ## Caveats
 
 - [Firebase Hosting Preview Channels](https://firebase.google.com/docs/hosting/test-preview-deploy) currently lacks first-party support for SSR applications. This adapter doesn't attempt to remedy this issue and doesn't produce a different SSR Function/Run for preview channel deployments.
 - :warning: while you can specify the region for both, Cloud Run in `firebase.json` and Cloud Functions in `runWith({})` config, **`us-central1` is the only valid region for Firebase Hosting rewrites**, other regions will error. The official warning about this can be found in [these docs](https://firebase.google.com/docs/hosting/functions).
 - `1.0.0` will not be published until the SvelteKit Adapter API is declared stable and SvelteKit is released for general use.
-
-### Firebase libs in SvelteKit routes
-
-This adapter does not try to solve the issue of using Firebase libraries in SvelteKit routes. These routes are compiled by the SvelteKit pipeline and there are many issues as ESM support in Firebase libs is not released and won't be for a long time.
-
-Using Firebase libs in SvelteKit `endpoints`/`routes` may have been resolved with https://github.com/sveltejs/kit/pull/490, however this does not mean the output is compatible with the Cloud Function runtime (investigation pending) and therefore compatible with `svelte-adapter-firebase`. Still prefer using Firebase Cloud Functions for API routes over SvelteKit routes.
 
 ## Contributing
 
