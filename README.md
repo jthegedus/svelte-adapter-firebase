@@ -562,10 +562,29 @@ The container is Googles hardend Ubuntu with Node.js 14 as the runtime.
 
 For those interested, this build & deploy command uses [Cloud Build](https://cloud.google.com/cloud-build), [Buildpacks](https://cloud.google.com/blog/products/containers-kubernetes/google-cloud-now-supports-buildpacks) and the [Functions Framework](https://github.com/GoogleCloudPlatform/functions-framework-nodejs).
 
+## Non-goals
+
+> Write Cloud Function code directly into `.js` file instead of printing in console.
+
+Firebase Cloud Functions have a long history of people configuring their index files completely differently, some even generating them from directories. Accommodating these would be a headache. Instead, all we look for is a match against this string, `${name} =`, where `name` is your Cloud Functions name. We may make this configurable to a specific file in future.
+
+Additionally, this allows for users to customise their Firebase Cloud Function API like `runWith()` options for memory/CPU and VPC/Ingress/Egress configuration settings, without complex support for options in the adapter. This keeps the Function config where it should, close to the executing code.
+
+> Handle the deployment of the app to Firebase.
+
+Firebase apps consist of many different services with the CLI providing optional deployments. We do not want to dictate full deployments with your frontend nor perform partial deployments if it does not fit your app. The only option then is to leave it to you :tada:
+
+> Custom Docker images
+
+We support Cloud Run with the same JS code as Cloud Functions, via the NodeJS [Functions Framework](https://github.com/GoogleCloudPlatform/functions-framework-nodejs) and reliance on the [Node14 Buildpacks](https://github.com/GoogleCloudPlatform/buildpacks/tree/main/builders/gcf/nodejs14), which is what essentially powers Cloud Functions. Diverging from this would make supporting Cloud Run more difficult. The idea behind the support is to allow usage of Cloud Run features, for example, [`min_instances`](https://cloud.google.com/run/docs/configuring/min-instances) and [concurrent requests](https://cloud.google.com/run/docs/about-concurrency) which both reduce cold starts (if that matters to you, use the CDN!)
+
+We are open to discussion on this topic, but it was not a goal when setting out to build this adapter (consider the cost/benefit).
+
 ## FAQ
 
-- Q: Why is the Cloud Function code output to the terminal for me to add manually instead of being written to `functions/index.js`?
-  - A: This method allow the user to consume other aspects of the Firebase Cloud Function API like `runWith()` options for memory/CPU and VPC/Ingress/Egress configuration settings, without complex support for options in the adapter. This keeps the Function config where it should, close to the executing code.
+> Why is the Cloud Function code output to the terminal for me to add manually instead of being written to `functions/index.js`?
+
+See [non-goals](#non-goals) _Write Cloud Function code directly into `.js` file instead of printing in console._
 
 ## Caveats
 
