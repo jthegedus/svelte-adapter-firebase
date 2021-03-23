@@ -31,6 +31,7 @@
     - [Cloud Function Caveats](#cloud-function-caveats)
   - [Cloud Run](#cloud-run)
     - [Cloud Run Deployment](#cloud-run-deployment)
+- [Non-Goals](#non-goals)
 - [FAQ](#faq)
 - [Caveats](#caveats)
   - [Firebase libs in SvelteKit routes](#firebase-libs-in-sveltekit-routes)
