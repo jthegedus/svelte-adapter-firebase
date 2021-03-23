@@ -17,7 +17,7 @@
 :heavy_check_mark: Local production testing with [Firebase Emulator](https://firebase.google.com/docs/emulator-suite)</br>
 :heavy_check_mark: [Multiple Hosting Sites](https://firebase.google.com/docs/hosting/multisites#add_additional_sites)</br>
 
-> Utilise the Firebase Hosting CDN with dynamic content served by SvelteKit from either Cloud Functions or Cloud Run!
+> Utilise the Firebase Hosting CDN with dynamic content served by SvelteKit on Cloud Functions or Cloud Run!
 
 </div>
 
