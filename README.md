@@ -77,7 +77,7 @@ Adapter options:
   - used to lookup the rewrite rule used for SSR
   - default: `**`
 - `firebaseJson`
-  - path to your `firebase.json`, relative from where `svelte adapt` is called
+  - path to your `firebase.json`, relative from where `svelte build` is called
   - default: `./firebase.json`
 - `cloudRunBuildDir`
   - output dir of Cloud Run service, relative from your svelte app
@@ -301,12 +301,12 @@ If the rewrite `source` pattern is not `**`, then `svelte.config.js` `sourceRewr
 <details>
 <summary><code>firebaseJson</code></summary>
 
-If the `firebase.json` file is not within the directory to which you will run `svelte adapt`, then you can set a relative path in `svelte.config.js`:
+If the `firebase.json` file is not in the directory you run `svelte build`, then you can set a relative path in `svelte.config.js`:
 
 ```
 .gitignore
 firebase.json
-app/                    <-- svelte adapt run in this dir
+app/                    <-- svelte build run in this dir
 	package.json
 	svelte.config.js
 	src/
@@ -333,7 +333,7 @@ functions/
 <details>
 <summary><code>cloudRunBuildDir</code></summary>
 
-By default, a Node.js Cloud Run service is output to the directory named after the `run.serviceId` prefixed with a `.` relative to the dir in which `svelte adapt` was executed. IE: `./.${run.serviceId}`. So with this config:
+By default, a Node.js Cloud Run service is output to the directory named after the `run.serviceId` prefixed with a `.` relative to the dir in which `svelte build` was executed. IE: `./.${run.serviceId}`. So with this config:
 
 ```json
 // firebase.json
@@ -469,7 +469,7 @@ myApp/				<-- Static assets to go to Firebase Hosting CDN
 
 </details>
 
-The final piece is to write the actual Cloud Function source code to reference the output server assets. The code is printed during `svelte adapt` and should be placed in your `index.js` or `index.ts` manually.
+The final piece is to write the actual Cloud Function source code to reference the output server assets. The code is printed during `svelte build` and should be placed in your `index.js` or `index.ts` manually.
 
 This is a flexible solution that allows integrating with other Cloud Functions in your project. You can edit the provided code as you see fit. The import/require of the generated code will not change unless you change the `firebase.json.hosting.site` or `package.json.main` fields, so you shouldn't need to update this code after adding it.
 
@@ -477,9 +477,9 @@ Additionally, the current SvelteKit server output requires the dep `@sveltejs/ap
 
 #### Cloud Function Deployment
 
-After `svelte adapt` and updating your Cloud Functions with the printed code you should be able to perform a normal `firebase deploy` to deploy your app.
+After `svelte build` and updating your Cloud Functions with the printed code you should be able to perform a normal `firebase deploy` to deploy your app.
 
-A [`firebase.json.hosting.predeploy`](https://firebase.google.com/docs/cli#hooks) script to perform `svelte-kit build && svelte-kit adapt` would ensure you always get the latest code for your server output before deployment.
+A [`firebase.json.hosting.predeploy`](https://firebase.google.com/docs/cli#hooks) script to perform `svelte-kit build` would ensure you always get the latest code for your server output before deployment.
 
 #### Cloud Function Caveats
 
