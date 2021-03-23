@@ -26,17 +26,19 @@
 - [Details](#details)
   - [`firebase.json` Configurations](#firebasejson-configurations)
   - [Adapter Configurations](#adapter-configurations)
-  - [Cloud Function](#cloud-function)
-    - [Cloud Function Deployment](#cloud-function-deployment)
-    - [Cloud Function Caveats](#cloud-function-caveats)
-  - [Cloud Run](#cloud-run)
-    - [Cloud Run Deployment](#cloud-run-deployment)
+- [Cloud Function](#cloud-function)
+  - [Deployment](#cloud-function-deployment)
+  - [Firebase Emulator local Testing](#cloud-function-firebase-emulator-local-testing)
+  - [Caveats](#cloud-function-caveats)
+- [Cloud Run](#cloud-run)
+  - [Deployment](#cloud-run-deployment)
+  - [Local Testing](#cloud-run-local-testing)
+  - [Caveats](#cloud-run-caveats)
+- [Function vs Run](#function-vs-run)
 - [Non-Goals](#non-goals)
 - [FAQ](#faq)
 - [Caveats](#caveats)
-  - [Firebase libs in SvelteKit routes](#firebase-libs-in-sveltekit-routes)
 - [Contributing](#contributing)
-  - [todo](#todo)
 
 ## Quickstart
 
@@ -393,7 +395,7 @@ module.exports = {
 
 </details>
 
-### Cloud Function
+## Cloud Function
 
 With this `firebase.json` and `functions/` dir in a standard SvelteKit app structure and default `svelte-adapter-firebase` config:
 
@@ -485,13 +487,11 @@ This is a flexible solution that allows integrating with other Cloud Functions i
 
 Additionally, the current SvelteKit server output requires the dep `@sveltejs/app-utils`, so ensure to add this to your Cloud Functions as well.
 
-#### Cloud Function Deployment
+### Cloud Function Deployment
 
-After `svelte build` and updating your Cloud Functions with the printed code you should be able to perform a normal `firebase deploy` to deploy your app.
+TODO
 
-A [`firebase.json.hosting.predeploy`](https://firebase.google.com/docs/cli#hooks) script to perform `svelte-kit build` would ensure you always get the latest code for your server output before deployment.
-
-#### Cloud Function Caveats
+### Cloud Function Caveats
 
 ```
 firebase.json ("site": "myCoolSite","public": "myApp")
@@ -512,7 +512,7 @@ As `package.json` gains dependencies for your Svelte app you may need to copy so
 
 This is a core reason for recommending Cloud Run for SSR as it's built & deployed separately from the rest of your Cloud Functions. This isolation enables dependency syncing etc.
 
-### Cloud Run
+## Cloud Run
 
 With this `firebase.json` a standard SvelteKit app structure and default `svelte-adapter-firebase` config:
 
@@ -553,13 +553,25 @@ An SSR Cloud Run service is much more simple to manage than an SSR Cloud Functio
 
 See the [official Hosting/Cloud Run docs here](https://firebase.google.com/docs/hosting/cloud-run) for more setup information (enabling required APIs etc).
 
-#### Cloud Run Deployment
+### Cloud Run Local Testing
+
+_Cloud Run cannot be tested locally with the Firebase Emulator. Though you can build and run it locally with `gcloud` cli - https://cloud.google.com/run/docs/testing/local#cloud-sdk_
+
+### Cloud Run Deployment
 
 `gcloud` CLI is required to build & deploy Cloud Run services. The specific command required to build & deploy the Cloud Run service will be output when the adapter is run. (I am not listing the command here as it will differ depending on your `serviceId`, output dir etc, but the adapter will output it :+1:)
 
 The container is Googles hardend Ubuntu with Node.js 14 as the runtime.
 
 For those interested, this build & deploy command uses [Cloud Build](https://cloud.google.com/cloud-build), [Buildpacks](https://cloud.google.com/blog/products/containers-kubernetes/google-cloud-now-supports-buildpacks) and the [Functions Framework](https://github.com/GoogleCloudPlatform/functions-framework-nodejs).
+
+### Cloud Run Caveats
+
+TODO
+
+## Function vs Run
+
+TODO
 
 ## Non-goals
 
