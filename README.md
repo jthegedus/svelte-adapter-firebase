@@ -491,7 +491,7 @@ Test your production build locally before pushing to git or deploying!
 
 - build your app: `svelte-kit build`
 - install Function dependencies: `pnpm install --prefix functions`
-- start the emulator: `firebase emulators:start
+- start the emulator: `firebase emulators:start`
 
 ### Cloud Function Deployment
 
