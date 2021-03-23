@@ -566,7 +566,7 @@ Notably, this command **builds** and **deploys** your container, which is tradit
 
 This deploy command uses [Cloud Build](https://cloud.google.com/cloud-build) and the aforementioned [Buildpacks](https://cloud.google.com/blog/products/containers-kubernetes/google-cloud-now-supports-buildpacks) and [Functions Framework](https://github.com/GoogleCloudPlatform/functions-framework-nodejs).
 
-:warning: Each build of your app will require both `firebase deploy --only hosting` alongside your Cloud Run deployment
+:warning: Each build of your app will require `firebase deploy --only hosting` alongside your Cloud Run deployment as your CDN content will need to be updated as the filename hashes of static resources is rewritten on each `svelte-kit build`
 
 ### Cloud Run Caveats
 
@@ -574,7 +574,15 @@ This deploy command uses [Cloud Build](https://cloud.google.com/cloud-build) and
 
 ## Function vs Run
 
-TODO
+Choice is a good thing, hopefully this comparison table helps you decide which compute environment is best for your application:
+
+| Feature                                             | Functions          | Run                |
+| --------------------------------------------------- | ------------------ | ------------------ |
+| Firebase Emulator Integration                       | :heavy_check_mark: | :x:                |
+| Hosting CDN content deployed with Compute resources | :heavy_check_mark: | :x:                |
+| Cold start mitigations                              | :x:                | :heavy_check_mark: |
+
+Cloud Functions seems do be a better default.
 
 ## Non-goals
 
