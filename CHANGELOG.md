@@ -1,3 +1,10 @@
+## [0.5.2](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.5.1...v0.5.2) (2021-04-28)
+
+
+### Bug Fixes
+
+* use searchParams in handler.js ([#35](https://github.com/jthegedus/svelte-adapter-firebase/issues/35)) ([b2911a0](https://github.com/jthegedus/svelte-adapter-firebase/commit/b2911a0e713f7da0371ebb8791dbbefb9875096b))
+
 ## [0.5.1](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.5.0...v0.5.1) (2021-03-22)
 
 
