@@ -62,14 +62,7 @@ function adaptToCloudFunctions({utils, name, source}) {
 	const serverOutputDir = path.join(source, path.dirname(functionsMain), ssrDirname);
 
 	utils.log.minor(`Writing Cloud Function server assets to: ${serverOutputDir}`);
-	utils.rimraf(serverOutputDir);
-	utils.copy_server_files(serverOutputDir);
-
-	// Prepare handler & entrypoint
-	renameSync(path.join(serverOutputDir, 'app.js'), path.join(serverOutputDir, 'app.mjs'));
-	copyFileSync(path.join(__dirname, 'files', 'index.js'), path.join(serverOutputDir, 'index.js'));
-	copyFileSync(path.join(__dirname, 'files', 'handler.mjs'), path.join(serverOutputDir, 'handler.mjs'));
-	copyFileSync(path.join(__dirname, 'files', 'handler.mjs.map'), path.join(serverOutputDir, 'handler.mjs.map'));
+	prepareEntrypoint({utils, serverOutputDir});
 
 	// Prepare Cloud Function
 	const functionsEntrypoint = path.join(source, functionsMain);
@@ -110,14 +103,7 @@ function adaptToCloudRun({utils, serviceId, region, cloudRunBuildDir}) {
 	const serverOutputDir = path.join(cloudRunBuildDir || `.${serviceId}`);
 
 	utils.log.info(`Writing Cloud Run service to ./${serverOutputDir}`);
-	utils.rimraf(serverOutputDir);
-	utils.copy_server_files(serverOutputDir);
-
-	// Prepare handler & entrypoint
-	renameSync(path.join(serverOutputDir, 'app.js'), path.join(serverOutputDir, 'app.mjs'));
-	copyFileSync(path.join(__dirname, 'files', 'index.js'), path.join(serverOutputDir, 'index.js'));
-	copyFileSync(path.join(__dirname, 'files', 'handler.mjs'), path.join(serverOutputDir, 'handler.mjs'));
-	copyFileSync(path.join(__dirname, 'files', 'handler.mjs.map'), path.join(serverOutputDir, 'handler.mjs.map'));
+	prepareEntrypoint({utils, serverOutputDir});
 
 	// Prepare Cloud Run package.json - read SvelteKit App 'package.json', modify the JSON, write to serverOutputDir
 	const pkgjson = JSON.parse(readFileSync('package.json', 'utf-8'));
@@ -141,4 +127,22 @@ function adaptToCloudRun({utils, serviceId, region, cloudRunBuildDir}) {
 gcloud beta run deploy ${serviceId} --platform managed --region ${region} --source ${serverOutputDir} --allow-unauthenticated
 +--------------------------------------------------+`
 	);
+}
+
+/**
+ *
+ * @param {{
+ * 	utils: import('@sveltejs/kit').AdapterUtils,
+ * 	serverOutputDir: string;
+ * }} param
+ */
+function prepareEntrypoint({utils, serverOutputDir}) {
+	utils.rimraf(serverOutputDir);
+	utils.copy_server_files(serverOutputDir);
+
+	// Prepare handler & entrypoint
+	renameSync(path.join(serverOutputDir, 'app.js'), path.join(serverOutputDir, 'app.mjs'));
+	copyFileSync(path.join(__dirname, 'files', 'index.js'), path.join(serverOutputDir, 'index.js'));
+	copyFileSync(path.join(__dirname, 'files', 'handler.mjs'), path.join(serverOutputDir, 'handler.mjs'));
+	copyFileSync(path.join(__dirname, 'files', 'handler.mjs.map'), path.join(serverOutputDir, 'handler.mjs.map'));
 }
