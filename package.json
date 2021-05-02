@@ -21,7 +21,7 @@
     "serverless",
     "ssr"
   ],
-  "version": "0.5.1",
+  "version": "0.5.2",
   "main": "dist/cli.js",
   "types": "index.d.ts",
   "files": [
