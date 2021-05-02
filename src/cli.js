@@ -19,23 +19,23 @@ module.exports = function ({
 	/** @type {import('@sveltejs/kit').Adapter} */
 	const adapter = {
 		name: 'svelte-adapter-firebase',
-		async adapt(builder) {
+		async adapt(utils) {
 			const {functions, cloudRun, publicDir} = parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJson});
 
 			if (functions !== false) {
-				adaptToCloudFunctions({builder, ...functions});
+				adaptToCloudFunctions({utils, ...functions});
 			}
 
 			if (cloudRun !== false) {
-				adaptToCloudRun({builder, ...cloudRun, cloudRunBuildDir});
+				adaptToCloudRun({utils, ...cloudRun, cloudRunBuildDir});
 			}
 
-			builder.log.info(`Writing client application to ${publicDir}`);
-			builder.copy_static_files(publicDir);
-			builder.copy_client_files(publicDir);
+			utils.log.info(`Writing client application to ${publicDir}`);
+			utils.copy_static_files(publicDir);
+			utils.copy_client_files(publicDir);
 
-			builder.log.info(`Prerendering static pages to ${publicDir}`);
-			await builder.prerender({dest: publicDir});
+			utils.log.info(`Prerendering static pages to ${publicDir}`);
+			await utils.prerender({dest: publicDir});
 		}
 	};
 
@@ -45,12 +45,12 @@ module.exports = function ({
 /**
  *
  * @param {{
- * 	builder: any;
+ * 	utils: import('@sveltejs/kit').AdapterUtils,
  * 	name: string;
  * 	source: string;
  * }} param
  */
-function adaptToCloudFunctions({builder, name, source}) {
+function adaptToCloudFunctions({utils, name, source}) {
 	const functionsPackageJson = JSON.parse(readFileSync(path.join(source, 'package.json'), 'utf-8'));
 	const functionsMain = functionsPackageJson?.main;
 	if (!functionsMain) {
@@ -60,8 +60,8 @@ function adaptToCloudFunctions({builder, name, source}) {
 	const ssrDirname = name ?? 'svelteKit';
 	const serverOutputDir = path.join(source, path.dirname(functionsMain), ssrDirname);
 
-	builder.log.minor(`Writing Cloud Function server assets to ${serverOutputDir}`);
-	builder.copy_server_files(serverOutputDir);
+	utils.log.minor(`Writing Cloud Function server assets to ${serverOutputDir}`);
+	utils.copy_server_files(serverOutputDir);
 
 	// Prepare handler & entrypoint
 	renameSync(path.join(serverOutputDir, 'app.js'), path.join(serverOutputDir, 'app.mjs'));
@@ -74,7 +74,7 @@ function adaptToCloudFunctions({builder, name, source}) {
 	try {
 		const ssrSvelteFunctionName = ssrDirname.replace(/\W/g, '').concat('Server');
 		if (!readFileSync(functionsEntrypoint, 'utf-8').includes(`${name} =`)) {
-			builder.log.warn(
+			utils.log.warn(
 				// eslint-disable-next-line indent
 `Add the following Cloud Function to ${functionsEntrypoint}
 +--------------------------------------------------+
@@ -98,17 +98,17 @@ exports.${name} = functions.https.onRequest(async (request, response) => {
 /**
  *
  * @param {{
- * 	builder: any;
+ * 	utils: import('@sveltejs/kit').AdapterUtils,
  * 	serviceId: string;
  * 	region: string;
  * 	cloudRunBuildDir: string|undefined
  * }} param
  */
-function adaptToCloudRun({builder, serviceId, region, cloudRunBuildDir}) {
+function adaptToCloudRun({utils, serviceId, region, cloudRunBuildDir}) {
 	const serverOutputDir = path.join(cloudRunBuildDir || `.${serviceId}`);
 
-	builder.log.info(`Writing Cloud Run service to ./${serverOutputDir}`);
-	builder.copy_server_files(serverOutputDir);
+	utils.log.info(`Writing Cloud Run service to ./${serverOutputDir}`);
+	utils.copy_server_files(serverOutputDir);
 
 	// Prepare handler & entrypoint
 	renameSync(path.join(serverOutputDir, 'app.js'), path.join(serverOutputDir, 'app.mjs'));
@@ -131,7 +131,7 @@ function adaptToCloudRun({builder, serviceId, region, cloudRunBuildDir}) {
 	copyFileIfExistsSync('yarn.lock', serverOutputDir);
 	copyFileIfExistsSync('pnpm-lock.yaml', serverOutputDir);
 
-	builder.log.warn(
+	utils.log.warn(
 		// eslint-disable-next-line indent
 `To deploy your Cloud Run service, run this command:
 +--------------------------------------------------+
