@@ -30,11 +30,11 @@ module.exports = function ({
 				adaptToCloudRun({utils, ...cloudRun, cloudRunBuildDir});
 			}
 
-			utils.log.info(`Writing client application to ${publicDir}`);
+			utils.log.minor(`Writing client application to ${publicDir}`);
 			utils.copy_static_files(publicDir);
 			utils.copy_client_files(publicDir);
 
-			utils.log.info(`Prerendering static pages to ${publicDir}`);
+			utils.log.minor(`Prerendering static pages to ${publicDir}`);
 			await utils.prerender({dest: publicDir});
 		}
 	};
@@ -61,6 +61,7 @@ function adaptToCloudFunctions({utils, name, source}) {
 	const serverOutputDir = path.join(source, path.dirname(functionsMain), ssrDirname);
 
 	utils.log.minor(`Writing Cloud Function server assets to ${serverOutputDir}`);
+	utils.rimraf(serverOutputDir);
 	utils.copy_server_files(serverOutputDir);
 
 	// Prepare handler & entrypoint
@@ -107,7 +108,8 @@ exports.${name} = functions.https.onRequest(async (request, response) => {
 function adaptToCloudRun({utils, serviceId, region, cloudRunBuildDir}) {
 	const serverOutputDir = path.join(cloudRunBuildDir || `.${serviceId}`);
 
-	utils.log.info(`Writing Cloud Run service to ./${serverOutputDir}`);
+	utils.log.minor(`Writing Cloud Run service to ./${serverOutputDir}`);
+	utils.rimraf(serverOutputDir);
 	utils.copy_server_files(serverOutputDir);
 
 	// Prepare handler & entrypoint
