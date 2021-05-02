@@ -1,19 +1,19 @@
-import {URL, URLSearchParams} from 'url';
-import {get_body as getBody} from '@sveltejs/app-utils/http'; // eslint-disable-line node/file-extension-in-import
+import {URL} from 'url';
+import {getRawBody} from '@sveltejs/kit/http';
+import '@sveltejs/kit/install-fetch'; // eslint-disable-line import/no-unassigned-import
 
 const svelteKit = async (request, response) => {
 	const host = `${request.headers['x-forwarded-proto']}://${request.headers.host}`;
-	const {pathname, query = ''} = new URL(request.url || '', host);
+	const {pathname, searchParams: searchParameters = ''} = new URL(request.url || '', host);
 
 	const {render} = await import('./app.mjs');
 
 	const rendered = await render({
-		host: null,
 		method: request.method,
 		headers: request.headers,
 		path: pathname,
-		query: new URLSearchParams(query),
-		body: await getBody(request)
+		query: searchParameters,
+		body: await getRawBody(request)
 	});
 
 	if (rendered) {
