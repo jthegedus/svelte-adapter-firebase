@@ -23,8 +23,10 @@
   ],
   "version": "0.5.1",
   "main": "dist/cli.js",
+  "types": "index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "index.d.ts"
   ],
   "dependencies": {
     "@sveltejs/kit": "^1.0.0-next.91"
