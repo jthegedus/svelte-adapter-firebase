@@ -7,7 +7,7 @@ specifiers:
   '@rollup/plugin-node-resolve': ^11.2.0
   '@semantic-release/changelog': ^5.0.1
   '@semantic-release/git': ^9.0.0
-  '@sveltejs/kit': ^1.0.0-next.91
+  '@sveltejs/kit': 1.0.0-next.95
   '@types/node': ^14.14.35
   ava: ^3.15.0
   husky: ^5.0.8
@@ -18,7 +18,7 @@ specifiers:
   xo: ^0.38.2
 
 dependencies:
-  '@sveltejs/kit': 1.0.0-next.91_rollup@2.41.2
+  '@sveltejs/kit': 1.0.0-next.95_rollup@2.41.2
 
 devDependencies:
   '@commitlint/cli': 11.0.0
@@ -732,15 +732,15 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /@sveltejs/kit/1.0.0-next.91_rollup@2.41.2:
-    resolution: {integrity: sha512-o2wjAnCMhpDNedyczQWwVQMRYRFhobTXQzBLpSentZXJjmImcdjI6InYXBe8wkilrpqHWxBqyc3VmbtBqXmxAA==}
+  /@sveltejs/kit/1.0.0-next.95_rollup@2.41.2:
+    resolution: {integrity: sha512-J5RFS3k88Hz/XB/UoZBx2Rd4zUMipPgAKUMCRdXSstzlFJ3Cdw1Ix76sSvWuNwVHVxrOdHV5e1u5trhVAuU6Bw==}
     engines: {node: '>= 12.17.0'}
     hasBin: true
     peerDependencies:
-      svelte: ^3.32.1
+      svelte: ^3.34.0
       vite: ^2.2.3
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 1.0.0-next.8_rollup@2.41.2
+      '@sveltejs/vite-plugin-svelte': 1.0.0-next.9_rollup@2.41.2
       cheap-watch: 1.0.3
       sade: 1.7.4
     transitivePeerDependencies:
@@ -748,8 +748,8 @@ packages:
       - supports-color
     dev: false
 
-  /@sveltejs/vite-plugin-svelte/1.0.0-next.8_rollup@2.41.2:
-    resolution: {integrity: sha512-aHhfHa0ma9e/H+yv5NA3ie0lRy5duwnUA5fNlGzvxlGMW7DPno+UffbMPZ/HQo3J3Oh7BdC/IDwSwvgucJHPkw==}
+  /@sveltejs/vite-plugin-svelte/1.0.0-next.9_rollup@2.41.2:
+    resolution: {integrity: sha512-ySB/GJsZV3h3jqjq5WIiaxVFkJK6vqtG9gS7Iw6SfUH9ZiFNw5JjQF69g68j9cNep3q4yRIYiG5/pI3YIdXEuA==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       svelte: ^3.37.0
