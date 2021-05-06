@@ -48,6 +48,7 @@
     "xo": "^0.38.2"
   },
   "scripts": {
+    "preinstall": "npx -y only-allow pnpm",
     "prepare": "husky install",
     "fix": "xo --fix",
     "test": "xo && ava"
