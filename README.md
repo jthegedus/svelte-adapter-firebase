@@ -102,7 +102,7 @@ Adapter options:
   - path to your `firebase.json`, relative from where `svelte build` is called
   - default: `./firebase.json`
 - `cloudRunBuildDir`
-  - output dir of Cloud Run service, relative from your svelte app
+  - output dir of Cloud Run service, relative from the `firebaseJson` location
   - default: `./.${run.serviceId}` where `run.serviceId` is pulled from the `firebase.json` rewrite rule
 
 ## Details
