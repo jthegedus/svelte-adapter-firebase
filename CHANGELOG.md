@@ -1,3 +1,10 @@
+## [0.6.1](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.6.0...v0.6.1) (2021-05-06)
+
+
+### Bug Fixes
+
+* handle empty deps when cloud run target ([#41](https://github.com/jthegedus/svelte-adapter-firebase/issues/41)) ([b7719bd](https://github.com/jthegedus/svelte-adapter-firebase/commit/b7719bd486de71ceccdc57c5703de49cdb3f9f77))
+
 # [0.6.0](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.5.2...v0.6.0) (2021-05-06)
 
 
