@@ -116,7 +116,7 @@ async function adaptToCloudRun({utils, serviceId, region, cloudRunBuildDir}) {
 		pkgjson.dependencies = {};
 	}
 
-	pkgjson.dependencies['@google-cloud/functions-framework'] = '^1.7.1'; // Peer-dep of this adapter instead?
+	pkgjson.dependencies['@google-cloud/functions-framework'] = '^1.7.1';
 	pkgjson.engines = {node: '14'};
 	delete pkgjson.type;
 	const data = JSON.stringify(pkgjson, null, 2);
