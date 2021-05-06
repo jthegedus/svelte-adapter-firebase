@@ -84,7 +84,7 @@ In your standard SvelteKit project:
 - `npm run build`
 - Follow further instructions output by the adapter to prepare for deployment.
 
-This adapter reads your `firebase.json` to determine if the Firebase Hosting site is using Cloud Functions or Cloud Run and outputs the server pieces accordingly. Static assets are output to the `public` directory for the Hosting site config.
+This adapter reads `firebase.json` to determine if the Firebase Hosting site is using Cloud Functions or Cloud Run and outputs the server pieces accordingly. Static assets are output to the directory for the Hosting site field `public` configured in `firebase.json`.
 
 Please read the docs carefully!
 
