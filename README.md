@@ -53,11 +53,11 @@ Since SvelteKit is still in Beta, and the Adapter API is _most_ in flux, here is
 | `0.4.x`         | `1.0.0-next.46`   |
 | `0.3.x`         | `1.0.0-next.27`   |
 
-**Note**: only the versions listed have been tested together, if others happen to work, it is just coincidence.
+**Note**: only the versions listed have been tested together, if others happen to work, it is just coincidence. This is beta software after all.
 
 In your standard SvelteKit project:
 
-- `npm i -D svelte-adapter-firebase`
+- `npm install --save-dev svelte-adapter-firebase`
 - add adapter to `svelte.config.js`:
 
   ```js
@@ -71,6 +71,15 @@ In your standard SvelteKit project:
     },
   };
   ```
+
+- in `package.json` remove Firebase Hosting public directory before `svelte-kit build` to work around https://github.com/sveltejs/kit/issues/587
+
+```json
+	"scripts": {
+		"dev": "svelte-kit dev",
+		"build": "npx -y rimraf <dir used in firebase.json.hosting.public> && svelte-kit build --verbose",
+		...
+```
 
 - `npm run build`
 - Follow further instructions output by the adapter to prepare for deployment.
