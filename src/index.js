@@ -32,7 +32,6 @@ const entrypoint = function ({
 				await adaptToCloudRun({utils, ...cloudRun, firebaseJsonDir, cloudRunBuildDir});
 			}
 
-			utils.log.info(`Clearing dirs for new build: ${publicDir}`);
 			utils.rimraf(publicDir);
 
 			utils.log.minor(`Prerendering static pages to: ${publicDir}`);
@@ -150,17 +149,13 @@ async function prepareEntrypoint({utils, serverOutputDir}) {
 	// TODO: SvelteKit may add utils.tmpdir() which would replace this hardcoded path
 	const temporaryDir = path.join('.svelte-kit', 'firebase');
 
-	utils.log.info(`Clearing dirs for new build: ${temporaryDir}`);
 	utils.rimraf(temporaryDir);
-	utils.log.info(`Clearing dirs for new build: ${serverOutputDir}`);
 	utils.rimraf(serverOutputDir);
 
 	const handlerSource = path.join(fileURLToPath(new URL('./files', import.meta.url)), 'handler.js');
 	const handlerDest = path.join(temporaryDir, 'handler.js');
-	utils.log.info(`Copying adapter handler to ${handlerDest}`);
 	utils.copy(handlerSource, handlerDest);
 
-	utils.log.info('Compiling handler.js with SvelteKit server via esbuild');
 	await esbuild.build({
 		entryPoints: [path.join(temporaryDir, 'handler.js')],
 		outfile: path.join(serverOutputDir, 'index.js'),
