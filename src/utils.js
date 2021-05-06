@@ -1,5 +1,5 @@
-const {copyFileSync, existsSync, readFileSync} = require('fs');
-const path = require('path');
+import {copyFileSync, existsSync, readFileSync} from 'fs';
+import path from 'path';
 
 /**
  *
@@ -148,7 +148,7 @@ function copyFileIfExistsSync(filename, destDir) {
 	}
 }
 
-module.exports = {
+export {
 	parseFirebaseConfiguration,
 	validCloudRunServiceId,
 	validCloudFunctionName,

@@ -1,7 +1,8 @@
-const {readFileSync, writeFileSync} = require('fs');
-const path = require('path');
-const {copyFileIfExistsSync, parseFirebaseConfiguration} = require('./utils.js');
-const esbuild = require('esbuild');
+import {readFileSync, writeFileSync} from 'fs';
+import path from 'path';
+import {fileURLToPath} from 'url';
+import {copyFileIfExistsSync, parseFirebaseConfiguration} from './utils.js';
+import esbuild from 'esbuild';
 
 /**
  * @param {{
@@ -11,7 +12,7 @@ const esbuild = require('esbuild');
  * 	cloudRunBuildDir?: string
  * }} options
  */
-module.exports = function ({
+const entrypoint = function ({
 	firebaseJson = 'firebase.json',
 	hostingSite = undefined,
 	sourceRewriteMatch = '**',
@@ -141,14 +142,14 @@ gcloud beta run deploy ${serviceId} --platform managed --region ${region} --sour
  */
 async function prepareEntrypoint({utils, serverOutputDir}) {
 	// TODO: SvelteKit may add utils.tmpdir() which would replace this hardcoded path
-	const temporaryDir = path.join('.svelte', 'firebase');
+	const temporaryDir = path.join('.svelte-kit', 'firebase');
 
 	utils.log.info(`Clearing dirs for new build: ${temporaryDir}`);
 	utils.rimraf(temporaryDir);
 	utils.log.info(`Clearing dirs for new build: ${serverOutputDir}`);
 	utils.rimraf(serverOutputDir);
 
-	const handlerSource = path.join(__dirname, 'files', 'handler.js');
+	const handlerSource = path.join(fileURLToPath(new URL('./files', import.meta.url)), 'handler.js');
 	const handlerDest = path.join(temporaryDir, 'handler.js');
 	utils.log.info(`Copying adapter ${handlerSource} to ${handlerDest}`);
 	utils.copy(handlerSource, handlerDest);
@@ -161,3 +162,5 @@ async function prepareEntrypoint({utils, serverOutputDir}) {
 		platform: 'node'
 	});
 }
+
+export default entrypoint;
