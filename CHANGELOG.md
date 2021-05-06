@@ -1,3 +1,15 @@
+# [0.6.0](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.5.2...v0.6.0) (2021-05-06)
+
+
+### Bug Fixes
+
+* remove unused pnpm run build cmd from workflow ([#40](https://github.com/jthegedus/svelte-adapter-firebase/issues/40)) ([e7ab34a](https://github.com/jthegedus/svelte-adapter-firebase/commit/e7ab34a2ac3da094f006e76e2b327cfe0463d547))
+
+
+### Features
+
+* update to kit@next.100, convert to esm ([#39](https://github.com/jthegedus/svelte-adapter-firebase/issues/39)) ([d2f95a1](https://github.com/jthegedus/svelte-adapter-firebase/commit/d2f95a1132abee67b41dce5a9419f132ea3164ce))
+
 ## [0.5.2](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.5.1...v0.5.2) (2021-04-28)
 
 
