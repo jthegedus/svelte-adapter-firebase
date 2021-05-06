@@ -1,19 +1,20 @@
 import {URL} from 'url';
-import {get_body as getBody} from '@sveltejs/app-utils/http'; // eslint-disable-line node/file-extension-in-import
+import {getRawBody} from '@sveltejs/kit/http';
+import '@sveltejs/kit/install-fetch'; // eslint-disable-line import/no-unassigned-import
+
+// TODO: hardcoding the relative location makes this brittle
+import {render} from '../output/server/app.js';
 
 const svelteKit = async (request, response) => {
 	const host = `${request.headers['x-forwarded-proto']}://${request.headers.host}`;
-	const {pathname, searchParams} = new URL(request.url || '', host);
-
-	const {render} = await import('./app.mjs');
+	const {pathname, searchParams: searchParameters = ''} = new URL(request.url || '', host);
 
 	const rendered = await render({
-		host: null,
 		method: request.method,
 		headers: request.headers,
 		path: pathname,
-		query: searchParams,
-		body: await getBody(request)
+		query: searchParameters,
+		body: await getRawBody(request)
 	});
 
 	if (rendered) {

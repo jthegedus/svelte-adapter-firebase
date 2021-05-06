@@ -44,22 +44,42 @@
 
 ## Quickstart
 
+Since SvelteKit is still in Beta, and the Adapter API is _most_ in flux, here is the Adapter to SvelteKit version compatibility:
+
+| Adapter Version | SvelteKit Version |
+| --------------- | ----------------- |
+| `0.6.0`         | `1.0.0-next.100`  |
+| `0.5.x`         | `1.0.0-next.54`   |
+| `0.4.x`         | `1.0.0-next.46`   |
+| `0.3.x`         | `1.0.0-next.27`   |
+
+**Note**: only the versions listed have been tested together, if others happen to work, it is just coincidence. This is beta software after all.
+
 In your standard SvelteKit project:
 
-- `npm i -D svelte-adapter-firebase`
-- add adapter to `svelte.config.cjs`:
+- `npm install --save-dev svelte-adapter-firebase`
+- add adapter to `svelte.config.js`:
 
   ```js
-  const firebaseAdapter = require("svelte-adapter-firebase");
+  import firebaseAdapter from "svelte-adapter-firebase";
 
   /** @type {import('@sveltejs/kit').Config} */
-  module.exports = {
+  export default {
     kit: {
       adapter: firebaseAdapter(),
       target: "#svelte",
     },
   };
   ```
+
+- in `package.json` remove Firebase Hosting public directory before `svelte-kit build` to work around https://github.com/sveltejs/kit/issues/587
+
+```json
+	"scripts": {
+		"dev": "svelte-kit dev",
+		"build": "npx -y rimraf <dir used in firebase.json.hosting.public> && svelte-kit build --verbose",
+		...
+```
 
 - `npm run build`
 - Follow further instructions output by the adapter to prepare for deployment.

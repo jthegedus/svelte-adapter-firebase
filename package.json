@@ -22,37 +22,36 @@
     "ssr"
   ],
   "version": "0.5.2",
-  "main": "dist/cli.js",
+  "type": "module",
+  "exports": {
+    "import": "./src/index.js"
+  },
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
   "files": [
-    "dist"
+    "src"
   ],
   "dependencies": {
-    "@sveltejs/app-utils": "^1.0.0-next.3"
+    "@sveltejs/kit": "1.0.0-next.100",
+    "esbuild": "^0.11.18"
   },
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
-    "@rollup/plugin-commonjs": "^17.1.0",
-    "@rollup/plugin-node-resolve": "^11.2.0",
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/git": "^9.0.0",
-    "@sveltejs/kit": "^1.0.0-next.54",
     "@types/node": "^14.14.35",
     "ava": "^3.15.0",
     "husky": "^5.0.8",
-    "rimraf": "^3.0.2",
-    "rollup": "^2.41.2",
     "semantic-release": "^17.4.0",
     "typescript": "^4.2.3",
     "xo": "^0.38.2"
   },
   "scripts": {
+    "preinstall": "npx -y only-allow pnpm",
     "prepare": "husky install",
     "fix": "xo --fix",
-    "test": "xo && ava",
-    "dev": "rollup -cw",
-    "prebuild": "rimraf dist",
-    "build": "rollup -c"
+    "test": "xo && ava"
   },
   "release": {
     "branches": [
