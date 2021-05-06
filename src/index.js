@@ -84,6 +84,7 @@ exports.${name} = functions.https.onRequest(async (request, response) => {
 		${ssrSvelteFunctionName} = require("./${ssrDirname}/index").default;
 		functions.logger.info("SvelteKit SSR Handler initialised!");
 	}
+	functions.logger.info("Requested resource: " + request.originalUrl);
 	return await ${ssrSvelteFunctionName}(request, response);
 });
 +--------------------------------------------------+`
