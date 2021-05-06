@@ -21,8 +21,6 @@ jobs:
           before_install: bash -c '${ASDF_DATA_DIR:=$HOME/.asdf}/plugins/nodejs/bin/import-release-team-keyring'
       - name: Install dependencies
         run: pnpm install
-      - name: Build svelte-adapter-firebase
-        run: pnpm run build
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
