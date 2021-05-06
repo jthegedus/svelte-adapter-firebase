@@ -48,7 +48,7 @@ Since SvelteKit is still in Beta, and the Adapter API is _most_ in flux, here is
 
 | Adapter Version | SvelteKit Version |
 | --------------- | ----------------- |
-| `0.6.0`         | `1.0.0-next.95`   |
+| `0.6.0`         | `1.0.0-next.100`  |
 | `0.5.x`         | `1.0.0-next.54`   |
 | `0.4.x`         | `1.0.0-next.46`   |
 | `0.3.x`         | `1.0.0-next.27`   |
@@ -58,13 +58,13 @@ Since SvelteKit is still in Beta, and the Adapter API is _most_ in flux, here is
 In your standard SvelteKit project:
 
 - `npm i -D svelte-adapter-firebase`
-- add adapter to `svelte.config.cjs`:
+- add adapter to `svelte.config.js`:
 
   ```js
-  const firebaseAdapter = require("svelte-adapter-firebase");
+  import firebaseAdapter from "svelte-adapter-firebase";
 
   /** @type {import('@sveltejs/kit').Config} */
-  module.exports = {
+  export default {
     kit: {
       adapter: firebaseAdapter(),
       target: "#svelte",

@@ -5,7 +5,7 @@ specifiers:
   '@commitlint/config-conventional': ^11.0.0
   '@semantic-release/changelog': ^5.0.1
   '@semantic-release/git': ^9.0.0
-  '@sveltejs/kit': 1.0.0-next.95
+  '@sveltejs/kit': 1.0.0-next.100
   '@types/node': ^14.14.35
   ava: ^3.15.0
   esbuild: ^0.11.18
@@ -15,7 +15,7 @@ specifiers:
   xo: ^0.38.2
 
 dependencies:
-  '@sveltejs/kit': 1.0.0-next.95
+  '@sveltejs/kit': 1.0.0-next.100
   esbuild: 0.11.18
 
 devDependencies:
@@ -682,8 +682,8 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /@sveltejs/kit/1.0.0-next.95:
-    resolution: {integrity: sha512-J5RFS3k88Hz/XB/UoZBx2Rd4zUMipPgAKUMCRdXSstzlFJ3Cdw1Ix76sSvWuNwVHVxrOdHV5e1u5trhVAuU6Bw==}
+  /@sveltejs/kit/1.0.0-next.100:
+    resolution: {integrity: sha512-r8G6bIlmIUiRS8JA5Hp+AASNWuuMTua64JP4i2fPTWSvqm/+F8+ZetXgtFy+RNabu5lU/Ua5YVEwBU6rgFVpDA==}
     engines: {node: '>= 12.17.0'}
     hasBin: true
     peerDependencies:

@@ -22,13 +22,17 @@
     "ssr"
   ],
   "version": "0.5.2",
+  "type": "module",
+  "exports": {
+    "import": "./src/index.js"
+  },
   "main": "src/index.js",
   "types": "src/index.d.ts",
   "files": [
     "src"
   ],
   "dependencies": {
-    "@sveltejs/kit": "1.0.0-next.95",
+    "@sveltejs/kit": "1.0.0-next.100",
     "esbuild": "^0.11.18"
   },
   "devDependencies": {
