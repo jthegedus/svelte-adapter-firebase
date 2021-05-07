@@ -1,3 +1,10 @@
+## [0.6.3](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.6.2...v0.6.3) (2021-05-07)
+
+
+### Bug Fixes
+
+* allow any node package manager to install ([#46](https://github.com/jthegedus/svelte-adapter-firebase/issues/46)) ([417f167](https://github.com/jthegedus/svelte-adapter-firebase/commit/417f1673fd3561d3cd80d9a23944407a8485fd7f))
+
 ## [0.6.2](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.6.1...v0.6.2) (2021-05-07)
 
 
