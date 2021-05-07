@@ -1,3 +1,10 @@
+## [0.6.2](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.6.1...v0.6.2) (2021-05-07)
+
+
+### Bug Fixes
+
+* treat `firebase.json` as root dir for Firebase resources ([#43](https://github.com/jthegedus/svelte-adapter-firebase/issues/43)) ([82c8493](https://github.com/jthegedus/svelte-adapter-firebase/commit/82c8493403199b82645eed8138fe04e79a108453))
+
 ## [0.6.1](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.6.0...v0.6.1) (2021-05-06)
 
 
