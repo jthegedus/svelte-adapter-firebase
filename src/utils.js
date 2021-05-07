@@ -24,7 +24,7 @@ function isString(parameter) {
  * }}
  */
 function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJson}) {
-	firebaseJson = path.resolve(firebaseJson); // Should this be fileURLToPath for portability???
+	firebaseJson = path.resolve(firebaseJson);
 	if (!existsSync(firebaseJson)) {
 		throw new Error(`File ${firebaseJson} does not exist. The provided file should exist and be a Firebase JSON config.`);
 	}
