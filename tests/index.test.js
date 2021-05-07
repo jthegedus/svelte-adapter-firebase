@@ -1,5 +1,6 @@
 import test from 'ava';
 import {fileURLToPath} from 'url';
+import path from 'path';
 import {parseFirebaseConfiguration, validCloudFunctionName, validCloudRunServiceId} from '../src/utils.js';
 
 // ParseFirebaseConfiguration: Valid configs
@@ -8,7 +9,7 @@ test(
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: fileURLToPath(new URL('./fixtures/successes/cf_site.json', import.meta.url))};
 		const result = parseFirebaseConfiguration(config);
-		const expectedResult = {functions: {name: 'some_func', source: 'functions'}, cloudRun: false, publicDir: 'app'};
+		const expectedResult = {functions: {name: 'some_func', source: path.join(path.dirname(config.firebaseJson), 'functions')}, cloudRun: false, publicDir: path.join(path.dirname(config.firebaseJson), 'app')};
 
 		t.deepEqual(result, expectedResult);
 	}
@@ -19,7 +20,7 @@ test(
 	t => {
 		const config = {hostingSite: 'app', sourceRewriteMatch: '**', firebaseJson: fileURLToPath(new URL('./fixtures/successes/cf_sites.json', import.meta.url))};
 		const result = parseFirebaseConfiguration(config);
-		const expectedResult = {functions: {name: 'some_func', source: 'functions'}, cloudRun: false, publicDir: 'app'};
+		const expectedResult = {functions: {name: 'some_func', source: path.join(path.dirname(config.firebaseJson), 'functions')}, cloudRun: false, publicDir: path.join(path.dirname(config.firebaseJson), 'app')};
 
 		t.deepEqual(result, expectedResult);
 	}
@@ -30,7 +31,7 @@ test(
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: fileURLToPath(new URL('./fixtures/successes/cr_site.json', import.meta.url))};
 		const result = parseFirebaseConfiguration(config);
-		const expectedResult = {functions: false, cloudRun: {serviceId: 'some-service', region: 'us-central1'}, publicDir: 'app'};
+		const expectedResult = {functions: false, cloudRun: {serviceId: 'some-service', region: 'us-central1'}, publicDir: path.join(path.dirname(config.firebaseJson), 'app')};
 
 		t.deepEqual(result, expectedResult);
 	}
@@ -41,7 +42,7 @@ test(
 	t => {
 		const config = {hostingSite: 'app', sourceRewriteMatch: '**', firebaseJson: fileURLToPath(new URL('./fixtures/successes/cr_sites.json', import.meta.url))};
 		const result = parseFirebaseConfiguration(config);
-		const expectedResult = {functions: false, cloudRun: {serviceId: 'some-service', region: 'us-central1'}, publicDir: 'app'};
+		const expectedResult = {functions: false, cloudRun: {serviceId: 'some-service', region: 'us-central1'}, publicDir: path.join(path.dirname(config.firebaseJson), 'app')};
 
 		t.deepEqual(result, expectedResult);
 	}

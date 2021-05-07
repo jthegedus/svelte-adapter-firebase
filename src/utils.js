@@ -24,6 +24,7 @@ function isString(parameter) {
  * }}
  */
 function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJson}) {
+	firebaseJson = path.resolve(firebaseJson);
 	if (!existsSync(firebaseJson)) {
 		throw new Error(`File ${firebaseJson} does not exist. The provided file should exist and be a Firebase JSON config.`);
 	}
@@ -99,13 +100,13 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 	return {
 		functions: rewriteConfig?.function ? {
 			name: rewriteConfig.function,
-			source: firebaseConfig.functions.source
+			source: path.join(path.dirname(firebaseJson), firebaseConfig.functions.source)
 		} : false,
 		cloudRun: rewriteConfig?.run ? {
 			serviceId: rewriteConfig.run.serviceId,
 			region: rewriteConfig.run?.region || 'us-central1'
 		} : false,
-		publicDir: hostingConfig.public
+		publicDir: path.join(path.dirname(firebaseJson), hostingConfig.public)
 	};
 }
 
