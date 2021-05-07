@@ -32,7 +32,7 @@
     "src"
   ],
   "dependencies": {
-    "@sveltejs/kit": "1.0.0-next.100",
+    "@sveltejs/kit": "1.0.0-next.101",
     "esbuild": "^0.11.18"
   },
   "devDependencies": {
@@ -48,7 +48,6 @@
     "xo": "^0.38.2"
   },
   "scripts": {
-    "preinstall": "npx -y only-allow pnpm",
     "prepare": "husky install",
     "fix": "xo --fix",
     "test": "xo && ava"
