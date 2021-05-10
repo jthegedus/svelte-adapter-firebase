@@ -108,7 +108,7 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 			region: rewriteConfig.run?.region || 'us-central1'
 		} : false,
 		publicDir: path.join(path.dirname(firebaseJson), hostingConfig.public),
-		firebaseJsonDir: firebaseJson
+		firebaseJsonDir: path.dirname(firebaseJson)
 	};
 }
 
