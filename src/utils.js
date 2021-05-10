@@ -20,6 +20,7 @@ function isString(parameter) {
  * @returns {{
  * 	functions: false | { name: string, source: string };
  * 	cloudRun: false | { serviceId: string, region: string };
+ * 	firebaseJsonDir: string;
  * 	publicDir: string
  * }}
  */
@@ -106,7 +107,8 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 			serviceId: rewriteConfig.run.serviceId,
 			region: rewriteConfig.run?.region || 'us-central1'
 		} : false,
-		publicDir: path.join(path.dirname(firebaseJson), hostingConfig.public)
+		publicDir: path.join(path.dirname(firebaseJson), hostingConfig.public),
+		firebaseJsonDir: firebaseJson
 	};
 }
 
