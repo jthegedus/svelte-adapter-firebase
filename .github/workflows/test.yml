@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 env:
   CI: true
-  ASDF_DIR: home/runner/.asdf
+  ASDF_DIR: /home/runner/.asdf
   FIREBASE_EMULATORS_PATH: ${{ github.workspace }}/emulator-cache
 
 jobs:
@@ -17,7 +17,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.ASDF_DIR }}
-          key: ${{ runner.os }}-${{ github.event_name }}-asdf-cache-${{ hashFiles('**/.tool-versions') }}
+          key: asdf-cache-${{ runner.os }}-${{ github.event_name }}-${{ hashFiles('**/.tool-versions') }}
       - name: install asdf
         if: steps.cache-asdf.outputs.cache-hit != 'true'
         uses: asdf-vm/actions/install@v1
@@ -34,7 +34,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.ASDF_DIR }}
-          key: ${{ runner.os }}-${{ github.event_name }}-asdf-cache-${{ hashFiles('**/.tool-versions') }}
+          key: asdf-cache-${{ runner.os }}-${{ github.event_name }}-${{ hashFiles('**/.tool-versions') }}
       - run: pnpm install
       - run: pnpm run test
 
@@ -48,7 +48,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.ASDF_DIR }}
-          key: ${{ runner.os }}-${{ github.event_name }}-asdf-cache-${{ hashFiles('**/.tool-versions') }}
+          key: asdf-cache-${{ runner.os }}-${{ github.event_name }}-${{ hashFiles('**/.tool-versions') }}
       - name: Install svelte-adapter-firebase deps
         run: pnpm install
       - name: Install example app deps
@@ -69,7 +69,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.ASDF_DIR }}
-          key: ${{ runner.os }}-${{ github.event_name }}-asdf-cache-${{ hashFiles('**/.tool-versions') }}
+          key: asdf-cache-${{ runner.os }}-${{ github.event_name }}-${{ hashFiles('**/.tool-versions') }}
       - name: Cache firebase emulators
         uses: actions/cache@v2
         with:
