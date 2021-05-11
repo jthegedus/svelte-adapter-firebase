@@ -32,7 +32,7 @@
     "src"
   ],
   "dependencies": {
-    "@sveltejs/kit": "1.0.0-next.101",
+    "@sveltejs/kit": "1.0.0-next.104",
     "esbuild": "^0.11.18"
   },
   "devDependencies": {
@@ -49,8 +49,8 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "fix": "xo --fix",
-    "test": "xo && ava"
+    "fix": "xo --ignore examples/** --fix",
+    "test": "xo --ignore examples/** && ava"
   },
   "release": {
     "branches": [
