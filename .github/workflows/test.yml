@@ -79,6 +79,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-asdf-${{ hashFiles('**/.tool-versions') }}
             ${{ runner.os }}-asdf-      - name: Install svelte-adapter-firebase deps
+      - name: Install svelte-adapter-firebase deps
         run: pnpm install
       - name: Install example app deps
         run: pnpm install
