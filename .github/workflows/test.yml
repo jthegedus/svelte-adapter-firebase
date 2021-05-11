@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 env:
   CI: true
-  ASDF_DIR: ${{ github.workspace }}/.asdf
+  ASDF_DIR: home/runner/.asdf
   FIREBASE_EMULATORS_PATH: ${{ github.workspace }}/emulator-cache
 
 jobs:
