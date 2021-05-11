@@ -50,7 +50,8 @@
   "scripts": {
     "prepare": "husky install",
     "fix": "xo --ignore examples/ --fix",
-    "test": "xo --ignore examples/ && ava"
+    "test": "xo --ignore examples/ && ava",
+    "test:e2e": "./tests/e2e-healthcheck.sh"
   },
   "release": {
     "branches": [
