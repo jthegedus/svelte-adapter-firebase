@@ -10,11 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: install asdf
-        uses: asdf-vm/actions/install@v1
-        with:
-          before_install: bash -c '${ASDF_DATA_DIR:=$HOME/.asdf}/plugins/nodejs/bin/import-release-team-keyring'
       - name: cache asdf
+        id: cache-asdf
         uses: actions/cache@v2
         with:
           path: ${{ env.ASDF_DIR }}
@@ -22,25 +19,43 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-asdf-${{ hashFiles('**/.tool-versions') }}
             ${{ runner.os }}-asdf-
-        continue-on-error: true
+      - name: install asdf
+        if: steps.cache-asdf.outputs.cache-hit != 'true'
+        uses: asdf-vm/actions/install@v1
+        with:
+          before_install: bash -c '${ASDF_DATA_DIR:=$HOME/.asdf}/plugins/nodejs/bin/import-release-team-keyring'
 
   unit:
     runs-on: ubuntu-latest
+    needs: setup
     steps:
       - uses: actions/checkout@v2
-      - uses: asdf-vm/actions/install@v1
+      - name: cache asdf
+        id: cache-asdf
+        uses: actions/cache@v2
         with:
-          before_install: bash -c '${ASDF_DATA_DIR:=$HOME/.asdf}/plugins/nodejs/bin/import-release-team-keyring'
+          path: ${{ env.ASDF_DIR }}
+          key: ${{ runner.os }}-asdf-${{ hashFiles('**/.tool-versions') }}
+          restore-keys: |
+            ${{ runner.os }}-asdf-${{ hashFiles('**/.tool-versions') }}
+            ${{ runner.os }}-asdf-
       - run: pnpm install
       - run: pnpm run test
 
   integration:
     runs-on: ubuntu-latest
+    needs: setup
     steps:
       - uses: actions/checkout@v2
-      - uses: asdf-vm/actions/install@v1
+      - name: cache asdf
+        id: cache-asdf
+        uses: actions/cache@v2
         with:
-          before_install: bash -c '${ASDF_DATA_DIR:=$HOME/.asdf}/plugins/nodejs/bin/import-release-team-keyring'
+          path: ${{ env.ASDF_DIR }}
+          key: ${{ runner.os }}-asdf-${{ hashFiles('**/.tool-versions') }}
+          restore-keys: |
+            ${{ runner.os }}-asdf-${{ hashFiles('**/.tool-versions') }}
+            ${{ runner.os }}-asdf-
       - name: Install svelte-adapter-firebase deps
         run: pnpm install
       - name: Install example app deps
@@ -52,12 +67,18 @@ jobs:
 
   end-to-end:
     runs-on: ubuntu-latest
+    needs: setup
     steps:
       - uses: actions/checkout@v2
-      - uses: asdf-vm/actions/install@v1
+      - name: cache asdf
+        id: cache-asdf
+        uses: actions/cache@v2
         with:
-          before_install: bash -c '${ASDF_DATA_DIR:=$HOME/.asdf}/plugins/nodejs/bin/import-release-team-keyring'
-      - name: Install svelte-adapter-firebase deps
+          path: ${{ env.ASDF_DIR }}
+          key: ${{ runner.os }}-asdf-${{ hashFiles('**/.tool-versions') }}
+          restore-keys: |
+            ${{ runner.os }}-asdf-${{ hashFiles('**/.tool-versions') }}
+            ${{ runner.os }}-asdf-      - name: Install svelte-adapter-firebase deps
         run: pnpm install
       - name: Install example app deps
         run: pnpm install
