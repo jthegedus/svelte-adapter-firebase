@@ -17,9 +17,6 @@ jobs:
         with:
           path: ${{ env.ASDF_DIR }}
           key: ${{ runner.os }}-${{ github.event_name }}-asdf-${{ hashFiles('**/.tool-versions') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ github.event_name }}-asdf-${{ hashFiles('**/.tool-versions') }}
-            ${{ runner.os }}-${{ github.event_name }}-asdf-
       - name: install asdf
         if: steps.cache-asdf.outputs.cache-hit != 'true'
         uses: asdf-vm/actions/install@v1
@@ -37,9 +34,6 @@ jobs:
         with:
           path: ${{ env.ASDF_DIR }}
           key: ${{ runner.os }}-${{ github.event_name }}-asdf-${{ hashFiles('**/.tool-versions') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ github.event_name }}-asdf-${{ hashFiles('**/.tool-versions') }}
-            ${{ runner.os }}-${{ github.event_name }}-asdf-
       - run: pnpm install
       - run: pnpm run test
 
@@ -54,9 +48,6 @@ jobs:
         with:
           path: ${{ env.ASDF_DIR }}
           key: ${{ runner.os }}-${{ github.event_name }}-asdf-${{ hashFiles('**/.tool-versions') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ github.event_name }}-asdf-${{ hashFiles('**/.tool-versions') }}
-            ${{ runner.os }}-${{ github.event_name }}-asdf-
       - name: Install svelte-adapter-firebase deps
         run: pnpm install
       - name: Install example app deps
@@ -77,9 +68,6 @@ jobs:
         with:
           path: ${{ env.ASDF_DIR }}
           key: ${{ runner.os }}-${{ github.event_name }}-asdf-${{ hashFiles('**/.tool-versions') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ github.event_name }}-asdf-${{ hashFiles('**/.tool-versions') }}
-            ${{ runner.os }}-${{ github.event_name }}-asdf-
       - name: Install svelte-adapter-firebase deps
         run: pnpm install
       - name: Install example app deps
