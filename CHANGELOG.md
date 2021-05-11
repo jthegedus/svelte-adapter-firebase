@@ -1,3 +1,17 @@
+## [0.6.5](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.6.4...v0.6.5) (2021-05-10)
+
+
+### Bug Fixes
+
+* resolve dirname of firebaseJsonDir ([#49](https://github.com/jthegedus/svelte-adapter-firebase/issues/49)) ([7556c7d](https://github.com/jthegedus/svelte-adapter-firebase/commit/7556c7d21f52488f500498a7bbf79f82771f51b2))
+
+## [0.6.4](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.6.3...v0.6.4) (2021-05-10)
+
+
+### Bug Fixes
+
+* export firebaseJsonDir from config parser func ([#48](https://github.com/jthegedus/svelte-adapter-firebase/issues/48)) ([5ec2e18](https://github.com/jthegedus/svelte-adapter-firebase/commit/5ec2e184669a036941e5ad48477b93aa67ffbf85))
+
 ## [0.6.3](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.6.2...v0.6.3) (2021-05-07)
 
 
