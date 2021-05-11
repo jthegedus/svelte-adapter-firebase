@@ -49,8 +49,8 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "fix": "xo --ignore examples/** --fix",
-    "test": "xo --ignore examples/** && ava"
+    "fix": "xo --ignore examples/ --fix",
+    "test": "xo --ignore examples/ && ava"
   },
   "release": {
     "branches": [
