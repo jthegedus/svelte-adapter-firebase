@@ -1,0 +1,15 @@
+{
+	"hosting": {
+		"public": "public",
+		"site": "svelte-func-single-site",
+		"rewrites": [
+			{
+				"source": "**",
+				"function": "svelte_function_single_site"
+			}
+		]
+	},
+	"functions": {
+		"source": "functions"
+	}
+}
