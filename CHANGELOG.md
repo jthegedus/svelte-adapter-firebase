@@ -1,3 +1,10 @@
+# [0.7.0](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.6.5...v0.7.0) (2021-05-12)
+
+
+### Features
+
+* sync new SvelteKit & init test suite ([#52](https://github.com/jthegedus/svelte-adapter-firebase/issues/52)) ([a1cb743](https://github.com/jthegedus/svelte-adapter-firebase/commit/a1cb743e835b6782344437026b0a4c238bb39842))
+
 ## [0.6.5](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.6.4...v0.6.5) (2021-05-10)
 
 
