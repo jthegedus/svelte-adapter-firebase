@@ -1,5 +1,5 @@
 import {URL} from 'url';
-import {getRawBody} from '@sveltejs/kit/http';
+import {getRawBody} from '@sveltejs/kit/node';
 import '@sveltejs/kit/install-fetch'; // eslint-disable-line import/no-unassigned-import
 
 // TODO: hardcoding the relative location makes this brittle

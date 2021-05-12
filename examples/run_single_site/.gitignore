@@ -1,0 +1,20 @@
+.DS_Store
+node_modules
+/.svelte-kit
+/build
+
+# Specific to this app's firebase.json
+public/
+.svelte-run-single-site
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+firebase-debug.log*
+firebase-debug.*.log*
+
+# Firebase cache
+.firebase/

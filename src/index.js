@@ -108,10 +108,10 @@ async function adaptToCloudRun({utils, serviceId, region, firebaseJsonDir, cloud
 	const serverOutputDir = path.join(firebaseJsonDir, cloudRunBuildDir || `.${serviceId}`);
 
 	await prepareEntrypoint({utils, serverOutputDir});
-	utils.log.info(`Writing Cloud Run service to ./${serverOutputDir}`);
+	utils.log.info(`Writing Cloud Run service to ${serverOutputDir}`);
 
 	// Prepare Cloud Run package.json - read SvelteKit App 'package.json', modify the JSON, write to serverOutputDir
-	const pkgjson = JSON.parse(readFileSync(fileURLToPath(new URL('package.json', import.meta.url)), 'utf-8'));
+	const pkgjson = JSON.parse(readFileSync(path.join(process.cwd(), 'package.json'), 'utf-8'));
 	pkgjson.scripts.start = 'functions-framework --target=default';
 	if (pkgjson.dependencies === undefined) {
 		pkgjson.dependencies = {};

@@ -1,0 +1,14 @@
+{
+	"hosting": {
+		"public": "public",
+		"site": "svelte-run-single-site",
+		"rewrites": [
+			{
+				"source": "**",
+				"run": {
+					"serviceId": "svelte-run-single-site"
+				}
+			}
+		]
+	}
+}

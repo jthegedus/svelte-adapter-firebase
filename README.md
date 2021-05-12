@@ -7,7 +7,7 @@
 
 # svelte-adapter-firebase
 
-[![GitHub Release](https://img.shields.io/github/release/jthegedus/svelte-adapter-firebase.svg?color=green)](https://github.com/jthegedus/svelte-adapter-firebase/releases) [![npm](https://img.shields.io/npm/v/svelte-adapter-firebase?color=green)](https://www.npmjs.com/package/svelte-adapter-firebase) [![Test](https://github.com/jthegedus/svelte-adapter-firebase/actions/workflows/test.yaml/badge.svg)](https://github.com/jthegedus/svelte-adapter-firebase/actions/workflows/test.yaml) [![CodeQL](https://github.com/jthegedus/svelte-adapter-firebase/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/jthegedus/svelte-adapter-firebase/actions/workflows/codeql-analysis.yml)
+[![GitHub Release](https://img.shields.io/github/release/jthegedus/svelte-adapter-firebase.svg?color=green)](https://github.com/jthegedus/svelte-adapter-firebase/releases) [![npm](https://img.shields.io/npm/v/svelte-adapter-firebase?color=green)](https://www.npmjs.com/package/svelte-adapter-firebase) [![Tests](https://github.com/jthegedus/svelte-adapter-firebase/actions/workflows/test.yml/badge.svg)](https://github.com/jthegedus/svelte-adapter-firebase/actions/workflows/test.yml) [![CodeQL](https://github.com/jthegedus/svelte-adapter-firebase/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/jthegedus/svelte-adapter-firebase/actions/workflows/codeql-analysis.yml)
 
 [Firebase](https://firebase.google.com/) adapter for [SvelteKit](https://github.com/sveltejs/kit). Support for:
 
@@ -48,7 +48,8 @@ Since SvelteKit is still in Beta, and the Adapter API is _most_ in flux, here is
 
 | Adapter Version | SvelteKit Version |
 | --------------- | ----------------- |
-| `0.6.3`         | `1.0.0-next.101`  |
+| `0.7.x`         | `1.0.0-next.107`  |
+| `0.6.x`         | `1.0.0-next.103`  |
 | `0.5.x`         | `1.0.0-next.54`   |
 | `0.4.x`         | `1.0.0-next.46`   |
 | `0.3.x`         | `1.0.0-next.27`   |
