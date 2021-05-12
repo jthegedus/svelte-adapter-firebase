@@ -48,8 +48,8 @@ Since SvelteKit is still in Beta, and the Adapter API is _most_ in flux, here is
 
 | Adapter Version | SvelteKit Version |
 | --------------- | ----------------- |
-| `0.7.x`         | `1.0.0-next.104`  |
-| `0.6.x`         | `1.0.0-next.101`  |
+| `0.7.x`         | `1.0.0-next.107`  |
+| `0.6.x`         | `1.0.0-next.103`  |
 | `0.5.x`         | `1.0.0-next.54`   |
 | `0.4.x`         | `1.0.0-next.46`   |
 | `0.3.x`         | `1.0.0-next.27`   |
