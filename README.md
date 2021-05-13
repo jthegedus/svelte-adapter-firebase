@@ -78,7 +78,7 @@ In your standard SvelteKit project:
 ```json
 	"scripts": {
 		"dev": "svelte-kit dev",
-		"build": "npx rimraf <dir used in firebase.json.hosting.public> && svelte-kit build --verbose",
+		"build": "npx rimraf <dir used in firebase.json:hosting.public> && svelte-kit build --verbose",
 		...
 ```
 
@@ -94,7 +94,7 @@ Please read the docs carefully!
 Adapter options:
 
 - `hostingSite`
-  - required when `firebase.json.hosting` is an array (contains many site configurations)
+  - required when `firebase.json:hosting` is an array (contains many site configurations)
   - default: no default value
 - `sourceRewriteMatch`
   - used to lookup the rewrite rule used for SSR
@@ -253,7 +253,7 @@ Detailed examples of the adapter configuration options.
 <details>
 <summary><code>hostingSite</code></summary>
 
-If the firebase.json.hosting is an array of sites, then you must provide a `site` with `hostingSite` to correctly match against. For example:
+If the firebase.json:hosting is an array of sites, then you must provide a `site` with `hostingSite` to correctly match against. For example:
 
 ```json
 // firebase.json
@@ -506,7 +506,7 @@ myApp/				<-- Static assets to go to Firebase Hosting CDN
 
 The final piece is to write the actual Cloud Function source code to reference the output server assets. The code is printed during `svelte build` and should be placed in your `index.js` or `index.ts` manually.
 
-This is a flexible solution that allows integrating with other Cloud Functions in your project. You can edit the provided code as you see fit. The import/require of the generated code will not change unless you change the `firebase.json.hosting.site` or `package.json.main` fields, so you shouldn't need to update this code after adding it.
+This is a flexible solution that allows integrating with other Cloud Functions in your project. You can edit the provided code as you see fit. The import/require of the generated code will not change unless you change the `firebase.json:hosting.site` or `package.json:main` fields, so you shouldn't need to update this code after adding it.
 
 ### Cloud Function Firebase Emulator local Testing
 
