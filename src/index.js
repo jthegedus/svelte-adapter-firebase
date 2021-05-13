@@ -28,7 +28,7 @@ const entrypoint = function ({
 
 			const svelteConfig = await import(path.join(process.cwd(), 'svelte.config.js'));
 			const svelteStaticDir = path.join(process.cwd(), svelteConfig?.kit?.files?.assets || 'static');
-
+			utils.log.info(`source: ${svelteStaticDir} | dest: ${publicDestDir}`);
 			ensureStaticResourceDirsDiffer({source: svelteStaticDir, dest: publicDestDir});
 
 			if (functions !== false) {
