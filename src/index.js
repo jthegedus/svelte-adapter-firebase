@@ -141,10 +141,12 @@ async function adaptToCloudRun({utils, serviceId, region, firebaseJsonDir, cloud
 
 	utils.log.warn(
 		// eslint-disable-next-line indent
-`To deploy your Cloud Run service, run this command:
+`To deploy your Cloud Run service, run both of these commands:
 +--------------------------------------------------+
 gcloud beta run deploy ${serviceId} --platform managed --region ${region} --source ${serverOutputDir} --allow-unauthenticated
-+--------------------------------------------------+`
+firebase deploy --only hosting
++--------------------------------------------------+
+Firebase deployment is required as your static assets may have new hashes after the build you deploy with Cloud Run`
 	);
 }
 
