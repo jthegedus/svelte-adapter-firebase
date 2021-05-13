@@ -1,3 +1,10 @@
+## [0.7.3](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.7.2...v0.7.3) (2021-05-13)
+
+
+### Bug Fixes
+
+* ensure valid cloud function runtime version ([#66](https://github.com/jthegedus/svelte-adapter-firebase/issues/66)) ([46fafad](https://github.com/jthegedus/svelte-adapter-firebase/commit/46fafadb6ccfe0c39f0eeb3ee43bdebb4c13235c))
+
 ## [0.7.2](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.7.1...v0.7.2) (2021-05-13)
 
 
