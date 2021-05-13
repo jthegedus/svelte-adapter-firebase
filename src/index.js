@@ -146,7 +146,7 @@ async function adaptToCloudRun({utils, serviceId, region, firebaseJsonDir, cloud
 gcloud beta run deploy ${serviceId} --platform managed --region ${region} --source ${serverOutputDir} --allow-unauthenticated
 firebase deploy --only hosting
 +--------------------------------------------------+
-Firebase deployment is required as your static assets may have new hashes after the build you deploy with Cloud Run`
+Firebase deployment is required as your static assets and route manifests may have changed from this build.`
 	);
 }
 
