@@ -1,7 +1,7 @@
 import test from 'ava';
 import {fileURLToPath} from 'url';
 import path from 'path';
-import {ensureStaticResourceDirsDiffer, parseFirebaseConfiguration, validCloudFunctionName, validCloudRunServiceId} from '../src/utils.js';
+import {ensureCompatibleCloudFunctionVersion, ensureStaticResourceDirsDiffer, parseFirebaseConfiguration, validCloudFunctionName, validCloudRunServiceId} from '../src/utils.js';
 
 // ParseFirebaseConfiguration: Valid configs
 test(
@@ -9,7 +9,7 @@ test(
 	t => {
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: fileURLToPath(new URL('./fixtures/successes/cf_site.json', import.meta.url))};
 		const result = parseFirebaseConfiguration(config);
-		const expectedResult = {functions: {name: 'some_func', source: path.join(path.dirname(config.firebaseJson), 'functions')}, cloudRun: false, publicDir: path.join(path.dirname(config.firebaseJson), 'app'), firebaseJsonDir: path.dirname(config.firebaseJson)};
+		const expectedResult = {functions: {name: 'some_func', source: path.join(path.dirname(config.firebaseJson), 'functions'), runtime: undefined}, cloudRun: false, publicDir: path.join(path.dirname(config.firebaseJson), 'app'), firebaseJsonDir: path.dirname(config.firebaseJson)};
 
 		t.deepEqual(result, expectedResult);
 	}
@@ -20,7 +20,7 @@ test(
 	t => {
 		const config = {hostingSite: 'app', sourceRewriteMatch: '**', firebaseJson: fileURLToPath(new URL('./fixtures/successes/cf_sites.json', import.meta.url))};
 		const result = parseFirebaseConfiguration(config);
-		const expectedResult = {functions: {name: 'some_func', source: path.join(path.dirname(config.firebaseJson), 'functions')}, cloudRun: false, publicDir: path.join(path.dirname(config.firebaseJson), 'app'), firebaseJsonDir: path.dirname(config.firebaseJson)};
+		const expectedResult = {functions: {name: 'some_func', source: path.join(path.dirname(config.firebaseJson), 'functions'), runtime: undefined}, cloudRun: false, publicDir: path.join(path.dirname(config.firebaseJson), 'app'), firebaseJsonDir: path.dirname(config.firebaseJson)};
 
 		t.deepEqual(result, expectedResult);
 	}
@@ -231,7 +231,7 @@ test('Cloud Function name with invalid length', t => {
 	t.is(result, false);
 });
 
-//
+// EnsureStaticResourceDirsDiffer
 test('Static asset source and dest different dirs', t => {
 	const error = t.notThrows(() => ensureStaticResourceDirsDiffer({source: 'a', dest: 'b'}));
 	t.is(error, undefined);
@@ -242,5 +242,37 @@ test(
 	t => {
 		const error = t.throws(() => ensureStaticResourceDirsDiffer({source: 'a', dest: 'a'}));
 		t.is(error.message, 'firebase.json:hosting.public must be a different directory to svelte.config.js:kit.files.assets');
+	}
+);
+
+// EnsureCompatibleCloudFunctionVersion
+test('Valid Function runtime version in package.json', t => {
+	const error = t.notThrows(() => ensureCompatibleCloudFunctionVersion({functionsPackageJsonEngine: '14'}));
+	t.is(error, undefined);
+});
+test('Valid Function runtime version in firebase.json', t => {
+	const error = t.notThrows(() => ensureCompatibleCloudFunctionVersion({firebaseJsonFunctionsRuntime: 'nodejs14'}));
+	t.is(error, undefined);
+});
+
+test(
+	'No Function runtime provided',
+	t => {
+		const error = t.throws(() => ensureCompatibleCloudFunctionVersion({}));
+		t.is(error.message, 'SvelteKit on Cloud Functions requires Node.js 14 or newer runtime. Set this in "package.json:engines.node" with one of "14" or "firebase.json:functions.runtime" with one of "nodejs14" - see the docs https://firebase.google.com/docs/functions/manage-functions#set_nodejs_version');
+	}
+);
+test(
+	'Invalid Function runtime in package.json',
+	t => {
+		const error = t.throws(() => ensureCompatibleCloudFunctionVersion({functionsPackageJsonEngine: '12'}));
+		t.is(error.message, 'SvelteKit on Cloud Functions requires Node.js 14 or newer runtime. Set this in "package.json:engines.node" with one of "14" or "firebase.json:functions.runtime" with one of "nodejs14" - see the docs https://firebase.google.com/docs/functions/manage-functions#set_nodejs_version');
+	}
+);
+test(
+	'Invalid Function runtime in firebase.json',
+	t => {
+		const error = t.throws(() => ensureCompatibleCloudFunctionVersion({firebaseJsonFunctionsRuntime: 'nodejs12'}));
+		t.is(error.message, 'SvelteKit on Cloud Functions requires Node.js 14 or newer runtime. Set this in "package.json:engines.node" with one of "14" or "firebase.json:functions.runtime" with one of "nodejs14" - see the docs https://firebase.google.com/docs/functions/manage-functions#set_nodejs_version');
 	}
 );

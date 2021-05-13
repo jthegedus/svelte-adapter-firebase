@@ -18,7 +18,7 @@ function isString(parameter) {
  * 	firebaseJson: string
  * }} param
  * @returns {{
- * 	functions: false | { name: string, source: string };
+ * 	functions: false | { name: string, source: string, runtime: string | undefined };
  * 	cloudRun: false | { serviceId: string, region: string };
  * 	firebaseJsonDir: string;
  * 	publicDir: string
@@ -101,7 +101,8 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 	return {
 		functions: rewriteConfig?.function ? {
 			name: rewriteConfig.function,
-			source: path.join(path.dirname(firebaseJson), firebaseConfig.functions.source)
+			source: path.join(path.dirname(firebaseJson), firebaseConfig.functions.source),
+			runtime: firebaseConfig.functions?.runtime
 		} : false,
 		cloudRun: rewriteConfig?.run ? {
 			serviceId: rewriteConfig.run.serviceId,
@@ -164,10 +165,33 @@ function ensureStaticResourceDirsDiffer({source, dest}) {
 	}
 }
 
+/**
+ *
+ * @param {{
+ * 	functionsPackageJsonEngine: string | undefined
+ * 	firebaseJsonFunctionsRuntime: string | undefined
+ * }} param
+ */
+function ensureCompatibleCloudFunctionVersion({functionsPackageJsonEngine, firebaseJsonFunctionsRuntime}) {
+	const validPackageJsonValues = [
+		'14'
+		// "16"
+	];
+	const validFirebaseJsonValues = [
+		'nodejs14'
+		// 'nodejs16'
+	];
+
+	if (!validPackageJsonValues.includes(functionsPackageJsonEngine) && !validFirebaseJsonValues.includes(firebaseJsonFunctionsRuntime)) {
+		throw new Error(`SvelteKit on Cloud Functions requires Node.js 14 or newer runtime. Set this in "package.json:engines.node" with one of "${validPackageJsonValues}" or "firebase.json:functions.runtime" with one of "${validFirebaseJsonValues}" - see the docs https://firebase.google.com/docs/functions/manage-functions#set_nodejs_version`);
+	}
+}
+
 export {
 	parseFirebaseConfiguration,
 	validCloudRunServiceId,
 	validCloudFunctionName,
 	copyFileIfExistsSync,
-	ensureStaticResourceDirsDiffer
+	ensureStaticResourceDirsDiffer,
+	ensureCompatibleCloudFunctionVersion
 };
