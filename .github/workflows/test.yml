@@ -1,11 +1,15 @@
 name: Tests
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
 env:
   CI: true
-  ASDF_DIR: /home/runner/.asdf
-  FIREBASE_EMULATORS_PATH: ${{ github.workspace }}/emulator-cache
+  # ASDF_DIR: /home/runner/.asdf
+  # FIREBASE_EMULATORS_PATH: ${{ github.workspace }}/emulator-cache
 
 jobs:
   unit:
