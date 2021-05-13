@@ -1,3 +1,10 @@
+## [0.7.4](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.7.3...v0.7.4) (2021-05-13)
+
+
+### Bug Fixes
+
+* instruct firebase deployment alongside Cloud Run ([#67](https://github.com/jthegedus/svelte-adapter-firebase/issues/67)) ([d1a1797](https://github.com/jthegedus/svelte-adapter-firebase/commit/d1a17977085f97fa20f25e5fc7e583ac1ec66b93))
+
 ## [0.7.3](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.7.2...v0.7.3) (2021-05-13)
 
 
