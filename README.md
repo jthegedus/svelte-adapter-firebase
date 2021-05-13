@@ -79,7 +79,6 @@ In your standard SvelteKit project:
 	"scripts": {
 		"dev": "svelte-kit dev",
 		"build": "npx rimraf <dir used in firebase.json:hosting.public> && svelte-kit build --verbose",
-		...
 ```
 
 - `npm run build`
