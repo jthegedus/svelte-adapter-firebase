@@ -170,7 +170,8 @@ async function prepareEntrypoint({utils, serverOutputDir}) {
 		entryPoints: [path.join(temporaryDir, 'handler.js')],
 		outfile: path.join(serverOutputDir, 'index.js'),
 		bundle: true,
-		platform: 'node'
+		platform: 'node',
+		target: ['node12']
 	});
 }
 
