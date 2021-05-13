@@ -1,7 +1,7 @@
 import test from 'ava';
 import {fileURLToPath} from 'url';
 import path from 'path';
-import {parseFirebaseConfiguration, validCloudFunctionName, validCloudRunServiceId} from '../src/utils.js';
+import {ensureStaticResourceDirsDiffer, parseFirebaseConfiguration, validCloudFunctionName, validCloudRunServiceId} from '../src/utils.js';
 
 // ParseFirebaseConfiguration: Valid configs
 test(
@@ -230,3 +230,17 @@ test('Cloud Function name with invalid length', t => {
 	const result = validCloudFunctionName('aCloudFunctionsFunctionNameThatIsSeventyFiveCharactersLongWhichIsMoreThan63');
 	t.is(result, false);
 });
+
+//
+test('Static asset source and dest different dirs', t => {
+	const error = t.notThrows(() => ensureStaticResourceDirsDiffer({source: 'a', dest: 'b'}));
+	t.is(error, undefined);
+});
+
+test(
+	'Static asset source and dest the same dir',
+	t => {
+		const error = t.throws(() => ensureStaticResourceDirsDiffer({source: 'a', dest: 'a'}));
+		t.is(error.message, 'firebase.json:hosting.public must be a different directory to svelte.config.js:kit.files.assets');
+	}
+);
