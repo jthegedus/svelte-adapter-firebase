@@ -1,3 +1,10 @@
+## [0.7.2](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.7.1...v0.7.2) (2021-05-13)
+
+
+### Bug Fixes
+
+* static output dir differes from static source dirs ([#65](https://github.com/jthegedus/svelte-adapter-firebase/issues/65)) ([72c7670](https://github.com/jthegedus/svelte-adapter-firebase/commit/72c7670e0c035d6c84f0361b5d39b3082a67958a))
+
 ## [0.7.1](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.7.0...v0.7.1) (2021-05-13)
 
 
