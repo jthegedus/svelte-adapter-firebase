@@ -1,7 +1,7 @@
 import {readFileSync, writeFileSync} from 'fs';
 import path from 'path';
 import {fileURLToPath} from 'url';
-import {copyFileIfExistsSync, ensureStaticResourceDirsDiffer, parseFirebaseConfiguration} from './utils.js';
+import {copyFileIfExistsSync, ensureCompatibleCloudFunctionVersion, ensureStaticResourceDirsDiffer, parseFirebaseConfiguration} from './utils.js';
 import esbuild from 'esbuild';
 
 /**
@@ -58,14 +58,18 @@ const entrypoint = function ({
  * 	utils: import('@sveltejs/kit').AdapterUtils,
  * 	name: string;
  * 	source: string;
+ * 	runtime: string | undefined;
  * }} param
  */
-async function adaptToCloudFunctions({utils, name, source}) {
+async function adaptToCloudFunctions({utils, name, source, runtime}) {
 	const functionsPackageJson = JSON.parse(readFileSync(path.join(source, 'package.json'), 'utf-8'));
 	const functionsMain = functionsPackageJson?.main;
+
 	if (!functionsMain) {
 		throw new Error(`Error reading ${functionsPackageJson}. Required field "main" missing.`);
 	}
+
+	ensureCompatibleCloudFunctionVersion({functionsPackageJsonEngine: functionsPackageJson?.engines?.node, firebaseJsonFunctionsRuntime: runtime});
 
 	const ssrDirname = name ?? 'svelteKit';
 	const serverOutputDir = path.join(source, path.dirname(functionsMain), ssrDirname);
