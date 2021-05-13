@@ -78,7 +78,7 @@ In your standard SvelteKit project:
 ```json
 	"scripts": {
 		"dev": "svelte-kit dev",
-		"build": "npx -y rimraf <dir used in firebase.json.hosting.public> && svelte-kit build --verbose",
+		"build": "npx rimraf <dir used in firebase.json.hosting.public> && svelte-kit build --verbose",
 		...
 ```
 
