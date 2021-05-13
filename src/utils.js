@@ -151,9 +151,23 @@ function copyFileIfExistsSync(filename, destDir) {
 	}
 }
 
+/**
+ * Ensure provided static asset output dir (firebase.json:hosting.public) is not the same as the source dir
+ * @param {{
+ * 	dest:string
+ * 	source:string
+ * }} param source and destination directory for static assets
+ */
+function ensureStaticResourceDirsDiffer({source, dest}) {
+	if (source === dest) {
+		throw new Error('firebase.json:hosting.public must be a different directory to svelte.config.js:kit.files.assets');
+	}
+}
+
 export {
 	parseFirebaseConfiguration,
 	validCloudRunServiceId,
 	validCloudFunctionName,
-	copyFileIfExistsSync
+	copyFileIfExistsSync,
+	ensureStaticResourceDirsDiffer
 };

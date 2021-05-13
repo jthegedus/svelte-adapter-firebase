@@ -1,7 +1,7 @@
 import {readFileSync, writeFileSync} from 'fs';
 import path from 'path';
 import {fileURLToPath} from 'url';
-import {copyFileIfExistsSync, parseFirebaseConfiguration} from './utils.js';
+import {copyFileIfExistsSync, ensureStaticResourceDirsDiffer, parseFirebaseConfiguration} from './utils.js';
 import esbuild from 'esbuild';
 
 /**
@@ -24,6 +24,13 @@ const entrypoint = function ({
 		async adapt(utils) {
 			const {firebaseJsonDir, functions, cloudRun, publicDir} = parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJson});
 
+			const publicDestDir = path.join(firebaseJsonDir, publicDir);
+
+			const svelteConfig = JSON.parse(readFileSync(path.join(process.cwd(), 'svelte.config.js'), 'utf-8'));
+			const svelteStaticDir = path.join(process.cwd(), svelteConfig?.kit?.files?.assets || 'static');
+
+			ensureStaticResourceDirsDiffer({source: svelteStaticDir, dest: publicDestDir});
+
 			if (functions !== false) {
 				await adaptToCloudFunctions({utils, ...functions});
 			}
@@ -32,13 +39,14 @@ const entrypoint = function ({
 				await adaptToCloudRun({utils, ...cloudRun, firebaseJsonDir, cloudRunBuildDir});
 			}
 
-			utils.rimraf(publicDir);
+			utils.log.warn(`Erasing ${publicDestDir} before processing static assets`);
+			utils.rimraf(publicDestDir);
 
-			utils.log.minor(`Prerendering static pages to: ${publicDir}`);
-			await utils.prerender({dest: publicDir});
+			utils.log.minor(`Prerendering static pages to: ${publicDestDir}`);
+			await utils.prerender({dest: publicDestDir});
 
-			utils.log.minor(`Writing client application to: ${publicDir}`);
-			utils.copy_static_files(publicDir);
+			utils.log.minor(`Writing client application to: ${publicDestDir}`);
+			utils.copy_static_files(publicDestDir);
 			utils.copy_client_files(publicDir);
 		}
 	};
