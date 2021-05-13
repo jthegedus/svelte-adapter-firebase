@@ -23,7 +23,7 @@
 
 ## Contents
 
-- [Quickstart](#quickstart)
+- [Setup](#setup)
 - [Configuration Overview](#configuration-overview)
 - [Details](#details)
   - [`firebase.json` Configurations](#firebasejson-configurations)
@@ -42,19 +42,9 @@
 - [Caveats](#caveats)
 - [Contributing](#contributing)
 
-## Quickstart
+## Setup
 
-Since SvelteKit is still in Beta, and the Adapter API is _most_ in flux, here is the Adapter to SvelteKit version compatibility:
-
-| Adapter Version | SvelteKit Version |
-| --------------- | ----------------- |
-| `0.7.x`         | `1.0.0-next.107`  |
-| `0.6.x`         | `1.0.0-next.103`  |
-| `0.5.x`         | `1.0.0-next.54`   |
-| `0.4.x`         | `1.0.0-next.46`   |
-| `0.3.x`         | `1.0.0-next.27`   |
-
-**Note**: only the versions listed have been tested together, if others happen to work, it is just coincidence. This is beta software after all.
+This adapter reads `firebase.json` to determine whether Cloud Functions or Cloud Run is being used and outputs the server pieces accordingly. Static assets are output to the configured dir in `firebase.json:hosting.public`.
 
 In your standard SvelteKit project:
 
@@ -81,12 +71,25 @@ In your standard SvelteKit project:
 		"build": "npx rimraf <dir used in firebase.json:hosting.public> && svelte-kit build --verbose",
 ```
 
-- `npm run build`
-- Follow further instructions output by the adapter to prepare for deployment.
+- `npm run build`. Read and repeat. The output is meant as a guide!
 
-This adapter reads `firebase.json` to determine if the Firebase Hosting site is using Cloud Functions or Cloud Run and outputs the server pieces accordingly. Static assets are output to the directory for the Hosting site field `public` configured in `firebase.json`.
+<!-- TODO: on 1.0.0 release, delete this section -->
 
-Please read the docs carefully!
+:warning: :warning: :warning: :warning: :warning:
+
+Since SvelteKit is still in Beta, and the Adapter API is _most_ in flux, here is the Adapter to SvelteKit version compatibility:
+
+| Adapter Version | SvelteKit Version |
+| --------------- | ----------------- |
+| `0.7.x`         | `1.0.0-next.107`  |
+| `0.6.x`         | `1.0.0-next.103`  |
+| `0.5.x`         | `1.0.0-next.54`   |
+| `0.4.x`         | `1.0.0-next.46`   |
+| `0.3.x`         | `1.0.0-next.27`   |
+
+**Note**: only the versions listed have been tested together, if others happen to work, it is just coincidence. This is beta software after all.
+
+<!-- END -->
 
 ## Configuration Overview
 
@@ -96,18 +99,23 @@ Adapter options:
   - required when `firebase.json:hosting` is an array (contains many site configurations)
   - default: no default value
 - `sourceRewriteMatch`
-  - used to lookup the rewrite rule used for SSR
+  - used to lookup the rewrite config to determine whether to output SSR code for Cloud Functions or Cloud Run. See [Firebase Rewrite configuration docs](https://firebase.google.com/docs/hosting/full-config#rewrite-functions).
   - default: `**`
 - `firebaseJson`
-  - path to your `firebase.json`, relative from where `svelte build` is called
+  - path to your `firebase.json` file, relative from where `svelte build` is called
   - default: `./firebase.json`
 - `cloudRunBuildDir`
   - output dir of Cloud Run service, relative from the `firebaseJson` location
   - default: `./.${run.serviceId}` where `run.serviceId` is pulled from the `firebase.json` rewrite rule
 
+Adapter output:
+
+- static assets (images, CSS, Client-side JavaScript) of your SvelteKit app output to the directory defined by `firebase.json:hosting.public`
+- server assets (SSR JavaScript) output alongside your Cloud Functions defined by `firebase.json:functions.source` or the `cloudRunBuildDir` depending on which service you are targeting in `firebase.json:hosting:rewrites`
+
 ## Details
 
-[Quickstart](#quickstart) outlines the steps most commonly used with a single SvelteKit app. Here we go into the details of each configuration and how it interacts with the `firebase.json` config.
+[Setup](#setup) outlines the steps most commonly used with a single SvelteKit app. Here we go into the details of each configuration and how it interacts with the `firebase.json` config.
 
 The 3 step process is:
 
