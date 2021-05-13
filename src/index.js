@@ -26,7 +26,7 @@ const entrypoint = function ({
 
 			const publicDestDir = path.join(firebaseJsonDir, publicDir);
 
-			const svelteConfig = JSON.parse(readFileSync(path.join(process.cwd(), 'svelte.config.js'), 'utf-8'));
+			const svelteConfig = await import(path.join(process.cwd(), 'svelte.config.js'));
 			const svelteStaticDir = path.join(process.cwd(), svelteConfig?.kit?.files?.assets || 'static');
 
 			ensureStaticResourceDirsDiffer({source: svelteStaticDir, dest: publicDestDir});
