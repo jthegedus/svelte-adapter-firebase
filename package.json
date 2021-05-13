@@ -77,7 +77,7 @@
         "@semantic-release/github",
         {
           "assets": [
-            "dist/**"
+            "src/**"
           ]
         }
       ],
