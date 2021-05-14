@@ -49,15 +49,15 @@ This adapter reads `firebase.json` to determine whether Cloud Functions or Cloud
 In your standard SvelteKit project:
 
 - `npm install --save-dev svelte-adapter-firebase`
-- add adapter to `svelte.config.js`:
+- add adapter to `svelte.config.js` (see option in [Adapter Configurations](#adapter-configurations)):
 
-  ```js
-  import firebaseAdapter from "svelte-adapter-firebase";
+  ```diff
+  +import firebase from "svelte-adapter-firebase";
 
   /** @type {import('@sveltejs/kit').Config} */
   export default {
     kit: {
-      adapter: firebaseAdapter(),
+  +   adapter: firebase(),
       target: "#svelte",
     },
   };
@@ -68,7 +68,8 @@ In your standard SvelteKit project:
 ```json
 	"scripts": {
 		"dev": "svelte-kit dev",
-		"build": "npx rimraf <dir used in firebase.json:hosting.public> && svelte-kit build --verbose",
+		"build": "npx rimraf <dir used in firebase.json:hosting.public> && svelte-kit build --verbose"
+  }
 ```
 
 - `npm run build`. Read and repeat. The output is meant as a guide!
@@ -119,7 +120,7 @@ Adapter output:
 
 The 3 step process is:
 
-1. select Hosting config from `firebase.json`. If more than one site match against `hostingSite`
+1. select Hosting config from `firebase.json`. If more than one site, match using `hostingSite`
 2. output static assets to the directory in the `public` field
 3. identify the rewrite rule for SSR to determine Cloud Function or Cloud Run output. The rewrite rule is determined by a lookup of the `rewrites.source` against `sourceRewriteMatch`
 
@@ -178,12 +179,12 @@ Due to the relaxed rules of `firebase.json` we can have many valid configs. At a
 To correctly lookup the `blog` site, `hostingSite` will need to be set in `svelte.config.js`:
 
 ```js
-import firebaseAdapter from "svelte-adapter-firebase";
+import firebase from "svelte-adapter-firebase";
 
 /** @type {import('@sveltejs/kit').Config} */
 export default {
   kit: {
-    adapter: firebaseAdapter({ hostingSite: "blog" }),
+    adapter: firebase({ hostingSite: "blog" }),
     target: "#svelte",
   },
 };
@@ -240,12 +241,12 @@ export default {
 To correctly lookup the `blog` site, `hostingSite` will need to be set in `svelte.config.js`:
 
 ```js
-import firebaseAdapter from "svelte-adapter-firebase";
+import firebase from "svelte-adapter-firebase";
 
 /** @type {import('@sveltejs/kit').Config} */
 export default {
   kit: {
-    adapter: firebaseAdapter({ hostingSite: "blog" }),
+    adapter: firebase({ hostingSite: "blog" }),
     target: "#svelte",
   },
 };
@@ -257,10 +258,29 @@ export default {
 
 Detailed examples of the adapter configuration options.
 
+All options:
+
+```js
+import firebase from "svelte-adapter-firebase";
+
+/** @type {import('@sveltejs/kit').Config} */
+export default {
+  kit: {
+    adapter: firebase({
+      hostingSite: "",
+      sourceRewriteMatch: "",
+      firebaseJson: "",
+      cloudRunBuildDir: "",
+    }),
+    target: "#svelte",
+  },
+};
+```
+
 <details>
 <summary><code>hostingSite</code></summary>
 
-If the firebase.json:hosting is an array of sites, then you must provide a `site` with `hostingSite` to correctly match against. For example:
+If `firebase.json:hosting` is an array of sites, then you must provide a `site` with `hostingSite` to correctly match against. For example:
 
 ```json
 // firebase.json
@@ -287,12 +307,12 @@ If the firebase.json:hosting is an array of sites, then you must provide a `site
 ```
 
 ```js
-import firebaseAdapter from "svelte-adapter-firebase";
+import firebase from "svelte-adapter-firebase";
 
 /** @type {import('@sveltejs/kit').Config} */
 export default {
   kit: {
-    adapter: firebaseAdapter({ hostingSite: "blog" }),
+    adapter: firebase({ hostingSite: "blog" }),
     target: "#svelte",
   },
 };
@@ -323,12 +343,12 @@ If the rewrite `source` pattern is not `**`, then `svelte.config.js` `sourceRewr
 ```
 
 ```js
-import firebaseAdapter from "svelte-adapter-firebase";
+import firebase from "svelte-adapter-firebase";
 
 /** @type {import('@sveltejs/kit').Config} */
 export default {
   kit: {
-    adapter: firebaseAdapter({ sourceRewriteMatch: "/blog/**" }),
+    adapter: firebase({ sourceRewriteMatch: "/blog/**" }),
     target: "#svelte",
   },
 };
@@ -357,12 +377,12 @@ functions/
 ```
 
 ```js
-import firebaseAdapter from "svelte-adapter-firebase";
+import firebase from "svelte-adapter-firebase";
 
 /** @type {import('@sveltejs/kit').Config} */
 export default {
   kit: {
-    adapter: firebaseAdapter({ firebaseJson: "../firebase.json" }),
+    adapter: firebase({ firebaseJson: "../firebase.json" }),
     target: "#svelte",
   },
 };
@@ -412,16 +432,18 @@ functions/
 If you wish to customise this output dir, then you can specify it in the adapter config:
 
 ```js
-import firebaseAdapter from "svelte-adapter-firebase";
+import firebase from "svelte-adapter-firebase";
 
 /** @type {import('@sveltejs/kit').Config} */
 export default {
   kit: {
-    adapter: firebaseAdapter({ cloudRunBuildDir: ".special/ssr/output/dir" }),
+    adapter: firebase({ cloudRunBuildDir: ".special/ssr/output/dir" }),
     target: "#svelte",
   },
 };
 ```
+
+`cloudRunBuildDir` is relative from the `firebase.json` file loaded by `firebaseJson` option (which has default `./firebase.json`).
 
 </details>
 
