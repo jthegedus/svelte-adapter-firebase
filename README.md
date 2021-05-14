@@ -119,7 +119,7 @@ Adapter output:
 
 The 3 step process is:
 
-1. select Hosting config from `firebase.json`. If more than one site match against `hostingSite`
+1. select Hosting config from `firebase.json`. If more than one site, match using `hostingSite`
 2. output static assets to the directory in the `public` field
 3. identify the rewrite rule for SSR to determine Cloud Function or Cloud Run output. The rewrite rule is determined by a lookup of the `rewrites.source` against `sourceRewriteMatch`
 
