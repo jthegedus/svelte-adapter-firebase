@@ -24,13 +24,17 @@ jobs:
       - run: pnpm run test
 
   integration:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         dirs:
           - examples/functions_single_site
           - examples/run_single_site
+        os:
+          - ubuntu-latest
+          - macOS-latest
+          - windows-latest
     steps:
       - uses: actions/checkout@v2
       - name: install asdf
