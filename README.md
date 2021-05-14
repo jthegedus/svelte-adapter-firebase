@@ -68,7 +68,8 @@ In your standard SvelteKit project:
 ```json
 	"scripts": {
 		"dev": "svelte-kit dev",
-		"build": "npx rimraf <dir used in firebase.json:hosting.public> && svelte-kit build --verbose",
+		"build": "npx rimraf <dir used in firebase.json:hosting.public> && svelte-kit build --verbose"
+  }
 ```
 
 - `npm run build`. Read and repeat. The output is meant as a guide!
