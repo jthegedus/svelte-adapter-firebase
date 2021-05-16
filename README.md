@@ -91,7 +91,7 @@ Since SvelteKit is still in Beta, and the Adapter API is _most_ in flux, here is
 **Note**: only the versions listed have been tested together, if others happen to work, it is just coincidence. This is beta software after all.
 
 <!-- END -->
-## svelte.config.js configuration Overview
+## Configuration Overview
 
 Adapter options:
 
@@ -107,7 +107,6 @@ Adapter options:
 - `cloudRunBuildDir`
   - output dir of Cloud Run service, relative from the `firebaseJson` location
   - default: `./.${run.serviceId}` where `run.serviceId` is pulled from the `firebase.json` rewrite rule
-- example `adapter: firebaseAdapter({ firebaseJson: '../firebase.json' })`
 
 
 Adapter output:
