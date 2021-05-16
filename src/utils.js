@@ -2,6 +2,43 @@ import {copyFileSync, existsSync, readFileSync} from 'fs';
 import path from 'path';
 
 /**
+ * @typedef CloudRunRewriteConfig
+ * @type {object} cloudrun
+ * @property {undefined|string} cloudrun.serviceId
+ * @property {undefined|'us-central1'} cloudrun.region
+ */
+
+/**
+ * @typedef HostingRewriteConfig
+ * @type {object} rewrite
+ * @property {undefined|string} rewrite.source
+ * @property {undefined|string} rewrite.function
+ * @property {undefined|CloudRunRewriteConfig} rewrite.run
+ */
+
+/**
+ * @typedef HostingConfig
+ * @type {object} hosting
+ * @property {undefined|string} hosting.site
+ * @property {undefined|string} hosting.public
+ * @property {undefined|Array.<HostingRewriteConfig>} hosting.rewrites
+ */
+
+/**
+ * @typedef FunctionsConfig
+ * @type {object} functions
+ * @property {undefined|string} functions.source
+ * @property {undefined|'nodejs14'} functions.runtime
+*/
+
+/**
+ * @typedef FirebaseConfig
+ * @type {object} config
+ * @property {undefined|HostingConfig|Array.<HostingConfig>} hosting
+ * @property {undefined|FunctionsConfig} functions
+ */
+
+/**
  *
  * @param {any} parameter
  * @returns {boolean} true if param is a string
@@ -22,7 +59,7 @@ function isString(parameter) {
  * 	cloudRun: false | { serviceId: string, region: string };
  * 	firebaseJsonDir: string;
  * 	publicDir: string
- * }}
+ * }} Functions or Run config with `public` dir and `firebase.json` root dir
  */
 function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJson}) {
 	firebaseJson = path.resolve(firebaseJson);
@@ -31,40 +68,9 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 	}
 
 	/**
-	 * Firebase configuration from `firebase.json`. Only required types of the adapter.
-	 * @type {{
-	 * hosting: undefined | {
-	 * 	site: undefined | string,
-	 * 	public: undefined | string,
-	 * 	rewrites: undefined | [
-	 * 		{
-	 * 			source: undefined | string,
-	 * 			function: undefined | string,
-	 * 			run: undefined | {
-	 * 				serviceId: undefined | string,
-	 * 				region: undefined | 'us-central1'
-	 * 			},
-	 * 		}
-	 * 	],
-	 * }[] | {
-	 * 	site: undefined | string,
-	 * 	public: undefined | string,
-	 * 	rewrites: undefined | [
-	 * 		{
-	 * 			source: undefined | string,
-	 * 			function: undefined | string,
-	 * 			run: undefined | {
-	 * 				serviceId: undefined | string,
-	 * 				region: undefined | 'us-central1'
-	 * 			},
-	 * 		}
-	 * 	],
-	 * },
-	 * functions: undefined | {
-	 * 	runtime: undefined | 'nodejs14'
-	 * 	source: undefined | string
-	 * }
-	 * }}
+	 * Firebase configuration from `firebase.json`. Typed with the types required by the adapter.
+	 *
+	 * @type {FirebaseConfig}
 	 */
 	let firebaseConfig;
 	try {
