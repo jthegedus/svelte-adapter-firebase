@@ -94,7 +94,7 @@ exports.${name} = functions.https.onRequest(async (request, response) => {
 		functions.logger.info("SvelteKit SSR Handler initialised!");
 	}
 	functions.logger.info("Requested resource: " + request.originalUrl);
-	return await ${ssrSvelteFunctionName}(request, response);
+	return ${ssrSvelteFunctionName}(request, response);
 });
 +--------------------------------------------------+`
 			);
