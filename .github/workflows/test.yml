@@ -29,7 +29,8 @@ jobs:
       fail-fast: false
       matrix:
         dirs:
-          - examples/**
+          - examples/functions_single_site
+          - examples/run_single_site
         os:
           - ubuntu-latest
           - macos-latest
