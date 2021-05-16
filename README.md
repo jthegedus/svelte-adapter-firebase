@@ -108,7 +108,6 @@ Adapter options:
   - output dir of Cloud Run service, relative from the `firebaseJson` location
   - default: `./.${run.serviceId}` where `run.serviceId` is pulled from the `firebase.json` rewrite rule
 
-
 Adapter output:
 
 - static assets (images, CSS, Client-side JavaScript) of your SvelteKit app output to the directory defined by `firebase.json:hosting.public`
