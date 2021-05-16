@@ -1,5 +1,6 @@
 import {copyFileSync, existsSync, readFileSync} from 'fs';
 import path from 'path';
+import {createHash} from 'crypto';
 import kleur from 'kleur';
 
 /**
@@ -364,7 +365,8 @@ function logErrorThrow({why, got, wanted, hint, docs}) {
 
 	console.log(`  See docs: ${docs}`);
 	console.log();
-	throw new Error('See above output.');
+	const errorHash = createHash('md5').update(why + got + wanted + hint + docs).digest('hex');
+	throw new Error(`See above output. Error hash: ${errorHash}`);
 }
 
 export {

@@ -55,7 +55,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./does_not_exist.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, `File ${firebaseJson} does not exist. The provided file should exist and be a Firebase JSON config.`);
+		t.is(error.message, 'See above output. Error hash: d1c6a473697671d5cb09adbedbc02396');
 	}
 );
 
@@ -65,7 +65,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/invalid.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, `Error parsing ${firebaseJson}. Unexpected token } in JSON at position 28`);
+		t.is(error.message, 'See above output. Error hash: 1d0b08ec7b33b5d55bbf411fc2c57b3f');
 	}
 );
 
@@ -75,7 +75,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/missing_hosting.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, `Error with config ${firebaseJson}. "hosting" field required.`);
+		t.is(error.message, 'See above output. Error hash: ee83e47e470ffb64e1022cb1ca373667');
 	}
 );
 
@@ -85,7 +85,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/sites_missing_rewrites.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, `Error with config ${firebaseJson}. "hosting" configs should identify their "site" name as Firebase supports multiple sites. This site config does not {"public":"some_dir"}`);
+		t.is(error.message, 'See above output. Error hash: 036ac1c936c5737368e75116b19a455c');
 	}
 );
 
@@ -95,7 +95,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cf_multi_site_requires_hostingSite.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, `Error with config ${firebaseJson}. No "hosting[].site" match for undefined. Ensure your svelte.config.js adapter config "hostingSite" matches an item in your Firebase config.`);
+		t.is(error.message, 'See above output. Error hash: d57c6b0d358d6b9e0fcdea66d186afa5');
 	}
 );
 
@@ -105,7 +105,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/site_missing_public.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, `Error with config ${firebaseJson}. "hosting[].public" field is required and should be a string. Hosting config with error: {}`);
+		t.is(error.message, 'See above output. Error hash: cafdfaeb44e29c274fb6f6507b59d82b');
 	}
 );
 
@@ -115,7 +115,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/site_missing_rewrite.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, `Error with config ${firebaseJson}. "hosting[].rewrites" field  required in hosting config and should be an array of object(s). Hosting config with error: {"public":"app"}`);
+		t.is(error.message, 'See above output. Error hash: 79084ae7cc2229eff3902bb400c0a545');
 	}
 );
 
@@ -125,7 +125,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cf_site_rewrite_mismatch.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: 'no_match', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, `Error with config ${firebaseJson}. "hosting[].rewrites[*]" does not contain a config with "source":"no_match" and either "function" or "run". Is your "sourceRewriteMatch" in svelte.config.js correct?`);
+		t.is(error.message, 'See above output. Error hash: d4567eef86b8f2c7fcf6165d2d0c2aa1');
 	}
 );
 
@@ -135,7 +135,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cr_missing_serviceId.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, `Error with config ${firebaseJson}. Cloud Run rewrite configuration missing required field "serviceId". Rewrite config with error: {"source":"**","run":{}}`);
+		t.is(error.message, 'See above output. Error hash: 2a448790e275e60a88cfbfbc457bb6b6');
 	}
 );
 
@@ -145,7 +145,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cr_invalid_serviceId.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, `Error with config ${firebaseJson}. "hosting[].public" field is required and should be a string. Hosting config with error: {"rewrites":[{"source":"**","run":{"serviceId":"anInvalidServiceId"}}]}`);
+		t.is(error.message, 'See above output. Error hash: 8c5fa4f640cb1f6fcdf481836dba5f2e');
 	}
 );
 
@@ -155,7 +155,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cr_invalid_region.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, `Error with config ${firebaseJson}. Firebase Hosting rewrites only support "regions":"us-central1" (docs - https://firebase.google.com/docs/functions/locations#http_and_client-callable_functions). Change "not-a-region" accordingly.`);
+		t.is(error.message, 'See above output. Error hash: 31df056aa250fdabeb6f6a7f1ffe11d6');
 	}
 );
 
@@ -165,7 +165,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cf_invalid_function_name.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, `Error with config ${firebaseJson}. The "serviceId":"invalid-func-name" must use only alphanumeric characters and underscores and cannot be longer than 62 characters.`);
+		t.is(error.message, 'See above output. Error hash: 850cde9e3e5ccc6060499de5e8072677');
 	}
 );
 
@@ -175,7 +175,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cf_site_missing_functions.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, `Error with config ${firebaseJson}. If you're using Cloud Functions for your SSR rewrite rule, you need to define a "functions.source" field (of type string) at your config root.`);
+		t.is(error.message, 'See above output. Error hash: 4b77ac38aba658ee1dac748579be8b01');
 	}
 );
 
@@ -241,7 +241,7 @@ test(
 	'Static asset source and dest the same dir',
 	t => {
 		const error = t.throws(() => ensureStaticResourceDirsDiffer({source: 'a', dest: 'a'}));
-		t.is(error.message, 'firebase.json:hosting.public must be a different directory to svelte.config.js:kit.files.assets');
+		t.is(error.message, 'See above output. Error hash: 3d5e040b4d834fbdc1f1763591ad3c68');
 	}
 );
 
@@ -259,20 +259,20 @@ test(
 	'No Function runtime provided',
 	t => {
 		const error = t.throws(() => ensureCompatibleCloudFunctionVersion({}));
-		t.is(error.message, 'SvelteKit on Cloud Functions requires Node.js 14 or newer runtime. Set this in "package.json:engines.node" with one of "14" or "firebase.json:functions.runtime" with one of "nodejs14" - see the docs https://firebase.google.com/docs/functions/manage-functions#set_nodejs_version');
+		t.is(error.message, 'See above output. Error hash: 9e40e7b9761be17831477824c1ecac6d');
 	}
 );
 test(
 	'Invalid Function runtime in package.json',
 	t => {
 		const error = t.throws(() => ensureCompatibleCloudFunctionVersion({functionsPackageJsonEngine: '12'}));
-		t.is(error.message, 'SvelteKit on Cloud Functions requires Node.js 14 or newer runtime. Set this in "package.json:engines.node" with one of "14" or "firebase.json:functions.runtime" with one of "nodejs14" - see the docs https://firebase.google.com/docs/functions/manage-functions#set_nodejs_version');
+		t.is(error.message, 'See above output. Error hash: 9e40e7b9761be17831477824c1ecac6d');
 	}
 );
 test(
 	'Invalid Function runtime in firebase.json',
 	t => {
 		const error = t.throws(() => ensureCompatibleCloudFunctionVersion({firebaseJsonFunctionsRuntime: 'nodejs12'}));
-		t.is(error.message, 'SvelteKit on Cloud Functions requires Node.js 14 or newer runtime. Set this in "package.json:engines.node" with one of "14" or "firebase.json:functions.runtime" with one of "nodejs14" - see the docs https://firebase.google.com/docs/functions/manage-functions#set_nodejs_version');
+		t.is(error.message, 'See above output. Error hash: 9e40e7b9761be17831477824c1ecac6d');
 	}
 );
