@@ -25,7 +25,7 @@ const entrypoint = function ({
 			const {firebaseJsonDir, functions, cloudRun, publicDir} = parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJson});
 
 			// Temporary solution until - https://github.com/sveltejs/kit/issues/1435 - is resolved
-			const svelteConfig = await import(pathToFileURL(path.join(process.cwd(), 'svelte.config.js')));
+			const svelteConfig = await import(pathToFileURL(path.join(process.cwd(), 'svelte.config.js')).toString());
 			const svelteStaticDir = path.join(process.cwd(), svelteConfig?.kit?.files?.assets || 'static');
 			ensureStaticResourceDirsDiffer({source: svelteStaticDir, dest: publicDir});
 
