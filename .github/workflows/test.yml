@@ -38,18 +38,18 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: install asdf
-        if: ${{ matrix.os }} != windows-latest
+        if: ${{ matrix.os }} != 'windows-latest'
         uses: asdf-vm/actions/install@v1
         with:
           before_install: bash -c '${ASDF_DATA_DIR:=$HOME/.asdf}/plugins/nodejs/bin/import-release-team-keyring'
       # START: Windows
       - name: install Node.js on Windows
-        if: ${{ matrix.os }} == windows-latest
+        if: ${{ matrix.os }} == 'windows-latest'
         uses: actions/setup-node@v2
         with:
           node-version: 14.16.1
       - name: install pnpm on Windows
-        if: ${{ matrix.os }} == windows-latest
+        if: ${{ matrix.os }} == 'windows-latest'
         run: curl -f https://get.pnpm.io/v6.js | node - add --global pnpm@6
       # END: Windows
       - name: Install svelte-adapter-firebase deps
