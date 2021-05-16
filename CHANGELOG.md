@@ -1,3 +1,10 @@
+## [0.7.6](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.7.5...v0.7.6) (2021-05-16)
+
+
+### Bug Fixes
+
+* import of svelte.config.js requires string ([#74](https://github.com/jthegedus/svelte-adapter-firebase/issues/74)) ([3376a22](https://github.com/jthegedus/svelte-adapter-firebase/commit/3376a2250e64f79443a47787b206a8eb4485afe2))
+
 ## [0.7.5](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.7.4...v0.7.5) (2021-05-16)
 
 
