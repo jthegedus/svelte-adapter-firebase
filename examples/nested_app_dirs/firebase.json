@@ -1,0 +1,15 @@
+{
+	"hosting": {
+		"public": "app/public",
+		"site": "nested-app-dir-site",
+		"rewrites": [
+			{
+				"source": "**",
+				"function": "nested_app_dir"
+			}
+		]
+	},
+	"functions": {
+		"source": "functions"
+	}
+}

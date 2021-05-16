@@ -4,7 +4,9 @@ import firebase from 'svelte-adapter-firebase';
 const config = {
 	kit: {
 		// Hydrate the <div id="svelte"> element in src/app.html
-		adapter: firebase(),
+		adapter: firebase({
+			firebaseJson: '../firebase.json'
+		}),
 		target: '#svelte'
 	}
 };
