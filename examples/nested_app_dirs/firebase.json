@@ -5,7 +5,7 @@
 		"rewrites": [
 			{
 				"source": "**",
-				"function": "nested_app_dir"
+				"function": "sveltekit"
 			}
 		]
 	},

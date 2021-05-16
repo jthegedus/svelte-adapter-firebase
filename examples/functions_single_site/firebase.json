@@ -5,7 +5,7 @@
 		"rewrites": [
 			{
 				"source": "**",
-				"function": "svelte_function_single_site"
+				"function": "sveltekit"
 			}
 		]
 	},
