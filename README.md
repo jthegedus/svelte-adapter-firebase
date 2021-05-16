@@ -63,7 +63,7 @@ In your standard SvelteKit project:
   };
   ```
 
-- in `package.json` remove Firebase Hosting public directory before `svelte-kit build` to work around https://github.com/sveltejs/kit/issues/587
+- in the SvelteKit project's `package.json` remove Firebase Hosting public directory before `svelte-kit build` to work around https://github.com/sveltejs/kit/issues/587
 
 ```json
 	"scripts": {
