@@ -1,4 +1,6 @@
 {
+	"xo.enable": true,
+	"xo.format.enable": true,
 	"files.insertFinalNewline": true,
 	"[javascript]": {
 		"editor.defaultFormatter": "samverschueren.linter-xo"
