@@ -1,5 +1,6 @@
 import {copyFileSync, existsSync, readFileSync} from 'fs';
 import path from 'path';
+import kleur from 'kleur';
 
 /**
  * @typedef CloudRunRewriteConfig
@@ -32,6 +33,8 @@ import path from 'path';
 */
 
 /**
+ * Firebase configuration from `firebase.json`. Typed with the types required by the adapter.
+ *
  * @typedef FirebaseConfig
  * @type {object} config
  * @property {undefined|HostingConfig|Array.<HostingConfig>} hosting
@@ -64,12 +67,12 @@ function isString(parameter) {
 function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJson}) {
 	firebaseJson = path.resolve(firebaseJson);
 	if (!existsSync(firebaseJson)) {
-		throw new Error(`File ${firebaseJson} does not exist. The provided file should exist and be a Firebase JSON config.`);
+		const errorMessage = `File ${firebaseJson} does not exist.
+The provided file should exist and be a Firebase JSON config.`;
+		throw new Error(errorMessage);
 	}
 
 	/**
-	 * Firebase configuration from `firebase.json`. Typed with the types required by the adapter.
-	 *
 	 * @type {FirebaseConfig}
 	 */
 	let firebaseConfig;
@@ -229,11 +232,23 @@ function ensureCompatibleCloudFunctionVersion({functionsPackageJsonEngine, fireb
 	}
 }
 
+/**
+ * Format message with relative dir on following newline.
+ *
+ * @param {string} message
+ * @param {string} dir
+ * @returns {string} formatted message with relative dir on following newline
+ */
+function logRelativeDir(message, dir) {
+	return `${message}:\n\t${kleur.italic(path.relative(process.cwd(), dir))}`;
+}
+
 export {
+	copyFileIfExistsSync,
+	ensureCompatibleCloudFunctionVersion,
+	ensureStaticResourceDirsDiffer,
+	logRelativeDir,
 	parseFirebaseConfiguration,
 	validCloudRunServiceId,
-	validCloudFunctionName,
-	copyFileIfExistsSync,
-	ensureStaticResourceDirsDiffer,
-	ensureCompatibleCloudFunctionVersion
+	validCloudFunctionName
 };
