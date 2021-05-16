@@ -30,6 +30,42 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 		throw new Error(`File ${firebaseJson} does not exist. The provided file should exist and be a Firebase JSON config.`);
 	}
 
+	/**
+	 * Firebase configuration from `firebase.json`. Only required types of the adapter.
+	 * @type {{
+	 * hosting: undefined | {
+	 * 	site: undefined | string,
+	 * 	public: undefined | string,
+	 * 	rewrites: undefined | [
+	 * 		{
+	 * 			source: undefined | string,
+	 * 			function: undefined | string,
+	 * 			run: undefined | {
+	 * 				serviceId: undefined | string,
+	 * 				region: undefined | 'us-central1'
+	 * 			},
+	 * 		}
+	 * 	],
+	 * }[] | {
+	 * 	site: undefined | string,
+	 * 	public: undefined | string,
+	 * 	rewrites: undefined | [
+	 * 		{
+	 * 			source: undefined | string,
+	 * 			function: undefined | string,
+	 * 			run: undefined | {
+	 * 				serviceId: undefined | string,
+	 * 				region: undefined | 'us-central1'
+	 * 			},
+	 * 		}
+	 * 	],
+	 * },
+	 * functions: undefined | {
+	 * 	runtime: undefined | 'nodejs14'
+	 * 	source: undefined | string
+	 * }
+	 * }}
+	 */
 	let firebaseConfig;
 	try {
 		firebaseConfig = JSON.parse(readFileSync(firebaseJson, 'utf-8'));
