@@ -1,6 +1,6 @@
 import {readFileSync, writeFileSync} from 'fs';
 import path from 'path';
-import {fileURLToPath} from 'url';
+import {fileURLToPath, pathToFileURL} from 'url';
 import {copyFileIfExistsSync, ensureCompatibleCloudFunctionVersion, ensureStaticResourceDirsDiffer, parseFirebaseConfiguration} from './utils.js';
 import esbuild from 'esbuild';
 
@@ -25,7 +25,7 @@ const entrypoint = function ({
 			const {firebaseJsonDir, functions, cloudRun, publicDir} = parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJson});
 
 			// Temporary solution until - https://github.com/sveltejs/kit/issues/1435 - is resolved
-			const svelteConfig = await import(path.join(process.cwd(), 'svelte.config.js'));
+			const svelteConfig = await import(pathToFileURL(path.join(process.cwd(), 'svelte.config.js')));
 			const svelteStaticDir = path.join(process.cwd(), svelteConfig?.kit?.files?.assets || 'static');
 			ensureStaticResourceDirsDiffer({source: svelteStaticDir, dest: publicDir});
 
