@@ -67,8 +67,7 @@ function isString(parameter) {
 function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJson}) {
 	firebaseJson = path.resolve(firebaseJson);
 	if (!existsSync(firebaseJson)) {
-		const errorMessage = `File ${firebaseJson} does not exist.
-The provided file should exist and be a Firebase JSON config.`;
+		const errorMessage = `File ${firebaseJson} does not exist. The provided file should exist and be a Firebase JSON config.`;
 		throw new Error(errorMessage);
 	}
 
