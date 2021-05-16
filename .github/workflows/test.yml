@@ -31,6 +31,7 @@ jobs:
         dirs:
           - examples/functions_single_site
           - examples/nested_app_dirs/app
+          - examples/run_custom_build_dir
           - examples/run_single_site
         os:
           - ubuntu-latest
