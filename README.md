@@ -91,6 +91,7 @@ Since SvelteKit is still in Beta, and the Adapter API is _most_ in flux, here is
 **Note**: only the versions listed have been tested together, if others happen to work, it is just coincidence. This is beta software after all.
 
 <!-- END -->
+
 ## Configuration Overview
 
 Adapter options:
