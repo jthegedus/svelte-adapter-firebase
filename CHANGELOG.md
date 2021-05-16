@@ -1,3 +1,10 @@
+## [0.7.5](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.7.4...v0.7.5) (2021-05-16)
+
+
+### Bug Fixes
+
+* import call for svelte.config.js on windows ([#76](https://github.com/jthegedus/svelte-adapter-firebase/issues/76)) ([02992ce](https://github.com/jthegedus/svelte-adapter-firebase/commit/02992cebfaa7681200a1773d00f87b4e3be00583))
+
 ## [0.7.4](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.7.3...v0.7.4) (2021-05-13)
 
 
