@@ -1,8 +1,13 @@
 import {readFileSync, writeFileSync} from 'fs';
 import path from 'path';
 import {fileURLToPath, pathToFileURL} from 'url';
-import {copyFileIfExistsSync, ensureCompatibleCloudFunctionVersion, ensureStaticResourceDirsDiffer, parseFirebaseConfiguration} from './utils.js';
 import esbuild from 'esbuild';
+import kleur from 'kleur';
+import {copyFileIfExistsSync,
+	ensureCompatibleCloudFunctionVersion,
+	ensureStaticResourceDirsDiffer,
+	logRelativeDir,
+	parseFirebaseConfiguration} from './utils.js';
 
 /**
  * @param {{
@@ -22,12 +27,14 @@ const entrypoint = function ({
 	const adapter = {
 		name: 'svelte-adapter-firebase',
 		async adapt(utils) {
-			const {firebaseJsonDir, functions, cloudRun, publicDir} = parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJson});
+			utils.log.minor(`Adapter configuration:\n\t${kleur.italic(JSON.stringify({firebaseJson, hostingSite, sourceRewriteMatch, cloudRunBuildDir}))}`);
+			const {firebaseJsonDir, functions, cloudRun, publicDir} = parseFirebaseConfiguration({firebaseJson, hostingSite, sourceRewriteMatch});
 
-			// Temporary solution until - https://github.com/sveltejs/kit/issues/1435 - is resolved
+			// START: Temporary solution until - https://github.com/sveltejs/kit/issues/1435 - is resolved
 			const svelteConfig = await import(pathToFileURL(path.join(process.cwd(), 'svelte.config.js')).toString());
 			const svelteStaticDir = path.join(process.cwd(), svelteConfig?.kit?.files?.assets || 'static');
 			ensureStaticResourceDirsDiffer({source: svelteStaticDir, dest: publicDir});
+			// END
 
 			if (functions !== false) {
 				await adaptToCloudFunctions({utils, ...functions});
@@ -37,15 +44,15 @@ const entrypoint = function ({
 				await adaptToCloudRun({utils, ...cloudRun, firebaseJsonDir, cloudRunBuildDir});
 			}
 
-			utils.log.warn(`Erasing ${publicDir} before processing static assets`);
+			utils.log.minor(logRelativeDir('Erasing static asset dir before processing', publicDir));
 			utils.rimraf(publicDir);
 
-			utils.log.minor(`Prerendering static pages to: ${publicDir}`);
-			await utils.prerender({dest: publicDir});
-
-			utils.log.minor(`Writing client application to: ${publicDir}`);
+			utils.log.minor(logRelativeDir('Writing client application to', publicDir));
 			utils.copy_static_files(publicDir);
 			utils.copy_client_files(publicDir);
+
+			utils.log.minor(logRelativeDir('Prerendering static pages to', publicDir));
+			await utils.prerender({dest: publicDir});
 		}
 	};
 
@@ -75,17 +82,15 @@ async function adaptToCloudFunctions({utils, name, source, runtime}) {
 	const serverOutputDir = path.join(source, path.dirname(functionsMain), ssrDirname);
 
 	await prepareEntrypoint({utils, serverOutputDir});
-	utils.log.minor(`Writing Cloud Function server assets to: ${serverOutputDir}`);
+	utils.log.minor(logRelativeDir('Writing Cloud Function server assets to', serverOutputDir));
 
 	// Prepare Cloud Function
 	const functionsEntrypoint = path.join(source, functionsMain);
 	try {
 		const ssrSvelteFunctionName = ssrDirname.replace(/\W/g, '').concat('Server');
 		if (!readFileSync(functionsEntrypoint, 'utf-8').includes(`${name} =`)) {
-			utils.log.warn(
-				// eslint-disable-next-line indent
-`Add the following Cloud Function to ${functionsEntrypoint}
-+--------------------------------------------------+
+			utils.log.info(`Add the following Cloud Function to ${functionsEntrypoint}`);
+			utils.log.info(kleur.bold().cyan(`
 let ${ssrSvelteFunctionName};
 exports.${name} = functions.https.onRequest(async (request, response) => {
 	if (!${ssrSvelteFunctionName}) {
@@ -96,8 +101,8 @@ exports.${name} = functions.https.onRequest(async (request, response) => {
 	functions.logger.info("Requested resource: " + request.originalUrl);
 	return ${ssrSvelteFunctionName}(request, response);
 });
-+--------------------------------------------------+`
-			);
+
+`));
 		}
 	} catch (error) {
 		throw new Error(`Error reading Cloud Function entrypoint file: ${functionsEntrypoint}. ${error.message}`);
@@ -118,7 +123,7 @@ async function adaptToCloudRun({utils, serviceId, region, firebaseJsonDir, cloud
 	const serverOutputDir = path.join(firebaseJsonDir, cloudRunBuildDir || `.${serviceId}`);
 
 	await prepareEntrypoint({utils, serverOutputDir});
-	utils.log.info(`Writing Cloud Run service to ${serverOutputDir}`);
+	utils.log.minor(logRelativeDir('Writing Cloud Run service to', serverOutputDir));
 
 	// Prepare Cloud Run package.json - read SvelteKit App 'package.json', modify the JSON, write to serverOutputDir
 	const pkgjson = JSON.parse(readFileSync(path.join(process.cwd(), 'package.json'), 'utf-8'));
@@ -139,15 +144,9 @@ async function adaptToCloudRun({utils, serviceId, region, firebaseJsonDir, cloud
 	copyFileIfExistsSync('yarn.lock', serverOutputDir);
 	copyFileIfExistsSync('pnpm-lock.yaml', serverOutputDir);
 
-	utils.log.warn(
-		// eslint-disable-next-line indent
-`To deploy your Cloud Run service, run both of these commands:
-+--------------------------------------------------+
-gcloud beta run deploy ${serviceId} --platform managed --region ${region} --source ${serverOutputDir} --allow-unauthenticated
-firebase deploy --only hosting
-+--------------------------------------------------+
-Firebase deployment is required as your static assets and route manifests may have changed from this build.`
-	);
+	utils.log.info(kleur.bold('To deploy your Cloud Run service, run both of these commands:'));
+	utils.log.info(kleur.bold().cyan(`gcloud beta run deploy ${serviceId} --platform managed --region ${region} --source ${serverOutputDir} --allow-unauthenticated && firebase deploy --only hosting`));
+	utils.log.info(kleur.bold('Firebase deployment is required as your static assets and route manifests may have changed from this build.'));
 }
 
 /**

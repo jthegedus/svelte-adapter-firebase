@@ -6,7 +6,7 @@
 			{
 				"source": "**",
 				"run": {
-					"serviceId": "svelte-run-single-site"
+					"serviceId": "cloudrun"
 				}
 			}
 		]

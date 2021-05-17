@@ -1,5 +1,46 @@
 import {copyFileSync, existsSync, readFileSync} from 'fs';
 import path from 'path';
+import {createHash} from 'crypto';
+import kleur from 'kleur';
+
+/**
+ * @typedef CloudRunRewriteConfig
+ * @type {object} cloudrun
+ * @property {undefined|string} cloudrun.serviceId
+ * @property {undefined|'us-central1'} cloudrun.region
+ */
+
+/**
+ * @typedef HostingRewriteConfig
+ * @type {object} rewrite
+ * @property {undefined|string} rewrite.source
+ * @property {undefined|string} rewrite.function
+ * @property {undefined|CloudRunRewriteConfig} rewrite.run
+ */
+
+/**
+ * @typedef HostingConfig
+ * @type {object} hosting
+ * @property {undefined|string} hosting.site
+ * @property {undefined|string} hosting.public
+ * @property {undefined|Array.<HostingRewriteConfig>} hosting.rewrites
+ */
+
+/**
+ * @typedef FunctionsConfig
+ * @type {object} functions
+ * @property {undefined|string} functions.source
+ * @property {undefined|'nodejs14'} functions.runtime
+*/
+
+/**
+ * Firebase configuration from `firebase.json`. Typed with the types required by the adapter.
+ *
+ * @typedef FirebaseConfig
+ * @type {object} config
+ * @property {undefined|HostingConfig|Array.<HostingConfig>} hosting
+ * @property {undefined|FunctionsConfig} functions
+ */
 
 /**
  *
@@ -22,23 +63,42 @@ function isString(parameter) {
  * 	cloudRun: false | { serviceId: string, region: string };
  * 	firebaseJsonDir: string;
  * 	publicDir: string
- * }}
+ * }} Functions or Run config with `public` dir and `firebase.json` root dir
  */
 function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJson}) {
 	firebaseJson = path.resolve(firebaseJson);
 	if (!existsSync(firebaseJson)) {
-		throw new Error(`File ${firebaseJson} does not exist. The provided file should exist and be a Firebase JSON config.`);
+		logErrorThrow({
+			why: 'File does not exist.',
+			got: `${kleur.italic(path.relative(process.cwd(), firebaseJson))}`,
+			hint: kleur.blue(`The adapter requires a ${kleur.italic('firebase.json')} file. The above file is computed using the adapter configuration. If the default adapter config is not working, consider updating it in ${kleur.italic('svelte.config.js')}`),
+			docs: 'https://github.com/jthegedus/svelte-adapter-firebase#configuration-overview'
+		}
+		);
 	}
 
+	/**
+	 * @type {FirebaseConfig}
+	 */
 	let firebaseConfig;
 	try {
 		firebaseConfig = JSON.parse(readFileSync(firebaseJson, 'utf-8'));
 	} catch (error) {
-		throw new Error(`Error parsing ${firebaseJson}. ${error.message}`);
+		logErrorThrow({
+			why: `Error parsing ${kleur.italic('firebase.json')}`,
+			got: error.message,
+			docs: 'https://jsonlint.com/ & https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse'
+		});
 	}
 
 	if (!firebaseConfig?.hosting) {
-		throw new TypeError(`Error with config ${firebaseJson}. "hosting" field required.`);
+		logErrorThrow({
+			why: 'Required field missing from Firebase Configuration file.',
+			got: Object.keys(firebaseConfig) && `fields ${kleur.bold(Object.keys(firebaseConfig).toString())}`,
+			wanted: `${kleur.bold('"hosting"')}`,
+			hint: 'Add the field or fix the typo in your ' + kleur.italic('firebase.json') + ' file',
+			docs: 'https://firebase.google.com/docs/hosting/full-config#firebase-json_example'
+		});
 	}
 
 	// Force "hosting" field to be array
@@ -48,7 +108,13 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 	if (firebaseHostingConfig.length > 1) {
 		for (const item of firebaseHostingConfig) {
 			if (!item.site) {
-				throw new Error(`Error with config ${firebaseJson}. "hosting" configs should identify their "site" name as Firebase supports multiple sites. This site config does not ${JSON.stringify(item)}`);
+				logErrorThrow({
+					why: `Multiple hosting configurations found, which requires each to have a ${kleur.bold('"site"')} field, one does not.`,
+					got: `\n${kleur.bold(JSON.stringify(item, null, 2))}`,
+					wanted: `Field named ${kleur.bold('"site": "<site_name>"')}`,
+					hint: 'Add the "site" field to the above Hosting Configuration in ' + kleur.italic('firebase.json'),
+					docs: 'https://firebase.google.com/docs/hosting/multisites'
+				});
 			}
 		}
 	}
@@ -58,15 +124,45 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 		firebaseHostingConfig.find(item => item.site === hostingSite);
 
 	if (!hostingConfig) {
-		throw new Error(`Error with config ${firebaseJson}. No "hosting[].site" match for ${hostingSite}. Ensure your svelte.config.js adapter config "hostingSite" matches an item in your Firebase config.`);
+		if (!hostingSite) {
+			logErrorThrow({
+				why: `Multiple hosting configurations found but no "${kleur.bold('hostingSite')}" specified in ${kleur.italic('svelte.config.js')} adapter config."`,
+				got: kleur.bold(`"hostingSite": ${hostingSite}`),
+				wanted: kleur.bold('"hostingSite": "<site_name>"') + ` in ${kleur.italic('svelte.config.js')} adapter config`,
+				docs: 'https://github.com/jthegedus/svelte-adapter-firebase#configuration-overview'
+			});
+		}
+
+		const hostingConfigSiteValues = firebaseHostingConfig.map(item => {
+			return {site: item.site};
+		});
+		logErrorThrow({
+			why: `No ${kleur.bold('"hosting[].site"')} match for found for ${kleur.bold(`"${hostingSite}"`)}`,
+			got: `"hosting[].site" values -\n${kleur.bold(JSON.stringify(hostingConfigSiteValues, null, 2))}`,
+			wanted: `One to be ${kleur.bold(`{"site": "${hostingSite}"}`)}`,
+			hint: `Update adapter config "${kleur.bold('hostingSite')}" in ${kleur.italic('svelte.config.js')} to match one of the above Hosting configs.`,
+			docs: 'https://github.com/jthegedus/svelte-adapter-firebase#configuration-overview'
+		});
 	}
 
 	if (!isString(hostingConfig?.public)) {
-		throw new Error(`Error with config ${firebaseJson}. "hosting[].public" field is required and should be a string. Hosting config with error: ${JSON.stringify(hostingConfig)}`);
+		logErrorThrow({
+			why: 'Required "hosting.public" field not found for hosting configuration',
+			got: `Hosting Configuration -\n${JSON.stringify(hostingConfig, null, 2)}`,
+			wanted: '"public": "<some_dir>"',
+			hint: 'Add a "public" field to the matched hosting config in firebase.json',
+			docs: 'https://firebase.google.com/docs/hosting/full-config#public'
+		});
 	}
 
 	if (!Array.isArray(hostingConfig?.rewrites)) {
-		throw new TypeError(`Error with config ${firebaseJson}. "hosting[].rewrites" field  required in hosting config and should be an array of object(s). Hosting config with error: ${JSON.stringify(hostingConfig)}`);
+		logErrorThrow({
+			why: 'Required "hosting[].rewrites" field not found for hosting configuration',
+			got: `Hosting Configuration -\n${JSON.stringify(hostingConfig, null, 2)}`,
+			wanted: '"rewrites": [{...}]',
+			hint: `Hosting conifig requires a rewrites array with either Cloud Run or Cloud Function with rewrite rule matching "source":"${sourceRewriteMatch}"`,
+			docs: 'https://firebase.google.com/docs/hosting/full-config#rewrite-functions'
+		});
 	}
 
 	const rewriteConfig = hostingConfig.rewrites.find(item => {
@@ -74,28 +170,62 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 	});
 
 	if (!rewriteConfig) {
-		throw new Error(`Error with config ${firebaseJson}. "hosting[].rewrites[*]" does not contain a config with "source":"${sourceRewriteMatch}" and either "function" or "run". Is your "sourceRewriteMatch" in svelte.config.js correct?`);
+		logErrorThrow({
+			why: `Required "hosting[].rewrites[]" does not contain a config with "source":"${sourceRewriteMatch} and either "function":"<func_name>" or "run":{...} entries`,
+			got: `Hosting Configuration -\n${JSON.stringify(hostingConfig, null, 2)}`,
+			wanted: '"rewrites": [{...}]',
+			hint: `Hosting conifig requires a rewrites array with rules for either Cloud Run or Cloud Function with "source":"${sourceRewriteMatch}"`,
+			docs: 'https://firebase.google.com/docs/hosting/full-config#rewrite-functions'
+		});
 	}
 
 	if (rewriteConfig?.run && (!rewriteConfig.run.serviceId || !isString(rewriteConfig.run.serviceId))) {
-		throw new Error(`Error with config ${firebaseJson}. Cloud Run rewrite configuration missing required field "serviceId". Rewrite config with error: ${JSON.stringify(rewriteConfig)}`);
+		logErrorThrow({
+			why: 'Required "serviceId" field not found for Cloud Run rewrite rule',
+			got: `Rewrite rule -\n${JSON.stringify(rewriteConfig, null, 2)}`,
+			wanted: '"serviceId": "<cloud run service name>"',
+			hint: 'Add the field or fix the typo for the rewrite rule in the ' + kleur.italic('firebase.json') + ' file',
+			docs: 'https://firebase.google.com/docs/hosting/full-config#rewrite-cloud-run-container'
+		});
 	}
 
 	if (rewriteConfig?.run && !validCloudRunServiceId(rewriteConfig.run.serviceId)) {
-		throw new Error(`Error with config ${firebaseJson}. The "serviceId":"${rewriteConfig.run.serviceId}" must use only lowercase alphanumeric characters and dashes, cannot begin or end with a dash, and cannot be longer than 63 characters.`);
+		logErrorThrow({
+			why: 'Cloud Run "serviceId" is invalid',
+			got: `${rewriteConfig.run.serviceId}`,
+			hint: 'Cloud Run "serviceId" must use only lowercase alphanumeric characters and dashes, cannot begin or end with a dash, and cannot be longer than 63 characters. Update ' + kleur.italic('firebase.json') + ' accordingly.',
+			docs: 'https://firebase.google.com/docs/hosting/full-config#rewrite-cloud-run-container'
+		});
 	}
 
 	if (rewriteConfig?.run && rewriteConfig?.run?.region && rewriteConfig.run.region !== 'us-central1') {
-		throw new Error(`Error with config ${firebaseJson}. Firebase Hosting rewrites only support "regions":"us-central1" (docs - https://firebase.google.com/docs/functions/locations#http_and_client-callable_functions). Change "${rewriteConfig.run.region}" accordingly.`);
+		logErrorThrow({
+			why: 'Cloud Run "region" is invalid',
+			got: `\n${JSON.stringify(rewriteConfig.run, null, 2)}`,
+			wanted: '"region": "us-central1"',
+			hint: 'Firebase Hosting rewrites only support "regions":"us-central1". Update ' + kleur.italic('firebase.json') + ' accordingly.',
+			docs: 'https://firebase.google.com/docs/functions/locations#http_and_client-callable_functions'
+		});
 	}
 
 	if (rewriteConfig?.function && !validCloudFunctionName(rewriteConfig.function)) {
-		throw new Error(`Error with config ${firebaseJson}. The "serviceId":"${rewriteConfig.function}" must use only alphanumeric characters and underscores and cannot be longer than 62 characters.`);
+		logErrorThrow({
+			why: 'Function name for rewrite rule is invalid',
+			got: `\n${JSON.stringify(rewriteConfig.function, null, 2)}`,
+			hint: 'Function name must use only alphanumeric characters and underscores and cannot be longer than 62 characters. Update ' + kleur.italic('firebase.json') + ' accordingly.',
+			docs: 'https://firebase.google.com/docs/hosting/full-config#rewrite-functions'
+		});
 	}
 
 	// If function, ensure function root-level field is present
 	if (rewriteConfig?.function && (!firebaseConfig?.functions || !firebaseConfig.functions?.source || !isString(firebaseConfig.functions.source))) {
-		throw new Error(`Error with config ${firebaseJson}. If you're using Cloud Functions for your SSR rewrite rule, you need to define a "functions.source" field (of type string) at your config root.`);
+		logErrorThrow({
+			why: 'Required "functions.source" field missing from Firebase Configuration file',
+			got: `Firebase Configuration -\n${JSON.stringify(firebaseConfig, null, 2)}`,
+			wanted: `${kleur.bold('"functions": { "source": "<functions dir>"}')}`,
+			hint: 'Add the field or fix the typo in your ' + kleur.italic('firebase.json') + ' file',
+			docs: 'https://firebase.google.com/docs/functions/manage-functions#deploy_functions'
+		});
 	}
 
 	return {
@@ -161,7 +291,11 @@ function copyFileIfExistsSync(filename, destDir) {
  */
 function ensureStaticResourceDirsDiffer({source, dest}) {
 	if (source === dest) {
-		throw new Error('firebase.json:hosting.public must be a different directory to svelte.config.js:kit.files.assets');
+		logErrorThrow({
+			why: 'firebase.json:hosting.public must be a different directory to svelte.config.js:kit.files.assets',
+			hint: 'Ideally keep svelte.config.js kit.files.assets as "static" and firebase.json:hosting.public as "public"',
+			docs: 'https://github.com/jthegedus/svelte-adapter-firebase/issues/22#issuecomment-831170396'
+		});
 	}
 }
 
@@ -183,15 +317,64 @@ function ensureCompatibleCloudFunctionVersion({functionsPackageJsonEngine, fireb
 	];
 
 	if (!validPackageJsonValues.includes(functionsPackageJsonEngine) && !validFirebaseJsonValues.includes(firebaseJsonFunctionsRuntime)) {
-		throw new Error(`SvelteKit on Cloud Functions requires Node.js 14 or newer runtime. Set this in "package.json:engines.node" with one of "${validPackageJsonValues}" or "firebase.json:functions.runtime" with one of "${validFirebaseJsonValues}" - see the docs https://firebase.google.com/docs/functions/manage-functions#set_nodejs_version`);
+		logErrorThrow({
+			why: 'Node.js runtime not supported. SvelteKit on Cloud Functions requires Node.js 14 or newer runtime.',
+			hint: `Set this in "package.json:engines.node" with one of "${validPackageJsonValues}" or "firebase.json:functions.runtime" with one of "${validFirebaseJsonValues}"`,
+			docs: 'https://firebase.google.com/docs/functions/manage-functions#set_nodejs_version'
+		});
 	}
 }
 
+/**
+ * Format message with relative dir on following newline.
+ *
+ * @param {string} message
+ * @param {string} dir
+ * @returns {string} formatted message with relative dir on following newline
+ */
+function logRelativeDir(message, dir) {
+	return `${message}:\n\t${kleur.italic(path.relative(process.cwd(), dir))}`;
+}
+
+/**
+ * Log formatted error before `throw new Error()`
+ *
+ * @param {{
+ * 	why: string,
+ * 	got?: string,
+ * 	wanted?: string,
+ * 	hint?: string,
+ * 	docs: string,
+ * }} params
+ */
+function logErrorThrow({why, got, wanted, hint, docs}) {
+	console.log();
+	console.log(kleur.red(`  Error: ${why}`));
+
+	if (got) {
+		console.log(`  Got: ${got}`);
+	}
+
+	if (wanted) {
+		console.log(`  Wanted: ${wanted}`);
+	}
+
+	if (hint) {
+		console.log(kleur.blue(`  Hint: ${hint}`));
+	}
+
+	console.log(`  See docs: ${docs}`);
+	console.log();
+	const errorHash = createHash('md5').update(why + got + wanted + hint + docs).digest('hex');
+	throw new Error(`See above output. Error hash: ${errorHash}`);
+}
+
 export {
+	copyFileIfExistsSync,
+	ensureCompatibleCloudFunctionVersion,
+	ensureStaticResourceDirsDiffer,
+	logRelativeDir,
 	parseFirebaseConfiguration,
 	validCloudRunServiceId,
-	validCloudFunctionName,
-	copyFileIfExistsSync,
-	ensureStaticResourceDirsDiffer,
-	ensureCompatibleCloudFunctionVersion
+	validCloudFunctionName
 };
