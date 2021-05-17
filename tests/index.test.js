@@ -55,7 +55,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./does_not_exist.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'See above output. Error hash: d1c6a473697671d5cb09adbedbc02396');
+		t.is(error.message, 'See above output. Error hash: 35f0234e50232c6836704e1284bdcfc6');
 	}
 );
 
@@ -85,7 +85,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/sites_missing_rewrites.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'See above output. Error hash: 036ac1c936c5737368e75116b19a455c');
+		t.is(error.message, 'See above output. Error hash: b3f0af4cee86288fefc39535563751d6');
 	}
 );
 
