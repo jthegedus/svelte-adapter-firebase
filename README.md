@@ -652,7 +652,7 @@ Firebase apps consist of many different services with the CLI providing optional
 
 We support Cloud Run with the same JS code as Cloud Functions, via the NodeJS [Functions Framework](https://github.com/GoogleCloudPlatform/functions-framework-nodejs) and reliance on the [Node14 Buildpacks](https://github.com/GoogleCloudPlatform/buildpacks/tree/main/builders/gcf/nodejs14), which is what essentially powers Cloud Functions. Diverging from this would make supporting Cloud Run more difficult. The idea behind the support is to allow usage of Cloud Run features, for example, [`min_instances`](https://cloud.google.com/run/docs/configuring/min-instances) and [concurrent requests](https://cloud.google.com/run/docs/about-concurrency) which both reduce cold starts (if that matters to you, use the CDN!)
 
-We are open to discussion on this topic, but it was not a goal when setting out to build this adapter (consider the cost/benefit).
+We are open to discussion on this topic, but it was not a goal when setting out to build this adapter (consider the cost/benefit to implement this feature well).
 
 ## FAQ
 
@@ -660,11 +660,9 @@ We are open to discussion on this topic, but it was not a goal when setting out 
 
 See [non-goals](#non-goals) _Write Cloud Function code directly into `.js` file instead of printing in console._
 
-> Firebase libs in SvelteKit routes
+> Firebase libs in SvelteKit
 
-This adapter does not try to solve the issue of using Firebase libraries in SvelteKit routes. These routes are compiled by the SvelteKit pipeline and there are many issues as ESM support in Firebase libs is not released and won't be for a long time.
-
-Using Firebase libs in SvelteKit `endpoints`/`routes` may have been resolved with https://github.com/sveltejs/kit/pull/490, however this does not mean the output is compatible with the Cloud Function runtime (investigation pending) and therefore compatible with `svelte-adapter-firebase`. Our recommendation is to prefer using Firebase Cloud Functions for API routes over SvelteKit routes.
+As recommended in the [SvelteKit FAQ](https://kit.svelte.dev/faq), please use [Firebase JS SDK v9](https://firebase.google.com/docs/web/learn-more#modular-version) as the older version of the SDK does not work well and has larger bundle sizes.
 
 > Cold Starts
 
@@ -672,7 +670,7 @@ Depends on your application load. Typically, Cloud Functions will require more i
 
 Since the purpose of using this adapter is to leverage the Firebase Hosting CDN, you should consider improving the user experience with targetted caching/TTLs.
 
-If cold starts are still an issue for your application, Cloud Run has support for [`min_instances`](https://cloud.google.com/run/docs/configuring/min-instances) which will keep `x` number of instances warm. This incurs additional costs. See the Cloud Run documentation for more.
+If cold starts are still an issue for your application, Cloud Run has support for [`min_instances`](https://cloud.google.com/run/docs/configuring/min-instances) which will keep `x` number of instances warm. This incurs additional costs, though [as discussed by Ahmet Alp Balkan here](https://github.com/ahmetb/cloud-run-faq#how-to-keep-a-cloud-run-service-warm) can be cheaper than an equivalent Compute Engine instance. See the [official Cloud Run pricing documentation](https://cloud.google.com/run/pricing) for more.
 
 ## Caveats
 
