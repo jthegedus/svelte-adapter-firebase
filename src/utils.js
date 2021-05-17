@@ -70,7 +70,7 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 	if (!existsSync(firebaseJson)) {
 		logErrorThrow({
 			why: 'File does not exist.',
-			got: `${kleur.italic(firebaseJson)}`,
+			got: `${kleur.italic(path.relative(process.cwd(), firebaseJson))}`,
 			hint: kleur.blue(`The adapter requires a ${kleur.italic('firebase.json')} file. The above file is computed using the adapter configuration. If the default adapter config is not working, consider updating it in ${kleur.italic('svelte.config.js')}`),
 			docs: 'https://github.com/jthegedus/svelte-adapter-firebase#configuration-overview'
 		}
@@ -94,7 +94,7 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 	if (!firebaseConfig?.hosting) {
 		logErrorThrow({
 			why: 'Required field missing from Firebase Configuration file.',
-			got: `fields ${kleur.bold(Object.keys(firebaseConfig).toString())}`,
+			got: Object.keys(firebaseConfig) && `fields ${kleur.bold(Object.keys(firebaseConfig).toString())}`,
 			wanted: `${kleur.bold('"hosting"')}`,
 			hint: 'Add the field or fix the typo in your ' + kleur.italic('firebase.json') + ' file',
 			docs: 'https://firebase.google.com/docs/hosting/full-config#firebase-json_example'
@@ -112,7 +112,7 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 					why: `Multiple hosting configurations found, which requires each to have a ${kleur.bold('"site"')} field, one does not.`,
 					got: `\n${kleur.bold(JSON.stringify(item, null, 2))}`,
 					wanted: `Field named ${kleur.bold('"site": "<site_name>"')}`,
-					hint: 'Add the "site" field to the above Hosting Configuration in ' + kleur.italic(`${firebaseJson}`),
+					hint: 'Add the "site" field to the above Hosting Configuration in ' + kleur.italic('firebase.json'),
 					docs: 'https://firebase.google.com/docs/hosting/multisites'
 				});
 			}
