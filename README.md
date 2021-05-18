@@ -1,7 +1,11 @@
 <div align="center">
 
+<!-- TODO: on 1.0.0 release, delete this section -->
+
 | :warning: WARNING: this project is considered to be in ALPHA until SvelteKit is available for general use and the Adapter API is stable! |
 | ---------------------------------------------------------------------------------------------------------------------------------------- |
+
+<!-- END -->
 
 ![SvelteKit adapter Firebase social preview](assets/github-preview-svelte-adapter-firebase.png)
 
@@ -51,28 +55,29 @@ In your standard SvelteKit project:
 - `npm install --save-dev svelte-adapter-firebase`
 - add adapter to `svelte.config.js` (see option in [Adapter Configurations](#adapter-configurations)):
 
-  ```diff
-  +import firebase from "svelte-adapter-firebase";
+```diff
++import firebase from "svelte-adapter-firebase";
 
-  /** @type {import('@sveltejs/kit').Config} */
-  export default {
-    kit: {
-  +   adapter: firebase(),
-      target: "#svelte",
-    },
-  };
-  ```
+/** @type {import('@sveltejs/kit').Config} */
+export default {
+  kit: {
++   adapter: firebase(),
+    target: "#svelte",
+  },
+};
+```
 
 - in the SvelteKit project's `package.json` remove Firebase Hosting public directory before `svelte-kit build` to work around https://github.com/sveltejs/kit/issues/587
 
-```json
+```diff
 	"scripts": {
 		"dev": "svelte-kit dev",
-		"build": "npx rimraf <dir used in firebase.json:hosting.public> && svelte-kit build --verbose"
+-		"build": "svelte-kit build --verbose"
++		"build": "npx rimraf <dir used in firebase.json:hosting.public> && svelte-kit build --verbose"
   }
 ```
 
-- `npm run build`. Read and repeat. The output is meant as a guide!
+- `npm run build`. **Read and repeat, the output is meant as a guide!**
 
 <!-- TODO: on 1.0.0 release, delete this section -->
 
@@ -628,11 +633,11 @@ This deploy command uses [Cloud Build](https://cloud.google.com/cloud-build) and
 
 Choice is a good thing, hopefully this comparison table helps you decide which compute environment is best for your application:
 
-| Feature                                             | Functions          | Run                |
-| --------------------------------------------------- | ------------------ | ------------------ |
-| Firebase Emulator Integration                       | :heavy_check_mark: | :x:                |
-| Hosting CDN content deployed with Compute resources | :heavy_check_mark: | :x:                |
-| Cold start mitigations                              | :x:                | :heavy_check_mark: |
+| Feature                                             | Functions          | Run                                                                                                 |
+| --------------------------------------------------- | ------------------ | --------------------------------------------------------------------------------------------------- |
+| Firebase Emulator Integration                       | :heavy_check_mark: | :x:                                                                                                 |
+| Hosting CDN content deployed with Compute resources | :heavy_check_mark: | :x:                                                                                                 |
+| Cold start mitigations                              | :x:                | :heavy_check_mark: ([`min_instances`](https://cloud.google.com/run/docs/configuring/min-instances)) |
 
 Cloud Functions seems do be a better default.
 
@@ -662,7 +667,7 @@ See [non-goals](#non-goals) _Write Cloud Function code directly into `.js` file 
 
 > Firebase libs in SvelteKit
 
-As recommended in the [SvelteKit FAQ](https://kit.svelte.dev/faq), please use [Firebase JS SDK v9](https://firebase.google.com/docs/web/learn-more#modular-version) as the older version of the SDK does not work well and has larger bundle sizes.
+As recommended in the [SvelteKit FAQ](https://kit.svelte.dev/faq), please use [Firebase JS SDK v9](https://firebase.google.com/docs/web/learn-more#modular-version) as the older version of the SDK has issues and a larger bundle size.
 
 > Cold Starts
 
