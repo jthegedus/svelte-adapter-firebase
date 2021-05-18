@@ -633,11 +633,11 @@ This deploy command uses [Cloud Build](https://cloud.google.com/cloud-build) and
 
 Choice is a good thing, hopefully this comparison table helps you decide which compute environment is best for your application:
 
-| Feature                                             | Functions          | Run                                                                                                 |
-| --------------------------------------------------- | ------------------ | --------------------------------------------------------------------------------------------------- |
-| Firebase Emulator Integration                       | :heavy_check_mark: | :x:                                                                                                 |
-| Hosting CDN content deployed with Compute resources | :heavy_check_mark: | :x:                                                                                                 |
-| Cold start mitigations                              | :x:                | :heavy_check_mark: ([`min_instances`](https://cloud.google.com/run/docs/configuring/min-instances)) |
+| Feature                                                           | Functions          | Run                                                                                                 |
+| ----------------------------------------------------------------- | ------------------ | --------------------------------------------------------------------------------------------------- |
+| Firebase Emulator Integration                                     | :heavy_check_mark: | :x:                                                                                                 |
+| Unified deployment - Firebase Hosting & Compute deployed together | :heavy_check_mark: | :x:                                                                                                 |
+| Cold start mitigations                                            | :x:                | :heavy_check_mark: ([`min_instances`](https://cloud.google.com/run/docs/configuring/min-instances)) |
 
 Cloud Functions seems do be a better default.
 
