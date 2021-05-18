@@ -28,6 +28,7 @@ Utilise the Firebase Hosting CDN with dynamic content served by SvelteKit on Clo
 ## Contents
 
 - [Setup](#setup)
+  - [Beta Adapter Version Compatibility](#beta-adapter-version-compatibility)
 - [Configuration Overview](#configuration-overview)
 - [Details](#details)
   - [`firebase.json` Configurations](#firebasejson-configurations)
@@ -81,9 +82,9 @@ export default {
 
 <!-- TODO: on 1.0.0 release, delete this section -->
 
-:warning: :warning: :warning: :warning: :warning:
+### Beta Adapter Version Compatibility
 
-Since SvelteKit is still in Beta, and the Adapter API is _most_ in flux, here is the Adapter to SvelteKit version compatibility:
+SvelteKit is still in Beta and the Adapter API is in flux, this can result in the Adapter and SvelteKit becoming incompatible. Here is a compatibility table:
 
 | Adapter Version | SvelteKit Version |
 | --------------- | ----------------- |
