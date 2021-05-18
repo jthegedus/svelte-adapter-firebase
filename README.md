@@ -552,11 +552,7 @@ Test your production build locally before pushing to git or deploying!
 
 ### Cloud Function Deployment
 
-`firebase deploy`, that is all.
-
-### Cloud Function Caveats
-
-As `package.json` gains dependencies for your Svelte app you may need to copy some of these to `functions/package.json` depending on the server-side functionality and how SvelteKit bundles your dependencies. :information_source: This should be re-evaluated again in the future as it changes depending on SvelteKit and may not exist as a caveat in `1.0.0` release.
+`firebase deploy` :tada:
 
 ## Cloud Run
 
