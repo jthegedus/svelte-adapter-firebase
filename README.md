@@ -9,15 +9,15 @@
 
 [![GitHub Release](https://img.shields.io/github/release/jthegedus/svelte-adapter-firebase.svg?color=green)](https://github.com/jthegedus/svelte-adapter-firebase/releases) [![npm](https://img.shields.io/npm/v/svelte-adapter-firebase?color=green)](https://www.npmjs.com/package/svelte-adapter-firebase) [![Tests](https://github.com/jthegedus/svelte-adapter-firebase/actions/workflows/test.yml/badge.svg)](https://github.com/jthegedus/svelte-adapter-firebase/actions/workflows/test.yml) [![CodeQL](https://github.com/jthegedus/svelte-adapter-firebase/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/jthegedus/svelte-adapter-firebase/actions/workflows/codeql-analysis.yml)
 
-[Firebase](https://firebase.google.com/) adapter for [SvelteKit](https://github.com/sveltejs/kit). Support for:
+[Firebase](https://firebase.google.com/) adapter for [SvelteKit](https://github.com/sveltejs/kit).
+
+Utilise the Firebase Hosting CDN with dynamic content served by SvelteKit on Cloud Functions or Cloud Run!
 
 :heavy_check_mark: SSR on [Cloud Run](https://firebase.google.com/docs/hosting/cloud-run)</br>
 :heavy_check_mark: SSR on [Cloud Functions](https://firebase.google.com/docs/hosting/functions)</br>
 :heavy_check_mark: Integrates with existing [JavaScript ~or TypeScript~ Cloud Functions](https://firebase.google.com/docs/functions/typescript)!</br>
 :heavy_check_mark: Local production testing with [Firebase Emulator](https://firebase.google.com/docs/emulator-suite)</br>
 :heavy_check_mark: [Multiple Hosting Sites](https://firebase.google.com/docs/hosting/multisites#add_additional_sites)</br>
-
-> Utilise the Firebase Hosting CDN with dynamic content served by SvelteKit on Cloud Functions or Cloud Run!
 
 </div>
 
