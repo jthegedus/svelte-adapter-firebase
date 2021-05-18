@@ -54,7 +54,7 @@ This adapter reads `firebase.json` to determine whether Cloud Functions or Cloud
 In your standard SvelteKit project:
 
 - `npm install --save-dev svelte-adapter-firebase`
-- add adapter to `svelte.config.js` (see option in [Adapter Configurations](#adapter-configurations)):
+- add adapter to `svelte.config.js` (see options in [Adapter Configurations](#adapter-configurations)):
 
 ```diff
 +import firebase from "svelte-adapter-firebase";
