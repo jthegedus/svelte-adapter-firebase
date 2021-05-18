@@ -680,8 +680,10 @@ If cold starts are still an issue for your application, Cloud Run has support fo
 ## Caveats
 
 - [Firebase Hosting Preview Channels](https://firebase.google.com/docs/hosting/test-preview-deploy) currently lacks first-party support for SSR applications. This adapter doesn't attempt to remedy this issue and doesn't produce a different SSR Function/Run for preview channel deployments.
-- :warning: while you can specify the region for both, Cloud Run in `firebase.json` and Cloud Functions in `runWith({})` config, **`us-central1` is the only valid region for Firebase Hosting rewrites**, other regions will error. The official warning about this can be found in [these docs](https://firebase.google.com/docs/hosting/functions).
+- :warning: while you can specify the region for both, Cloud Run in `firebase.json:run.region` and Cloud Functions in `firebase.json:functions.runtime` config, **`us-central1` is the only valid region for Firebase Hosting rewrites**, other regions will error. The official warning about this can be found in [these docs](https://firebase.google.com/docs/hosting/functions).
+<!-- TODO: on 1.0.0 release, delete this section -->
 - `1.0.0` will not be published until the SvelteKit Adapter API is declared stable and SvelteKit is released for general use.
+<!-- END -->
 
 ## Contributing
 
