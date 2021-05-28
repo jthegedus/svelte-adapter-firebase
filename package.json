@@ -54,6 +54,11 @@
     "test": "xo --ignore examples/ && ava",
     "test:e2e": "./tests/e2e-healthcheck.sh"
   },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
   "release": {
     "branches": [
       "+([0-9])?(.{+([0-9]),x}).x",
