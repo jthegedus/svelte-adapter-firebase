@@ -1,3 +1,10 @@
+## [0.7.8](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.7.7...v0.7.8) (2021-05-28)
+
+
+### Bug Fixes
+
+* improve tests & document tip codes ([#85](https://github.com/jthegedus/svelte-adapter-firebase/issues/85)) ([8f33de7](https://github.com/jthegedus/svelte-adapter-firebase/commit/8f33de7e3e542272ddba2cbc85903ab4ae02492f))
+
 ## [0.7.7](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.7.6...v0.7.7) (2021-05-17)
 
 
