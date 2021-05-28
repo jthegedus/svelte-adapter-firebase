@@ -1,7 +1,11 @@
 <div align="center">
 
+<!-- TODO: on 1.0.0 release, delete this section -->
+
 | :warning: WARNING: this project is considered to be in ALPHA until SvelteKit is available for general use and the Adapter API is stable! |
 | ---------------------------------------------------------------------------------------------------------------------------------------- |
+
+<!-- END -->
 
 ![SvelteKit adapter Firebase social preview](assets/github-preview-svelte-adapter-firebase.png)
 
@@ -9,7 +13,9 @@
 
 [![GitHub Release](https://img.shields.io/github/release/jthegedus/svelte-adapter-firebase.svg?color=green)](https://github.com/jthegedus/svelte-adapter-firebase/releases) [![npm](https://img.shields.io/npm/v/svelte-adapter-firebase?color=green)](https://www.npmjs.com/package/svelte-adapter-firebase) [![Tests](https://github.com/jthegedus/svelte-adapter-firebase/actions/workflows/test.yml/badge.svg)](https://github.com/jthegedus/svelte-adapter-firebase/actions/workflows/test.yml) [![CodeQL](https://github.com/jthegedus/svelte-adapter-firebase/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/jthegedus/svelte-adapter-firebase/actions/workflows/codeql-analysis.yml)
 
-[Firebase](https://firebase.google.com/) adapter for [SvelteKit](https://github.com/sveltejs/kit). Support for:
+[Firebase](https://firebase.google.com/) adapter for [SvelteKit](https://github.com/sveltejs/kit).
+
+Utilise the Firebase Hosting CDN with dynamic content served by SvelteKit on Cloud Functions or Cloud Run!
 
 :heavy_check_mark: SSR on [Cloud Run](https://firebase.google.com/docs/hosting/cloud-run)</br>
 :heavy_check_mark: SSR on [Cloud Functions](https://firebase.google.com/docs/hosting/functions)</br>
@@ -17,13 +23,12 @@
 :heavy_check_mark: Local production testing with [Firebase Emulator](https://firebase.google.com/docs/emulator-suite)</br>
 :heavy_check_mark: [Multiple Hosting Sites](https://firebase.google.com/docs/hosting/multisites#add_additional_sites)</br>
 
-> Utilise the Firebase Hosting CDN with dynamic content served by SvelteKit on Cloud Functions or Cloud Run!
-
 </div>
 
 ## Contents
 
 - [Setup](#setup)
+  - [Beta Adapter Version Compatibility](#beta-adapter-version-compatibility)
 - [Configuration Overview](#configuration-overview)
 - [Details](#details)
   - [`firebase.json` Configurations](#firebasejson-configurations)
@@ -40,6 +45,7 @@
 - [Non-Goals](#non-goals)
 - [FAQ](#faq)
 - [Caveats](#caveats)
+- [Hints with Codes](#hints-with-codes)
 - [Contributing](#contributing)
 
 ## Setup
@@ -49,39 +55,41 @@ This adapter reads `firebase.json` to determine whether Cloud Functions or Cloud
 In your standard SvelteKit project:
 
 - `npm install --save-dev svelte-adapter-firebase`
-- add adapter to `svelte.config.js` (see option in [Adapter Configurations](#adapter-configurations)):
+- add adapter to `svelte.config.js` (see options in [Adapter Configurations](#adapter-configurations)):
 
-  ```diff
-  +import firebase from "svelte-adapter-firebase";
+```diff
++import firebase from "svelte-adapter-firebase";
 
-  /** @type {import('@sveltejs/kit').Config} */
-  export default {
-    kit: {
-  +   adapter: firebase(),
-      target: "#svelte",
-    },
-  };
-  ```
+/** @type {import('@sveltejs/kit').Config} */
+export default {
+  kit: {
++   adapter: firebase(),
+    target: "#svelte",
+  },
+};
+```
 
 - in the SvelteKit project's `package.json` remove Firebase Hosting public directory before `svelte-kit build` to work around https://github.com/sveltejs/kit/issues/587
 
-```json
+```diff
 	"scripts": {
 		"dev": "svelte-kit dev",
-		"build": "npx rimraf <dir used in firebase.json:hosting.public> && svelte-kit build --verbose"
+-		"build": "svelte-kit build --verbose"
++		"build": "npx rimraf <dir used in firebase.json:hosting.public> && svelte-kit build --verbose"
   }
 ```
 
-- `npm run build`. Read and repeat. The output is meant as a guide!
+- `npm run build`. **Read and repeat, the output is meant as a guide!**
 
 <!-- TODO: on 1.0.0 release, delete this section -->
 
-:warning: :warning: :warning: :warning: :warning:
+### Beta Adapter Version Compatibility
 
-Since SvelteKit is still in Beta, and the Adapter API is _most_ in flux, here is the Adapter to SvelteKit version compatibility:
+SvelteKit is still in Beta and the Adapter API is in flux, this can result in the Adapter and SvelteKit becoming incompatible. Here is a compatibility table:
 
 | Adapter Version | SvelteKit Version |
 | --------------- | ----------------- |
+| `NA`            | `1.0.0-next.110`  |
 | `0.7.x`         | `1.0.0-next.107`  |
 | `0.6.x`         | `1.0.0-next.103`  |
 | `0.5.x`         | `1.0.0-next.54`   |
@@ -547,11 +555,7 @@ Test your production build locally before pushing to git or deploying!
 
 ### Cloud Function Deployment
 
-`firebase deploy`, that is all.
-
-### Cloud Function Caveats
-
-As `package.json` gains dependencies for your Svelte app you may need to copy some of these to `functions/package.json` depending on the server-side functionality and how SvelteKit bundles your dependencies. :information_source: This should be re-evaluated again in the future as it changes depending on SvelteKit and may not exist as a caveat in `1.0.0` release.
+`firebase deploy` :tada:
 
 ## Cloud Run
 
@@ -628,11 +632,11 @@ This deploy command uses [Cloud Build](https://cloud.google.com/cloud-build) and
 
 Choice is a good thing, hopefully this comparison table helps you decide which compute environment is best for your application:
 
-| Feature                                             | Functions          | Run                |
-| --------------------------------------------------- | ------------------ | ------------------ |
-| Firebase Emulator Integration                       | :heavy_check_mark: | :x:                |
-| Hosting CDN content deployed with Compute resources | :heavy_check_mark: | :x:                |
-| Cold start mitigations                              | :x:                | :heavy_check_mark: |
+| Feature                                                           | Functions          | Run                                                                                                 |
+| ----------------------------------------------------------------- | ------------------ | --------------------------------------------------------------------------------------------------- |
+| Firebase Emulator Integration                                     | :heavy_check_mark: | :x:                                                                                                 |
+| Unified deployment - Firebase Hosting & Compute deployed together | :heavy_check_mark: | :x:                                                                                                 |
+| Cold start mitigations                                            | :x:                | :heavy_check_mark: ([`min_instances`](https://cloud.google.com/run/docs/configuring/min-instances)) |
 
 Cloud Functions seems do be a better default.
 
@@ -662,7 +666,7 @@ See [non-goals](#non-goals) _Write Cloud Function code directly into `.js` file 
 
 > Firebase libs in SvelteKit
 
-As recommended in the [SvelteKit FAQ](https://kit.svelte.dev/faq), please use [Firebase JS SDK v9](https://firebase.google.com/docs/web/learn-more#modular-version) as the older version of the SDK does not work well and has larger bundle sizes.
+As recommended in the [SvelteKit FAQ](https://kit.svelte.dev/faq), please use [Firebase JS SDK v9](https://firebase.google.com/docs/web/learn-more#modular-version) as the older version of the SDK has issues and a larger bundle size.
 
 > Cold Starts
 
@@ -675,8 +679,52 @@ If cold starts are still an issue for your application, Cloud Run has support fo
 ## Caveats
 
 - [Firebase Hosting Preview Channels](https://firebase.google.com/docs/hosting/test-preview-deploy) currently lacks first-party support for SSR applications. This adapter doesn't attempt to remedy this issue and doesn't produce a different SSR Function/Run for preview channel deployments.
-- :warning: while you can specify the region for both, Cloud Run in `firebase.json` and Cloud Functions in `runWith({})` config, **`us-central1` is the only valid region for Firebase Hosting rewrites**, other regions will error. The official warning about this can be found in [these docs](https://firebase.google.com/docs/hosting/functions).
+- :warning: while you can specify the region for both, Cloud Run in `firebase.json:run.region` and Cloud Functions in `firebase.json:functions.runtime` config, **`us-central1` is the only valid region for Firebase Hosting rewrites**, other regions will error. The official warning about this can be found in [these docs](https://firebase.google.com/docs/hosting/functions).
+<!-- TODO: on 1.0.0 release, delete this section -->
 - `1.0.0` will not be published until the SvelteKit Adapter API is declared stable and SvelteKit is released for general use.
+<!-- END -->
+
+## Hints with Codes
+
+The adapter is intended to guide you through the configuration of your `firebase.json` and `svelte.config.js` file. As such, when you have a misconfiguration the adapter will log a hint. Codes for these hints are listed here:
+
+**firebase.json file**
+
+- SAF1000: provided `firebase.json` file does not exist. It is computed from adapter config `firebaseJson`. If the default adapter config is not working, consider updating it in `svelte.config.js`
+- SAF1001: `JSON.parse` error of `firebase.json`
+
+**firebase.json:hosting[]**
+
+- SAF1010: `hosting` field required in `firebase.json`
+- SAF1011: Multiple hosting configurations found, which requires each to have a `site` field, one does not.
+- SAF1012: Multiple `hosting` configurations found in `firebase.json` but no `hostingSite` specified in `svelte.config.js` adapter config.
+- SAF1013: Multiple `hosting` configurations found in `firebase.json` but no match found for `hostingSite` specified in `svelte.config.js` adapter config.
+
+**firebase.json:hosting[].rewrites**
+
+- SAF1020: Required `hosting[].rewrites` field not found for matched hosting config.
+- SAF1021: Required `hosting[].rewrites[]` does not contain a config with `source` matching adapter config `sourceRewriteMatch` and either `function` or `run` entries.
+
+**firebase.json:hosting[].rewrites Cloud Run config**
+
+- SAF1030: Required `serviceId` field not found for Cloud Run rewrite rule in `firebase.json`.
+- SAF1031: Cloud Run `serviceId` is invalid. Cloud Run `serviceId` must use only lowercase alphanumeric characters and dashes, cannot begin or end with a dash, and cannot be longer than 63 characters. Update `firebase.json` accordingly.
+- SAF1032: Cloud Run `region` is invalid. Firebase Hosting rewrites only support `"regions":"us-central1"`. Update `firebase.json` accordingly.
+
+**firebase.json:hosting[].rewrites Cloud Function config**
+
+- SAF1040: Function name for rewrite rule is invalid. Function name must use only alphanumeric characters and underscores and cannot be longer than 62 characters. Update `firebase.json` accordingly.
+
+**firebase.json:hosting[].public**
+
+- SAF1050: Required `hosting.public` field not found for hosting configuration. Add a `public` field to the matched hosting config in `firebase.json`.
+- SAF1051: `firebase.json:hosting.public` must be a different directory to `svelte.config.js:kit.files.assets`.
+- SAF1052: Required "hosting.public" field is an empty string. "public" should be a directory name.
+
+**firebase.json:functions**
+
+- SAF1060: Required `functions.source` field missing from `firebase.json` file.
+- SAF1061: Node.js runtime not supported. SvelteKit on Cloud Functions requires Node.js 14 or newer runtime. Set the version in either: `<cloud function dir>/package.json:engines.node` or `firebase.json:functions.runtime`.
 
 ## Contributing
 
@@ -690,6 +738,10 @@ asdf install
 pnpm i
 ```
 
+See [asdf](https://asdf-vm.com) to install set it up.
+
 ### external contributions
+
+While building this adapter some issues were found with upstream components, these are captured here should someone wish to contribute them:
 
 - Cloud Function validation code linked in `utils.js` is from two different sources which indicates that it is being validated by `firebase-tools` in two separate places. PR a fix there.

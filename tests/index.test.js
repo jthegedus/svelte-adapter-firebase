@@ -55,7 +55,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./does_not_exist.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'See above output. Error hash: 35f0234e50232c6836704e1284bdcfc6');
+		t.is(error.message, 'See above output. See Hint code SAF1000 in README');
 	}
 );
 
@@ -65,7 +65,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/invalid.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'See above output. Error hash: 1d0b08ec7b33b5d55bbf411fc2c57b3f');
+		t.is(error.message, 'See above output. See Hint code SAF1001 in README');
 	}
 );
 
@@ -75,7 +75,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/missing_hosting.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'See above output. Error hash: ee83e47e470ffb64e1022cb1ca373667');
+		t.is(error.message, 'See above output. See Hint code SAF1010 in README');
 	}
 );
 
@@ -85,17 +85,27 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/sites_missing_rewrites.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'See above output. Error hash: b3f0af4cee86288fefc39535563751d6');
+		t.is(error.message, 'See above output. See Hint code SAF1011 in README');
 	}
 );
 
 test(
-	'Firebase config multiple sites require a hostingSite to be specified',
+	'Firebase config w multiple sites require a "hostingSite" to be specified',
 	t => {
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cf_multi_site_requires_hostingSite.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'See above output. Error hash: d57c6b0d358d6b9e0fcdea66d186afa5');
+		t.is(error.message, 'See above output. See Hint code SAF1012 in README');
+	}
+);
+
+test(
+	'Firebase config w multiple sites but no match found for a "hostingSite" specified in svelte.config.js adapter config',
+	t => {
+		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cf_multi_site_requires_hostingSite.json', import.meta.url));
+		const config = {hostingSite: 'no_matching_site', sourceRewriteMatch: '**', firebaseJson};
+		const error = t.throws(() => parseFirebaseConfiguration(config));
+		t.is(error.message, 'See above output. See Hint code SAF1013 in README');
 	}
 );
 
@@ -105,9 +115,16 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/site_missing_public.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'See above output. Error hash: cafdfaeb44e29c274fb6f6507b59d82b');
+		t.is(error.message, 'See above output. See Hint code SAF1050 in README');
 	}
 );
+
+test('Firebase config w empty "public" string', t => {
+	const firebaseJson = fileURLToPath(new URL('./fixtures/failures/site_empty_public.json', import.meta.url));
+	const config = {sourceRewriteMatch: '**', firebaseJson};
+	const error = t.throws(() => parseFirebaseConfiguration(config));
+	t.is(error.message, 'See above output. See Hint code SAF1052 in README');
+});
 
 test(
 	'Firebase config w site missing "rewrites"',
@@ -115,7 +132,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/site_missing_rewrite.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'See above output. Error hash: 79084ae7cc2229eff3902bb400c0a545');
+		t.is(error.message, 'See above output. See Hint code SAF1020 in README');
 	}
 );
 
@@ -125,7 +142,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cf_site_rewrite_mismatch.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: 'no_match', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'See above output. Error hash: d4567eef86b8f2c7fcf6165d2d0c2aa1');
+		t.is(error.message, 'See above output. See Hint code SAF1021 in README');
 	}
 );
 
@@ -135,7 +152,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cr_missing_serviceId.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'See above output. Error hash: 2a448790e275e60a88cfbfbc457bb6b6');
+		t.is(error.message, 'See above output. See Hint code SAF1030 in README');
 	}
 );
 
@@ -145,7 +162,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cr_invalid_serviceId.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'See above output. Error hash: 8c5fa4f640cb1f6fcdf481836dba5f2e');
+		t.is(error.message, 'See above output. See Hint code SAF1031 in README');
 	}
 );
 
@@ -155,7 +172,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cr_invalid_region.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'See above output. Error hash: 31df056aa250fdabeb6f6a7f1ffe11d6');
+		t.is(error.message, 'See above output. See Hint code SAF1032 in README');
 	}
 );
 
@@ -165,7 +182,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cf_invalid_function_name.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'See above output. Error hash: 850cde9e3e5ccc6060499de5e8072677');
+		t.is(error.message, 'See above output. See Hint code SAF1040 in README');
 	}
 );
 
@@ -175,7 +192,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cf_site_missing_functions.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'See above output. Error hash: 4b77ac38aba658ee1dac748579be8b01');
+		t.is(error.message, 'See above output. See Hint code SAF1060 in README');
 	}
 );
 
@@ -241,7 +258,7 @@ test(
 	'Static asset source and dest the same dir',
 	t => {
 		const error = t.throws(() => ensureStaticResourceDirsDiffer({source: 'a', dest: 'a'}));
-		t.is(error.message, 'See above output. Error hash: 3d5e040b4d834fbdc1f1763591ad3c68');
+		t.is(error.message, 'See above output. See Hint code SAF1051 in README');
 	}
 );
 
@@ -259,20 +276,20 @@ test(
 	'No Function runtime provided',
 	t => {
 		const error = t.throws(() => ensureCompatibleCloudFunctionVersion({}));
-		t.is(error.message, 'See above output. Error hash: 9e40e7b9761be17831477824c1ecac6d');
+		t.is(error.message, 'See above output. See Hint code SAF1061 in README');
 	}
 );
 test(
 	'Invalid Function runtime in package.json',
 	t => {
 		const error = t.throws(() => ensureCompatibleCloudFunctionVersion({functionsPackageJsonEngine: '12'}));
-		t.is(error.message, 'See above output. Error hash: 9e40e7b9761be17831477824c1ecac6d');
+		t.is(error.message, 'See above output. See Hint code SAF1061 in README');
 	}
 );
 test(
 	'Invalid Function runtime in firebase.json',
 	t => {
 		const error = t.throws(() => ensureCompatibleCloudFunctionVersion({firebaseJsonFunctionsRuntime: 'nodejs12'}));
-		t.is(error.message, 'See above output. Error hash: 9e40e7b9761be17831477824c1ecac6d');
+		t.is(error.message, 'See above output. See Hint code SAF1061 in README');
 	}
 );
