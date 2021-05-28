@@ -90,7 +90,7 @@ test(
 );
 
 test(
-	'Firebase config multiple sites require a hostingSite to be specified',
+	'Firebase config w multiple sites require a "hostingSite" to be specified',
 	t => {
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cf_multi_site_requires_hostingSite.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
@@ -99,8 +99,15 @@ test(
 	}
 );
 
-// TODO: write test for SAF1005????
-// - SAF1005: Multiple `hosting` configurations found in `firebase.json` but no match found for `hostingSite` specified in `svelte.config.js` adapter config.
+test(
+	'Firebase config w multiple sites but no match found for a "hostingSite" specified in svelte.config.js adapter config',
+	t => {
+		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cf_multi_site_requires_hostingSite.json', import.meta.url));
+		const config = {hostingSite: 'no_matching_site', sourceRewriteMatch: '**', firebaseJson};
+		const error = t.throws(() => parseFirebaseConfiguration(config));
+		t.is(error.message, 'See above output. See Hint code SAF1013 in README');
+	}
+);
 
 test(
 	'Firebase config w missing "public"',
