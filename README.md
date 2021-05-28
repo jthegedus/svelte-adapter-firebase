@@ -717,7 +717,8 @@ The adapter is intended to guide you through the configuration of your `firebase
 **firebase.json:hosting[].public**
 
 - SAF1050: Required `hosting.public` field not found for hosting configuration. Add a `public` field to the matched hosting config in `firebase.json`.
-- SAF2051: `firebase.json:hosting.public` must be a different directory to `svelte.config.js:kit.files.assets`.
+- SAF1051: `firebase.json:hosting.public` must be a different directory to `svelte.config.js:kit.files.assets`.
+- SAF1052: Required "hosting.public" field is an empty string. "public" should be a directory name.
 
 **firebase.json:functions**
 

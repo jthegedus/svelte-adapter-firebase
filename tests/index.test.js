@@ -55,7 +55,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./does_not_exist.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'See above output. Tip code: SAF1000');
+		t.is(error.message, 'See above output. See Hint code SAF1000 in README');
 	}
 );
 
@@ -65,7 +65,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/invalid.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'See above output. Tip code: SAF1001');
+		t.is(error.message, 'See above output. See Hint code SAF1001 in README');
 	}
 );
 
@@ -75,7 +75,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/missing_hosting.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'See above output. Tip code: SAF1002');
+		t.is(error.message, 'See above output. See Hint code SAF1010 in README');
 	}
 );
 
@@ -85,7 +85,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/sites_missing_rewrites.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'See above output. Tip code: SAF1003');
+		t.is(error.message, 'See above output. See Hint code SAF1011 in README');
 	}
 );
 
@@ -95,13 +95,12 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cf_multi_site_requires_hostingSite.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'See above output. Tip code: SAF1004');
+		t.is(error.message, 'See above output. See Hint code SAF1012 in README');
 	}
 );
 
-// TODO: write test for SAF1005
-
-// TODO: write test to ensure public is not an empty string
+// TODO: write test for SAF1005????
+// - SAF1005: Multiple `hosting` configurations found in `firebase.json` but no match found for `hostingSite` specified in `svelte.config.js` adapter config.
 
 test(
 	'Firebase config w missing "public"',
@@ -109,9 +108,16 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/site_missing_public.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'See above output. Tip code: SAF1006');
+		t.is(error.message, 'See above output. See Hint code SAF1050 in README');
 	}
 );
+
+test('Firebase config w empty "public" string', t => {
+	const firebaseJson = fileURLToPath(new URL('./fixtures/failures/site_empty_public.json', import.meta.url));
+	const config = {sourceRewriteMatch: '**', firebaseJson};
+	const error = t.throws(() => parseFirebaseConfiguration(config));
+	t.is(error.message, 'See above output. See Hint code SAF1052 in README');
+});
 
 test(
 	'Firebase config w site missing "rewrites"',
@@ -119,7 +125,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/site_missing_rewrite.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'See above output. Tip code: SAF1007');
+		t.is(error.message, 'See above output. See Hint code SAF1020 in README');
 	}
 );
 
@@ -129,7 +135,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cf_site_rewrite_mismatch.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: 'no_match', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'See above output. Tip code: SAF1008');
+		t.is(error.message, 'See above output. See Hint code SAF1021 in README');
 	}
 );
 
@@ -139,7 +145,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cr_missing_serviceId.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'See above output. Tip code: SAF1009');
+		t.is(error.message, 'See above output. See Hint code SAF1030 in README');
 	}
 );
 
@@ -149,7 +155,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cr_invalid_serviceId.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'See above output. Tip code: SAF1010');
+		t.is(error.message, 'See above output. See Hint code SAF1031 in README');
 	}
 );
 
@@ -159,7 +165,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cr_invalid_region.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'See above output. Tip code: SAF1011');
+		t.is(error.message, 'See above output. See Hint code SAF1032 in README');
 	}
 );
 
@@ -169,7 +175,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cf_invalid_function_name.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'See above output. Tip code: SAF1012');
+		t.is(error.message, 'See above output. See Hint code SAF1040 in README');
 	}
 );
 
@@ -179,7 +185,7 @@ test(
 		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cf_site_missing_functions.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		const error = t.throws(() => parseFirebaseConfiguration(config));
-		t.is(error.message, 'See above output. Tip code: SAF1013');
+		t.is(error.message, 'See above output. See Hint code SAF1060 in README');
 	}
 );
 
@@ -245,7 +251,7 @@ test(
 	'Static asset source and dest the same dir',
 	t => {
 		const error = t.throws(() => ensureStaticResourceDirsDiffer({source: 'a', dest: 'a'}));
-		t.is(error.message, 'See above output. Tip code: SAF2000');
+		t.is(error.message, 'See above output. See Hint code SAF1051 in README');
 	}
 );
 
@@ -263,20 +269,20 @@ test(
 	'No Function runtime provided',
 	t => {
 		const error = t.throws(() => ensureCompatibleCloudFunctionVersion({}));
-		t.is(error.message, 'See above output. Tip code: SAF2001');
+		t.is(error.message, 'See above output. See Hint code SAF1061 in README');
 	}
 );
 test(
 	'Invalid Function runtime in package.json',
 	t => {
 		const error = t.throws(() => ensureCompatibleCloudFunctionVersion({functionsPackageJsonEngine: '12'}));
-		t.is(error.message, 'See above output. Tip code: SAF2001');
+		t.is(error.message, 'See above output. See Hint code SAF1061 in README');
 	}
 );
 test(
 	'Invalid Function runtime in firebase.json',
 	t => {
 		const error = t.throws(() => ensureCompatibleCloudFunctionVersion({firebaseJsonFunctionsRuntime: 'nodejs12'}));
-		t.is(error.message, 'See above output. Tip code: SAF2001');
+		t.is(error.message, 'See above output. See Hint code SAF1061 in README');
 	}
 );
