@@ -26,7 +26,7 @@ const entrypoint = function ({
 	/** @type {import('@sveltejs/kit').Adapter} */
 	const adapter = {
 		name: 'svelte-adapter-firebase',
-		async adapt(utils) {
+		async adapt({utils}) {
 			utils.log.minor(`Adapter configuration:\n\t${kleur.italic(JSON.stringify({firebaseJson, hostingSite, sourceRewriteMatch, cloudRunBuildDir}))}`);
 			const {firebaseJsonDir, functions, cloudRun, publicDir} = parseFirebaseConfiguration({firebaseJson, hostingSite, sourceRewriteMatch});
 
