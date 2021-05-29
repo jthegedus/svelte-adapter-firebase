@@ -1,5 +1,4 @@
 import {URL} from 'url';
-import {getRawBody} from '@sveltejs/kit/node';
 import '@sveltejs/kit/install-fetch'; // eslint-disable-line import/no-unassigned-import
 
 // TODO: hardcoding the relative location makes this brittle
@@ -14,7 +13,7 @@ const svelteKit = async (request, response) => {
 		headers: request.headers,
 		path: pathname,
 		query: searchParameters,
-		body: await getRawBody(request)
+		rawBody: request.rawBody
 	});
 
 	if (rendered) {
