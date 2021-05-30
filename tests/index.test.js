@@ -1,5 +1,5 @@
-import {fileURLToPath} from 'node:url';
-import path from 'node:path';
+import {fileURLToPath} from 'url';
+import path from 'path';
 import test from 'ava';
 import {ensureCompatibleCloudFunctionVersion, ensureStaticResourceDirsDiffer, parseFirebaseConfiguration, validCloudFunctionName, validCloudRunServiceId} from '../src/utils.js';
 

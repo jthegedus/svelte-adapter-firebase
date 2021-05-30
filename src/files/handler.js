@@ -1,4 +1,4 @@
-import {URL} from 'node:url';
+import {URL} from 'url';
 import '@sveltejs/kit/install-fetch'; // eslint-disable-line import/no-unassigned-import
 
 // TODO: hardcoding the relative location makes this brittle

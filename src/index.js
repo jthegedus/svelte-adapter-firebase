@@ -1,6 +1,6 @@
-import {readFileSync, writeFileSync} from 'node:fs';
-import path from 'node:path';
-import {fileURLToPath} from 'node:url';
+import {readFileSync, writeFileSync} from 'fs';
+import path from 'path';
+import {fileURLToPath} from 'url';
 import esbuild from 'esbuild';
 import kleur from 'kleur';
 import {copyFileIfExistsSync,
