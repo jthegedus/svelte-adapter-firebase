@@ -1,3 +1,10 @@
+## [0.8.4](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.8.3...v0.8.4) (2021-05-30)
+
+
+### Bug Fixes
+
+* specify minimum nodejs version in package.json ([#98](https://github.com/jthegedus/svelte-adapter-firebase/issues/98)) ([456da34](https://github.com/jthegedus/svelte-adapter-firebase/commit/456da349d359470002dadb841acce5cbb0b8589a))
+
 ## [0.8.3](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.8.2...v0.8.3) (2021-05-30)
 
 
