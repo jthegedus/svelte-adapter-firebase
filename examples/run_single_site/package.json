@@ -7,7 +7,7 @@
     "preview": "svelte-kit preview"
   },
   "devDependencies": {
-    "@sveltejs/kit": "next",
+    "@sveltejs/kit": "^1.0.0-next.111",
     "svelte": "^3.34.0"
   },
   "type": "module",
