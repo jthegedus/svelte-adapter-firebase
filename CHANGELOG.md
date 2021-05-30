@@ -1,3 +1,10 @@
+## [0.8.2](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.8.1...v0.8.2) (2021-05-30)
+
+
+### Bug Fixes
+
+* simplify body parsing & add handler types ([#96](https://github.com/jthegedus/svelte-adapter-firebase/issues/96)) ([8b47baf](https://github.com/jthegedus/svelte-adapter-firebase/commit/8b47baf262dcf409db83eaeb1fd84280b18c663f))
+
 ## [0.8.1](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.8.0...v0.8.1) (2021-05-30)
 
 
