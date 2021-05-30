@@ -1,5 +1,5 @@
-import {copyFileSync, existsSync, readFileSync} from 'fs';
-import path from 'path';
+import {copyFileSync, existsSync, readFileSync} from 'node:fs';
+import path from 'node:path';
 import kleur from 'kleur';
 
 /**
