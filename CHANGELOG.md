@@ -1,3 +1,10 @@
+# [0.8.0](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.7.8...v0.8.0) (2021-05-30)
+
+
+### Features
+
+* update adapter api to latest with config ([#95](https://github.com/jthegedus/svelte-adapter-firebase/issues/95)) ([622739f](https://github.com/jthegedus/svelte-adapter-firebase/commit/622739fea6628c80e09453944171f690c0c41dc7))
+
 ## [0.7.8](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.7.7...v0.7.8) (2021-05-28)
 
 
