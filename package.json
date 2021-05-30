@@ -32,8 +32,8 @@
     "src"
   ],
   "engines": {
-		"node": "^14.13.1 || >= 16"
-	},
+    "node": "^14.13.1 || >= 16"
+  },
   "dependencies": {
     "esbuild": "^0.11.23",
     "kleur": "^4.1.4"
@@ -54,7 +54,7 @@
     "husky": "^5.0.8",
     "semantic-release": "^17.4.0",
     "typescript": "^4.2.3",
-    "xo": "^0.38.2"
+    "xo": "^0.40.1"
   },
   "scripts": {
     "prepare": "husky install",
@@ -62,7 +62,7 @@
     "test": "xo && ava",
     "test:e2e": "./tests/e2e-healthcheck.sh"
   },
-  "xo":{
+  "xo": {
     "ignores": [
       "examples"
     ],
