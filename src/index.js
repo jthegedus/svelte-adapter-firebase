@@ -1,6 +1,6 @@
-import {readFileSync, writeFileSync} from 'fs';
-import path from 'path';
-import {fileURLToPath, pathToFileURL} from 'url';
+import {readFileSync, writeFileSync} from 'node:fs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 import esbuild from 'esbuild';
 import kleur from 'kleur';
 import {copyFileIfExistsSync,
@@ -26,15 +26,11 @@ const entrypoint = function ({
 	/** @type {import('@sveltejs/kit').Adapter} */
 	const adapter = {
 		name: 'svelte-adapter-firebase',
-		async adapt({utils}) {
+		async adapt({utils, config}) {
 			utils.log.minor(`Adapter configuration:\n\t${kleur.italic(JSON.stringify({firebaseJson, hostingSite, sourceRewriteMatch, cloudRunBuildDir}))}`);
 			const {firebaseJsonDir, functions, cloudRun, publicDir} = parseFirebaseConfiguration({firebaseJson, hostingSite, sourceRewriteMatch});
 
-			// START: Temporary solution until - https://github.com/sveltejs/kit/issues/1435 - is resolved
-			const svelteConfig = await import(pathToFileURL(path.join(process.cwd(), 'svelte.config.js')).toString());
-			const svelteStaticDir = path.join(process.cwd(), svelteConfig?.kit?.files?.assets || 'static');
-			ensureStaticResourceDirsDiffer({source: svelteStaticDir, dest: publicDir});
-			// END
+			ensureStaticResourceDirsDiffer({source: path.join(process.cwd(), config.kit.files.assets), dest: publicDir});
 
 			if (functions !== false) {
 				await adaptToCloudFunctions({utils, ...functions});
