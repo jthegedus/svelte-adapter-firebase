@@ -1,7 +1,7 @@
 import cookie from 'cookie';
 import {v4 as uuid} from '@lukeed/uuid';
 
-export const handle = async ({request, render}) => {
+export const handle = async ({request, resolve}) => {
 	const cookies = cookie.parse(request.headers.cookie || '');
 	request.locals.userid = cookies.userid || uuid();
 
@@ -10,7 +10,7 @@ export const handle = async ({request, render}) => {
 		request.method = request.query.get('_method').toUpperCase();
 	}
 
-	const response = await render(request);
+	const response = await resolve(request);
 
 	if (!cookies.userid) {
 		// If this is the first time the user has visited this app,
