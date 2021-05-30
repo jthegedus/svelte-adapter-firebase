@@ -1,3 +1,10 @@
+## [0.8.3](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.8.2...v0.8.3) (2021-05-30)
+
+
+### Bug Fixes
+
+* use SK computed config to determine if static dirs differ ([#97](https://github.com/jthegedus/svelte-adapter-firebase/issues/97)) ([53e3c97](https://github.com/jthegedus/svelte-adapter-firebase/commit/53e3c97d321fa8a29dfa44059927291893d4ee2a))
+
 ## [0.8.2](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.8.1...v0.8.2) (2021-05-30)
 
 

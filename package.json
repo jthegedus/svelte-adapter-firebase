@@ -21,7 +21,7 @@
     "serverless",
     "ssr"
   ],
-  "version": "0.8.2",
+  "version": "0.8.3",
   "type": "module",
   "exports": {
     "import": "./src/index.js"
@@ -59,7 +59,7 @@
     "test": "xo && ava",
     "test:e2e": "./tests/e2e-healthcheck.sh"
   },
-  "xo":{
+  "xo": {
     "ignores": [
       "examples"
     ],
