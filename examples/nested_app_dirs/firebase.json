@@ -1,15 +1,32 @@
 {
-	"hosting": {
-		"public": "app/public",
-		"site": "nested-app-dir-site",
-		"rewrites": [
-			{
-				"source": "**",
-				"function": "sveltekit"
-			}
-		]
-	},
-	"functions": {
-		"source": "functions"
-	}
+  "hosting": {
+    "public": "app/public",
+    "site": "nested-app-dir-site",
+    "rewrites": [
+      {
+        "source": "**",
+        "function": "sveltekit"
+      }
+    ]
+  },
+  "functions": {
+    "source": "functions"
+  },
+  "emulators": {
+    "ui": {
+      "enabled": true
+    },
+    "functions": {
+      "port": 5001
+    },
+    "auth": {
+      "port": 9099
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "pubsub": {
+      "port": 8085
+    }
+  }
 }

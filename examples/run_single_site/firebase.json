@@ -1,14 +1,31 @@
 {
-	"hosting": {
-		"public": "public",
-		"site": "svelte-run-single-site",
-		"rewrites": [
-			{
-				"source": "**",
-				"run": {
-					"serviceId": "cloudrun"
-				}
-			}
-		]
-	}
+  "hosting": {
+    "public": "public",
+    "site": "svelte-run-single-site",
+    "rewrites": [
+      {
+        "source": "**",
+        "run": {
+          "serviceId": "cloudrun"
+        }
+      }
+    ]
+  },
+  "emulators": {
+    "ui": {
+      "enabled": true
+    },
+    "functions": {
+      "port": 5001
+    },
+    "auth": {
+      "port": 9099
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "pubsub": {
+      "port": 8085
+    }
+  }
 }
