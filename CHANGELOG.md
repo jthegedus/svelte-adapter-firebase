@@ -1,3 +1,10 @@
+## [0.8.1](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.8.0...v0.8.1) (2021-05-30)
+
+
+### Bug Fixes
+
+* wait request body infinitely in handler.js ([#93](https://github.com/jthegedus/svelte-adapter-firebase/issues/93)) ([94c4158](https://github.com/jthegedus/svelte-adapter-firebase/commit/94c4158ee0fd11194e300f0e2b81b66f16b3a15d))
+
 # [0.8.0](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.7.8...v0.8.0) (2021-05-30)
 
 
