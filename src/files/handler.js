@@ -1,20 +1,39 @@
 import {URL} from 'url';
-import {getRawBody} from '@sveltejs/kit/node';
 import '@sveltejs/kit/install-fetch'; // eslint-disable-line import/no-unassigned-import
 
 // TODO: hardcoding the relative location makes this brittle
 import {render} from '../output/server/app.js';
 
-const svelteKit = async (request, response) => {
-	const host = `${request.headers['x-forwarded-proto']}://${request.headers.host}`;
-	const {pathname, searchParams: searchParameters = ''} = new URL(request.url || '', host);
+/**
+ * Firebase Cloud Function handler for SvelteKit
+ *
+ * This function converts the Firebase Cloud Function (Express.js) Request object
+ * into a format consumable to the SvelteKit render() function, which is of type
+ * SvelteKit `import('types/hooks').StrictBody | null`
+ *
+ * Relevant documentation - https://firebase.google.com/docs/functions/http-events#read_values_from_the_request
+ *
+ * @param {import('firebase-functions').https.Request} request
+ * @param {import('express').Response} response
+ * @returns {Promise<void>}
+ */
+const svelteKit = async ({body, headers, method, rawBody, url}, response) => {
+	const host = `${headers['x-forwarded-proto']}://${headers.host}`;
+	const {pathname, searchParams: searchParameters = ''} = new URL(url || '', host);
+
+	const finalRawBody =
+		headers['content-type'] === undefined ?
+			rawBody :
+			(headers['content-type'] === 'application/octet-stream' ?
+				body :
+				new TextDecoder(headers['content-encoding'] || 'utf-8').decode(rawBody));
 
 	const rendered = await render({
-		method: request.method,
-		headers: request.headers,
+		method,
+		headers,
 		path: pathname,
 		query: searchParameters,
-		body: await getRawBody(request)
+		rawBody: finalRawBody
 	});
 
 	if (rendered) {
