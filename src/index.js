@@ -83,7 +83,7 @@ async function adaptToCloudFunctions({utils, name, source, runtime}) {
 	// Prepare Cloud Function
 	const functionsEntrypoint = path.join(source, functionsMain);
 	try {
-		const ssrSvelteFunctionName = ssrDirname.replace(/\W/g, '').concat('Server');
+		const ssrSvelteFunctionName = ssrDirname.replace(/\W/g, '') + 'Server';
 		if (!readFileSync(functionsEntrypoint, 'utf-8').includes(`${name} =`)) {
 			utils.log.info(`Add the following Cloud Function to ${functionsEntrypoint}`);
 			utils.log.info(kleur.bold().cyan(`
@@ -153,7 +153,6 @@ async function adaptToCloudRun({utils, serviceId, region, firebaseJsonDir, cloud
  * }} param
  */
 async function prepareEntrypoint({utils, serverOutputDir}) {
-	// TODO: SvelteKit may add utils.tmpdir() which would replace this hardcoded path
 	const temporaryDir = path.join('.svelte-kit', 'firebase');
 
 	utils.rimraf(temporaryDir);
