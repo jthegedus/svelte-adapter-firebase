@@ -94,7 +94,7 @@ async function adaptToCloudFunctions({utils, name, source, runtime}) {
 let ${ssrSvelteFunctionName};
 exports.${name} = functions.https.onRequest(async (request, response) => {
 	if (!${ssrSvelteFunctionName}) {
-		functions.logger.info("Initializing SvelteKit SSR Handler");
+		functions.logger.info("Initialising SvelteKit SSR Handler");
 		${ssrSvelteFunctionName} = require("./${ssrDirname}/index").default;
 		functions.logger.info("SvelteKit SSR Handler initialised!");
 	}
