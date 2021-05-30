@@ -1,6 +1,6 @@
-import test from 'ava';
 import {fileURLToPath} from 'url';
 import path from 'path';
+import test from 'ava';
 import {ensureCompatibleCloudFunctionVersion, ensureStaticResourceDirsDiffer, parseFirebaseConfiguration, validCloudFunctionName, validCloudRunServiceId} from '../src/utils.js';
 
 // ParseFirebaseConfiguration: Valid configs

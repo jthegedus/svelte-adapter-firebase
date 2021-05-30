@@ -55,9 +55,17 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "fix": "xo --ignore examples/ --fix",
-    "test": "xo --ignore examples/ && ava",
+    "fix": "xo --fix",
+    "test": "xo && ava",
     "test:e2e": "./tests/e2e-healthcheck.sh"
+  },
+  "xo":{
+    "ignores": [
+      "examples"
+    ],
+    "rules": {
+      "unicorn/prefer-node-protocol": "off"
+    }
   },
   "commitlint": {
     "extends": [
