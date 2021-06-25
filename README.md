@@ -638,9 +638,9 @@ Choice is a good thing, hopefully this comparison table helps you decide which c
 | ----------------------------------------------------------------- | ------------------ | --------------------------------------------------------------------------------------------------- |
 | Firebase Emulator Integration                                     | :heavy_check_mark: | :x:                                                                                                 |
 | Unified deployment - Firebase Hosting & Compute deployed together | :heavy_check_mark: | :x:                                                                                                 |
-| Cold start mitigations                                            | :x:                | :heavy_check_mark: ([`min_instances`](https://cloud.google.com/run/docs/configuring/min-instances)) |
+| Cold start mitigations                                            | :x: stay tuned     | :heavy_check_mark: ([`min_instances`](https://cloud.google.com/run/docs/configuring/min-instances)) |
 
-Cloud Functions seems do be a better default.
+Cloud Functions seems do be a better default, with some improvements coming in the future.
 
 ## Non-goals
 
@@ -681,7 +681,7 @@ If cold starts are still an issue for your application, Cloud Run has support fo
 ## Caveats
 
 - [Firebase Hosting Preview Channels](https://firebase.google.com/docs/hosting/test-preview-deploy) currently lacks first-party support for SSR applications. This adapter doesn't attempt to remedy this issue and doesn't produce a different SSR Function/Run for preview channel deployments.
-- :warning: while you can specify the region for both, Cloud Run in `firebase.json:run.region` and Cloud Functions in `firebase.json:functions.runtime` config, **`us-central1` is the only valid region for Firebase Hosting rewrites**, other regions will error. The official warning about this can be found in [these docs](https://firebase.google.com/docs/hosting/functions).
+- :warning: while you can specify the region for both, Cloud Run in `firebase.json:run.region` and Cloud Functions in the `runWith({region: ""})` function definition, **`us-central1` is the only valid region for Firebase Hosting rewrites**, other regions will error. The official warning about this can be found in [these docs](https://firebase.google.com/docs/hosting/functions).
 <!-- TODO: on 1.0.0 release, delete this section -->
 - `1.0.0` will not be published until the SvelteKit Adapter API is declared stable and SvelteKit is released for general use.
 <!-- END -->
