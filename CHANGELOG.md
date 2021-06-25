@@ -1,3 +1,10 @@
+## [0.8.5](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.8.4...v0.8.5) (2021-06-25)
+
+
+### Bug Fixes
+
+* valid cloud run region ([#102](https://github.com/jthegedus/svelte-adapter-firebase/issues/102)) ([58d8d3d](https://github.com/jthegedus/svelte-adapter-firebase/commit/58d8d3dfec5ac9d644df63fd00e497ac21544a91))
+
 ## [0.8.4](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.8.3...v0.8.4) (2021-05-30)
 
 
