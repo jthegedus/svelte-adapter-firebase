@@ -219,13 +219,13 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 		});
 	}
 
-	if (rewriteConfig?.run && rewriteConfig?.run?.region && rewriteConfig.run.region !== 'us-central1') {
+	if (rewriteConfig?.run && rewriteConfig?.run?.region && !CLOUD_RUN_REGIONS.has(rewriteConfig.run.region)) {
 		logErrorThrow({
 			why: 'Cloud Run "region" is invalid',
 			got: `\n${JSON.stringify(rewriteConfig.run, null, 2)}`,
-			wanted: '"region": "us-central1"',
-			hint: 'Firebase Hosting rewrites only support "regions":"us-central1". Update ' + kleur.italic('firebase.json') + ' accordingly.',
-			docs: 'https://firebase.google.com/docs/functions/locations#http_and_client-callable_functions',
+			wanted: `one of\n\t${[...CLOUD_RUN_REGIONS].join('\n\t').toString()}`,
+			hint: `Firebase Hosting rewrites with Cloud Run only supports specific regions. Update ${kleur.italic('firebase.json')} accordingly.`,
+			docs: 'https://firebase.google.com/docs/hosting/full-config#rewrite-cloud-run-container',
 			hintCode: 1032
 		});
 	}
@@ -394,6 +394,28 @@ function logErrorThrow({why, got, wanted, hint, docs, hintCode}) {
 	console.log();
 	throw new Error(`See above output. See Hint code SAF${hintCode} in README`);
 }
+
+const CLOUD_RUN_REGIONS = new Set(['asia-east1',
+	'asia-east2',
+	'asia-northeast1',
+	'asia-northeast2',
+	'asia-northeast3',
+	'asia-south1',
+	'asia-southeast1',
+	'asia-southeast2',
+	'australia-southeast1',
+	'europe-north1',
+	'europe-west1',
+	'europe-west2',
+	'europe-west3',
+	'europe-west4',
+	'europe-west6',
+	'northamerica-northeast1',
+	'southamerica-east1',
+	'us-central1',
+	'us-east1',
+	'us-east4',
+	'us-west1']);
 
 export {
 	copyFileIfExistsSync,
