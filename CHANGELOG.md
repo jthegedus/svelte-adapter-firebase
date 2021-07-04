@@ -1,3 +1,10 @@
+# [0.9.0](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.8.5...v0.9.0) (2021-07-04)
+
+
+### Features
+
+* adapter runs app init ([#103](https://github.com/jthegedus/svelte-adapter-firebase/issues/103)) ([9d281fb](https://github.com/jthegedus/svelte-adapter-firebase/commit/9d281fb0dfc9b41146232768850b67fa1b866e84))
+
 ## [0.8.5](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.8.4...v0.8.5) (2021-06-25)
 
 
