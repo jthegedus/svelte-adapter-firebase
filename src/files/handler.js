@@ -1,7 +1,9 @@
 import '@sveltejs/kit/install-fetch'; // eslint-disable-line import/no-unassigned-import
 
 // TODO: hardcoding the relative location makes this brittle
-import {render} from '../output/server/app.js';
+import {init, render} from '../output/server/app.js';
+
+init();
 
 /**
  * Firebase Cloud Function handler for SvelteKit
