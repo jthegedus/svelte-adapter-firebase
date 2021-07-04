@@ -89,6 +89,7 @@ SvelteKit is still in Beta and the Adapter API is in flux, this can result in th
 
 | Adapter Version | SvelteKit Version |
 | --------------- | ----------------- |
+| `0.9.x`         | `1.0.0-next.119`  |
 | `0.8.x`         | `1.0.0-next.111`  |
 | `NA`            | `1.0.0-next.110`  |
 | `NA`            | `1.0.0-next.109`  |
