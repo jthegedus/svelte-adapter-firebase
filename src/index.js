@@ -158,7 +158,8 @@ async function prepareEntrypoint({utils, serverOutputDir}) {
 	utils.rimraf(temporaryDir);
 	utils.rimraf(serverOutputDir);
 
-	const handlerSource = path.join(fileURLToPath(new URL('./files', import.meta.url)), 'handler.js');
+	const files = fileURLToPath(new URL('./files', import.meta.url));
+	const handlerSource = path.join(files, 'handler.js');
 	const handlerDest = path.join(temporaryDir, 'handler.js');
 	utils.copy(handlerSource, handlerDest);
 
@@ -166,6 +167,7 @@ async function prepareEntrypoint({utils, serverOutputDir}) {
 		entryPoints: [path.join(temporaryDir, 'handler.js')],
 		outfile: path.join(serverOutputDir, 'index.js'),
 		bundle: true,
+		inject: [path.join(files, 'shims.js')],
 		platform: 'node',
 		target: ['node12']
 	});
