@@ -1,3 +1,10 @@
+## [0.9.1](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.9.0...v0.9.1) (2021-07-07)
+
+
+### Bug Fixes
+
+* use esbuild inject api to ensure exec order & polyfill ([#104](https://github.com/jthegedus/svelte-adapter-firebase/issues/104)) ([52429d2](https://github.com/jthegedus/svelte-adapter-firebase/commit/52429d23809c08dd8027e6b0ce8c2e04b6b41136))
+
 # [0.9.0](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.8.5...v0.9.0) (2021-07-04)
 
 
