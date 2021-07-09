@@ -1,3 +1,10 @@
+## [0.9.2](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.9.1...v0.9.2) (2021-07-09)
+
+
+### Bug Fixes
+
+* beta version compat table ([114a30f](https://github.com/jthegedus/svelte-adapter-firebase/commit/114a30f0e95bf34b5ecc58457bc920d8e15410aa))
+
 ## [0.9.1](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.9.0...v0.9.1) (2021-07-07)
 
 
