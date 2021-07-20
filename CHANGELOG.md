@@ -1,3 +1,11 @@
+# Changelog
+
+## [0.10.0](https://www.github.com/jthegedus/svelte-adapter-firebase/compare/v0.9.2...v0.10.0) (2021-07-20)
+
+### Features
+
+* support esbuild config ([#109](https://www.github.com/jthegedus/svelte-adapter-firebase/issues/109)) ([3b7c733](https://www.github.com/jthegedus/svelte-adapter-firebase/commit/3b7c733249b6f29e4041e56bbc9c8dabd24c9c86))
+
 ## [0.9.2](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.9.1...v0.9.2) (2021-07-09)
 
 
