@@ -24,7 +24,7 @@ import {
  * 	esbuildBuildOptions?: (defaultOptions: BuildOptions) => Promise<BuildOptions> | BuildOptions;
  * }} options
  **/
-const entrypoint = function (options) {
+const entrypoint = function (options = {}) {
 	/** @type {import('@sveltejs/kit').Adapter} */
 	const adapter = {
 		name: 'svelte-adapter-firebase',
