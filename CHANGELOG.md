@@ -1,6 +1,13 @@
 # Changelog
 
 
+### [0.10.2](https://www.github.com/jthegedus/svelte-adapter-firebase/compare/v0.10.1...v0.10.2) (2021-07-20)
+
+
+### Bug Fixes
+
+* update sveltekit peer dep ([#112](https://www.github.com/jthegedus/svelte-adapter-firebase/issues/112)) ([d6aea82](https://www.github.com/jthegedus/svelte-adapter-firebase/commit/d6aea8293b04d6e529daed24d420656317315aed))
+
 ## [0.9.2](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.9.1...v0.9.2) (2021-07-09)
 
 
