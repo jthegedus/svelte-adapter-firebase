@@ -22,9 +22,9 @@ jobs:
         uses: asdf-vm/actions/install@v1
 
       - uses: GoogleCloudPlatform/release-please-action@v2
+        id: release
         with:
           release-type: node
-          package-name: svelte-adapter-firebase
           bump-minor-pre-major: true # remove this to enable breaking changes causing 1.0.0 tag
 
       # The logic below handles the npm publication:
