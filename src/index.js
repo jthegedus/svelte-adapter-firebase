@@ -177,7 +177,7 @@ async function prepareEntrypoint({utils, esbuildBuildOptions, serverOutputDir}) 
 	utils.copy(handlerSource, handlerDest);
 
 	/** @type {BuildOptions} */
-	const defaultEsbuildOptions = {
+	const defaultOptions = {
 		entryPoints: [path.join(temporaryDir, 'handler.js')],
 		outfile: path.join(serverOutputDir, 'index.js'),
 		bundle: true,
@@ -185,7 +185,7 @@ async function prepareEntrypoint({utils, esbuildBuildOptions, serverOutputDir}) 
 		platform: 'node'
 	};
 
-	const esbuildOptions = esbuildBuildOptions ? await esbuildBuildOptions(defaultEsbuildOptions) : defaultEsbuildOptions;
+	const esbuildOptions = esbuildBuildOptions ? await esbuildBuildOptions(defaultOptions) : defaultOptions;
 
 	await esbuild.build(esbuildOptions);
 }
