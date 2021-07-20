@@ -3,41 +3,51 @@ import path from 'path';
 import {fileURLToPath} from 'url';
 import esbuild from 'esbuild';
 import kleur from 'kleur';
-import {copyFileIfExistsSync,
+import {
+	copyFileIfExistsSync,
 	ensureCompatibleCloudFunctionVersion,
 	ensureStaticResourceDirsDiffer,
 	logRelativeDir,
-	parseFirebaseConfiguration} from './utils.js';
+	parseFirebaseConfiguration
+} from './utils.js';
+
+/**
+ * @typedef {import('esbuild').BuildOptions} BuildOptions
+ */
 
 /**
  * @param {{
  * 	hostingSite?: string;
- * 	sourceRewriteMatch?: string,
- * 	firebaseJson?: string,
- * 	cloudRunBuildDir?: string
+ * 	sourceRewriteMatch?: string;
+ * 	firebaseJson?: string;
+ * 	cloudRunBuildDir?: string;
+ * 	esbuildBuildOptions?: (defaultOptions: BuildOptions) => Promise<BuildOptions> | BuildOptions;
  * }} options
- */
-const entrypoint = function ({
-	firebaseJson = 'firebase.json',
-	hostingSite = undefined,
-	sourceRewriteMatch = '**',
-	cloudRunBuildDir = undefined
-} = {}) {
+ **/
+const entrypoint = function (options = {}) {
 	/** @type {import('@sveltejs/kit').Adapter} */
 	const adapter = {
 		name: 'svelte-adapter-firebase',
 		async adapt({utils, config}) {
-			utils.log.minor(`Adapter configuration:\n\t${kleur.italic(JSON.stringify({firebaseJson, hostingSite, sourceRewriteMatch, cloudRunBuildDir}))}`);
+			const {
+				firebaseJson = 'firebase.json',
+				hostingSite = undefined,
+				sourceRewriteMatch = '**',
+				cloudRunBuildDir = undefined,
+				esbuildBuildOptions
+			} = options;
+
+			utils.log.minor(`Adapter configuration:\n\t${kleur.italic(JSON.stringify(options))}`);
 			const {firebaseJsonDir, functions, cloudRun, publicDir} = parseFirebaseConfiguration({firebaseJson, hostingSite, sourceRewriteMatch});
 
 			ensureStaticResourceDirsDiffer({source: path.join(process.cwd(), config.kit.files.assets), dest: publicDir});
 
 			if (functions !== false) {
-				await adaptToCloudFunctions({utils, ...functions});
+				await adaptToCloudFunctions({utils, esbuildBuildOptions, ...functions});
 			}
 
 			if (cloudRun !== false) {
-				await adaptToCloudRun({utils, ...cloudRun, firebaseJsonDir, cloudRunBuildDir});
+				await adaptToCloudRun({utils, esbuildBuildOptions, firebaseJsonDir, cloudRunBuildDir, ...cloudRun});
 			}
 
 			utils.log.minor(logRelativeDir('Erasing static asset dir before processing', publicDir));
@@ -58,13 +68,14 @@ const entrypoint = function ({
 /**
  *
  * @param {{
- * 	utils: import('@sveltejs/kit').AdapterUtils,
+ * 	utils: import('@sveltejs/kit').AdapterUtils;
+ * 	esbuildBuildOptions?: (defaultOptions: BuildOptions) => Promise<BuildOptions> | BuildOptions;
  * 	name: string;
  * 	source: string;
  * 	runtime: string | undefined;
  * }} param
  */
-async function adaptToCloudFunctions({utils, name, source, runtime}) {
+async function adaptToCloudFunctions({utils, esbuildBuildOptions, name, source, runtime}) {
 	const functionsPackageJson = JSON.parse(readFileSync(path.join(source, 'package.json'), 'utf-8'));
 	const functionsMain = functionsPackageJson?.main;
 
@@ -77,7 +88,7 @@ async function adaptToCloudFunctions({utils, name, source, runtime}) {
 	const ssrDirname = name ?? 'svelteKit';
 	const serverOutputDir = path.join(source, path.dirname(functionsMain), ssrDirname);
 
-	await prepareEntrypoint({utils, serverOutputDir});
+	await prepareEntrypoint({utils, esbuildBuildOptions, serverOutputDir});
 	utils.log.minor(logRelativeDir('Writing Cloud Function server assets to', serverOutputDir));
 
 	// Prepare Cloud Function
@@ -108,17 +119,18 @@ exports.${name} = functions.https.onRequest(async (request, response) => {
 /**
  *
  * @param {{
- * 	utils: import('@sveltejs/kit').AdapterUtils,
+ * 	utils: import('@sveltejs/kit').AdapterUtils;
+ * 	esbuildBuildOptions?: (defaultOptions: BuildOptions) => Promise<BuildOptions> | BuildOptions;
  * 	serviceId: string;
  * 	region: string;
- * 	firebaseJsonDir: string
- * 	cloudRunBuildDir: string|undefined
+ * 	firebaseJsonDir: string;
+ * 	cloudRunBuildDir: string|undefined;
  * }} param
  */
-async function adaptToCloudRun({utils, serviceId, region, firebaseJsonDir, cloudRunBuildDir}) {
+async function adaptToCloudRun({utils, esbuildBuildOptions, serviceId, region, firebaseJsonDir, cloudRunBuildDir}) {
 	const serverOutputDir = path.join(firebaseJsonDir, cloudRunBuildDir || `.${serviceId}`);
 
-	await prepareEntrypoint({utils, serverOutputDir});
+	await prepareEntrypoint({utils, esbuildBuildOptions, serverOutputDir});
 	utils.log.minor(logRelativeDir('Writing Cloud Run service to', serverOutputDir));
 
 	// Prepare Cloud Run package.json - read SvelteKit App 'package.json', modify the JSON, write to serverOutputDir
@@ -148,11 +160,12 @@ async function adaptToCloudRun({utils, serviceId, region, firebaseJsonDir, cloud
 /**
  *
  * @param {{
- * 	utils: import('@sveltejs/kit').AdapterUtils,
+ * 	utils: import('@sveltejs/kit').AdapterUtils;
+ * 	esbuildBuildOptions?: (defaultOptions: BuildOptions) => Promise<BuildOptions> | BuildOptions;
  * 	serverOutputDir: string;
  * }} param
  */
-async function prepareEntrypoint({utils, serverOutputDir}) {
+async function prepareEntrypoint({utils, esbuildBuildOptions, serverOutputDir}) {
 	const temporaryDir = path.join('.svelte-kit', 'firebase');
 
 	utils.rimraf(temporaryDir);
@@ -163,14 +176,18 @@ async function prepareEntrypoint({utils, serverOutputDir}) {
 	const handlerDest = path.join(temporaryDir, 'handler.js');
 	utils.copy(handlerSource, handlerDest);
 
-	await esbuild.build({
+	/** @type {BuildOptions} */
+	const defaultOptions = {
 		entryPoints: [path.join(temporaryDir, 'handler.js')],
 		outfile: path.join(serverOutputDir, 'index.js'),
 		bundle: true,
 		inject: [path.join(files, 'shims.js')],
-		platform: 'node',
-		target: ['node12']
-	});
+		platform: 'node'
+	};
+
+	const esbuildOptions = esbuildBuildOptions ? await esbuildBuildOptions(defaultOptions) : defaultOptions;
+
+	await esbuild.build(esbuildOptions);
 }
 
 export default entrypoint;
