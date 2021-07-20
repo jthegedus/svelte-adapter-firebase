@@ -1,8 +1,10 @@
 name: Release
+
 on:
   push:
     branches:
       - main
+
 jobs:
   release:
     name: Release
@@ -15,14 +17,28 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+
       - name: asdf_install
         uses: asdf-vm/actions/install@v1
+
+      - uses: GoogleCloudPlatform/release-please-action@v2
         with:
-          before_install: bash -c '${ASDF_DATA_DIR:=$HOME/.asdf}/plugins/nodejs/bin/import-release-team-keyring'
-      - name: Install dependencies
-        run: pnpm install
-      - name: Release
+          release-type: node
+          package-name: svelte-adapter-firebase
+          bump-minor-pre-major: true # remove this to enable breaking changes causing 1.0.0 tag
+
+      # The logic below handles the npm publication:
+      # The if statements ensure that a publication only occurs when a new release is created
+      - uses: actions/checkout@v2
+        if: ${{ steps.release.outputs.release_created }}
+
+      - run: npm config set registry "https://registry.npmjs.org"
+        if: ${{ steps.release.outputs.release_created }}
+
+      - run: npm ci
+        if: ${{ steps.release.outputs.release_created }}
+
+      - run: npm publish
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: pnpx semantic-release
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        if: ${{ steps.release.outputs.release_created }}
