@@ -12,15 +12,6 @@ jobs:
     env:
       HUSKY: 0
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-
-      - name: asdf_install
-        uses: asdf-vm/actions/install@v1
-
       - uses: GoogleCloudPlatform/release-please-action@v2
         id: release
         with:
@@ -29,10 +20,17 @@ jobs:
 
       # The logic below handles the npm publication:
       # The if statements ensure that a publication only occurs when a new release is created
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
         if: ${{ steps.release.outputs.release_created }}
 
-      - run: npm config set registry https://registry.npmjs.org
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 16
+          registry-url: 'https://registry.npmjs.org'
         if: ${{ steps.release.outputs.release_created }}
 
       - run: npm install
