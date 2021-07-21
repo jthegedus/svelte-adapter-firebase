@@ -1,6 +1,13 @@
 # Changelog
 
 
+### [0.10.5](https://www.github.com/jthegedus/svelte-adapter-firebase/compare/v0.10.4...v0.10.5) (2021-07-21)
+
+
+### Bug Fixes
+
+* document potential Cloud Run deprecation ([#119](https://www.github.com/jthegedus/svelte-adapter-firebase/issues/119)) ([ac8cd74](https://www.github.com/jthegedus/svelte-adapter-firebase/commit/ac8cd745632f4d0f63d116dd6ea0aedf4d7178ab))
+
 ### [0.10.4](https://www.github.com/jthegedus/svelte-adapter-firebase/compare/v0.10.3...v0.10.4) (2021-07-21)
 
 
