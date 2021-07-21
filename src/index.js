@@ -47,6 +47,7 @@ const entrypoint = function (options = {}) {
 			}
 
 			if (cloudRun !== false) {
+				utils.log.info(kleur.bold('Cloud Run support may be deprecated in future. Comment why you need Cloud Run instead of Functions here - https://github.com/jthegedus/svelte-adapter-firebase/issues/118'));
 				await adaptToCloudRun({utils, esbuildBuildOptions, firebaseJsonDir, cloudRunBuildDir, ...cloudRun});
 			}
 
