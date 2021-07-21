@@ -1,6 +1,13 @@
 # Changelog
 
 
+### [0.10.4](https://www.github.com/jthegedus/svelte-adapter-firebase/compare/v0.10.3...v0.10.4) (2021-07-21)
+
+
+### Bug Fixes
+
+* release workflow ([#116](https://www.github.com/jthegedus/svelte-adapter-firebase/issues/116)) ([57316fc](https://www.github.com/jthegedus/svelte-adapter-firebase/commit/57316fc36f7b64ba63a36835f44db3a0e0c54826))
+
 ## [0.9.2](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.9.1...v0.9.2) (2021-07-09)
 
 
