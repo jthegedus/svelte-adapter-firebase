@@ -3,9 +3,13 @@
 
 ### [0.10.2](https://www.github.com/jthegedus/svelte-adapter-firebase/compare/v0.10.1...v0.10.2) (2021-07-20)
 
+### Features
+
+* support esbuild config ([#109](https://www.github.com/jthegedus/svelte-adapter-firebase/issues/109)) ([3b7c733](https://www.github.com/jthegedus/svelte-adapter-firebase/commit/3b7c733249b6f29e4041e56bbc9c8dabd24c9c86))
 
 ### Bug Fixes
 
+* release-please wortkflow ([98fe66e](https://www.github.com/jthegedus/svelte-adapter-firebase/commit/98fe66e5e0f7bde8f01aeec79fba83180999cd2e))
 * update sveltekit peer dep ([#112](https://www.github.com/jthegedus/svelte-adapter-firebase/issues/112)) ([d6aea82](https://www.github.com/jthegedus/svelte-adapter-firebase/commit/d6aea8293b04d6e529daed24d420656317315aed))
 
 ## [0.9.2](https://github.com/jthegedus/svelte-adapter-firebase/compare/v0.9.1...v0.9.2) (2021-07-09)
