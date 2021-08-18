@@ -7,7 +7,7 @@ specifiers:
   '@types/express': ^4.17.12
   '@types/node': ^14.14.35
   ava: ^3.15.0
-  esbuild: ^0.11.23
+  esbuild: ^0.12.20
   firebase-functions: ^3.14.1
   husky: ^5.0.8
   kleur: ^4.1.4
@@ -15,7 +15,7 @@ specifiers:
   xo: ^0.40.3
 
 dependencies:
-  esbuild: 0.11.23
+  esbuild: 0.12.20
   kleur: 4.1.4
 
 devDependencies:
@@ -1943,17 +1943,10 @@ packages:
       is-symbol: 1.0.4
     dev: true
 
-  /esbuild/0.11.23:
-    resolution: {integrity: sha512-iaiZZ9vUF5wJV8ob1tl+5aJTrwDczlvGP0JoMmnpC2B0ppiMCu8n8gmy5ZTGl5bcG081XBVn+U+jP+mPFm5T5Q==}
-    hasBin: true
-    requiresBuild: true
-    dev: false
-
   /esbuild/0.12.20:
     resolution: {integrity: sha512-u7+0qTo9Z64MD9PhooEngCmzyEYJ6ovFhPp8PLNh3UasR5Ihjv6HWVXqm8uHmasdQlpsAf0IsY4U0YVUfCpt4Q==}
     hasBin: true
     requiresBuild: true
-    dev: true
 
   /escalade/3.1.1:
     resolution: {integrity: sha512-k0er2gUkLf8O0zKJiAhmkTnJlTvINGv7ygDNPbeIsX/TJjGJZHuh9B2UxbsaEkmlEo9MfhrSzmhIlhRlI2GXnw==}
