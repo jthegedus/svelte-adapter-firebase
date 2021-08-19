@@ -7,8 +7,7 @@ init();
  * Firebase Cloud Function handler for SvelteKit
  *
  * This function converts the Firebase Cloud Function (Express.js) Request object
- * into a format consumable to the SvelteKit render() function, which is of type
- * SvelteKit `import('types/hooks').StrictBody | null`
+ * into a format consumable to the SvelteKit render() function
  *
  * Relevant documentation - https://firebase.google.com/docs/functions/http-events#read_values_from_the_request
  *
@@ -16,31 +15,37 @@ init();
  * @param {import('express').Response} response
  * @returns {Promise<void>}
  */
-const svelteKit = async ({body, headers, method, rawBody, url}, response) => {
-	const host = `${headers['x-forwarded-proto']}://${headers.host}`;
-	const {pathname, searchParams: searchParameters = ''} = new URL(url || '', host);
+async function svelteKit(request, response) {
+	const rendered = await render(toSvelteKitRequest(request));
 
-	const finalRawBody =
-		headers['content-type'] === undefined ?
-			rawBody :
-			(headers['content-type'] === 'application/octet-stream' ?
-				body :
-				new TextDecoder(headers['content-encoding'] || 'utf-8').decode(rawBody));
+	return rendered ?
+		response.writeHead(rendered.status, rendered.headers).end(rendered.body) :
+		response.writeHead(404, 'Not Found').end();
+}
 
-	const rendered = await render({
-		method,
-		headers,
+/**
+ * @param {import('firebase-functions').https.Request} request
+ * @return {import('@sveltejs/kit/types/internal').Incoming}
+ */
+function toSvelteKitRequest(request) {
+	const host = `${request.headers['x-forwarded-proto']}://${request.headers.host}`;
+	const {pathname, searchParams: searchParameters} = new URL(
+		request.url || '',
+		host
+	);
+
+	return {
+		// Incoming
+		method: request.method,
+		headers: request.headers,
+		rawBody: new Uint8Array(request.rawBody),
+		// Body: request.body, Why does SvelteKit not use body?
+		// Location
+		host,
 		path: pathname,
-		query: searchParameters,
-		rawBody: finalRawBody
-	});
-
-	if (rendered) {
-		const {status, headers, body} = rendered;
-		return response.writeHead(status, headers).end(body);
-	}
-
-	return response.writeHead(404).end();
-};
+		params: request.params,
+		query: searchParameters
+	};
+}
 
 export default svelteKit;
