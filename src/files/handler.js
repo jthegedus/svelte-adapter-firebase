@@ -36,12 +36,9 @@ function toSvelteKitRequest(request) {
 	);
 
 	return {
-		// Incoming
 		method: request.method,
 		headers: request.headers,
 		rawBody: new Uint8Array(request.rawBody),
-		// Body: request.body, Why does SvelteKit not use body?
-		// Location
 		host,
 		path: pathname,
 		query: searchParameters
