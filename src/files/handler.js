@@ -1,4 +1,5 @@
 // TODO: hardcoding the relative location makes this brittle
+// @ts-expect-error
 import {init, render} from '../output/server/app.js';
 
 init();
