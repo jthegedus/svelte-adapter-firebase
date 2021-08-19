@@ -44,7 +44,6 @@ function toSvelteKitRequest(request) {
 		// Location
 		host,
 		path: pathname,
-		params: request.params,
 		query: searchParameters
 	};
 }
