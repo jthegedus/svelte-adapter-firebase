@@ -48,27 +48,29 @@ test('convert string[] headers of any kind to csv string values', () => {
 // Request
 test('firebase-functions.https.request is converted to SvelteKit Incoming request type correctly', () => {
 	const expected = {
-		method: 'some-method',
+		method: 'GET',
 		headers: {
 			'accept-language': 'en',
 			'set-cookie': 'some,cookie,data',
-			host: 'localhost:8080'
+			host: 'us-central1-func.cloudfunctions.net',
+			'x-forwarded-proto': 'https'
 		},
 		rawBody: new Uint8Array(Buffer.from('some-data', 'utf-8').buffer),
-		host: 'undefined://localhost:8080',
+		host: 'https://us-central1-func.cloudfunctions.net',
 		path: '/url',
-		query: new URL('https://cloud-functions.net/url?some=thing' || '', 'localhost:8080').searchParams
+		query: new URL('/url?some=thing' || '', 'https://us-central1-func.cloudfunctions.net').searchParams
 	};
 
 	const result = toSvelteKitRequest({
-		method: 'some-method',
+		method: 'GET',
 		headers: {
 			'accept-language': 'en',
 			'set-cookie': ['some', 'cookie', 'data'],
-			host: 'localhost:8080'
+			host: 'us-central1-func.cloudfunctions.net',
+			'x-forwarded-proto': 'https'
 		},
 		rawBody: Buffer.from('some data', 'utf8'),
-		url: 'https://cloud-functions.net/url?some=thing'
+		url: '/url?some=thing'
 	});
 
 	assert.equal(result, expected, 'match');
