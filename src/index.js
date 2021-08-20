@@ -176,6 +176,9 @@ async function prepareEntrypoint({utils, esbuildBuildOptions, serverOutputDir}) 
 	const handlerSource = path.join(files, 'handler.js');
 	const handlerDest = path.join(temporaryDir, 'handler.js');
 	utils.copy(handlerSource, handlerDest);
+	const firebaseToSvelteKitSource = path.join(files, 'firebase-to-svelte-kit.js');
+	const firebaseToSvelteKitDest = path.join(temporaryDir, 'firebase-to-svelte-kit.js');
+	utils.copy(firebaseToSvelteKitSource, firebaseToSvelteKitDest);
 
 	/** @type {BuildOptions} */
 	const defaultOptions = {
