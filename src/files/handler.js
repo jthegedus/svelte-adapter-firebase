@@ -30,14 +30,19 @@ async function svelteKit(request, response) {
  */
 function toSvelteKitRequest(request) {
 	const host = `${request.headers['x-forwarded-proto']}://${request.headers.host}`;
-	const {pathname, searchParams: searchParameters} = new URL(
-		request.url || '',
-		host
-	);
+	const {pathname, searchParams: searchParameters} = new URL(request.url || '', host);
+
+	// Copy all values from request.headers except 'set-cookie' as it is the unsupported string[] type
+	// If 'set-cookie' was in initial request headers, convert it to a csv string value.
+	const {'set-cookie': setCookie, ...rest} = request.headers;
+	const finalHeaders = /** @type {Record<string, string>} */ ({...rest});
+	if (request.headers['set-cookie']) {
+		finalHeaders['set-cookie'] = request.headers['set-cookie'].join(',');
+	}
 
 	return {
 		method: request.method,
-		headers: request.headers,
+		headers: finalHeaders,
 		rawBody: new Uint8Array(request.rawBody),
 		host,
 		path: pathname,
