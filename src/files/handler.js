@@ -45,7 +45,7 @@ function toSvelteKitRequest(request) {
 /**
  * Convert Node.js http.IncomingHttpHeaders to SvelteKit Record<string,string>
  *
- * This is achieved by converting the only concrete string[] header, 'set-cookie' to the expected csv string.
+ * This is achieved by converting the all string[] header values to the expected type of a CSV string.
  *
  * Example:
  * 	input = { 'Content-Type': 'application/json', 'set-cookie': ['something', 'another'] }
@@ -55,10 +55,14 @@ function toSvelteKitRequest(request) {
  * @returns {Record<string, string>}
  */
 function toSvelteKitHeaders(headers) {
-	const {'set-cookie': setCookie, ...rest} = headers;
-	const finalHeaders = /** @type {Record<string, string>} */ (rest);
-	if (headers['set-cookie']) {
-		finalHeaders['set-cookie'] = headers['set-cookie'].join(',');
+	/** @type {Record<string, string>} */
+	const finalHeaders = {};
+
+	// Assume string | string[] types for all values
+	for (const [key, value] of Object.entries(headers)) {
+		finalHeaders[key] = Array.isArray(value) ?
+			value.join(',') :
+			value;
 	}
 
 	return finalHeaders;
