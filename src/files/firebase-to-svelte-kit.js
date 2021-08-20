@@ -11,7 +11,9 @@ export function toSvelteKitRequest(request) {
 	return {
 		method: request.method,
 		headers: toSvelteKitHeaders(request.headers),
-		rawBody: new Uint8Array(request.rawBody.buffer),
+		rawBody: request.rawBody ?
+			new Uint8Array(request.rawBody.buffer) :
+			new Uint8Array(),
 		host,
 		path: pathname,
 		query: searchParameters
