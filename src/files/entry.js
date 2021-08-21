@@ -17,12 +17,10 @@ init();
  * @param {import('express').Response} response
  * @returns {Promise<void>}
  */
-async function svelteKit(request, response) {
+export default async function svelteKit(request, response) {
 	const rendered = await render(toSvelteKitRequest(request));
 
 	return rendered ?
 		response.writeHead(rendered.status, rendered.headers).end(rendered.body) :
 		response.writeHead(404, 'Not Found').end();
 }
-
-export default svelteKit;
