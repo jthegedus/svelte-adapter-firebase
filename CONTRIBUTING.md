@@ -27,3 +27,24 @@ pnpm i
 See the [GitHub Issues](https://github.com/jthegedus/svelte-adatper-firebase/issues) list for any open Issue, especially those marked as `help wanted`
 
 General improvements to any aspect of this adapter are welcome, just ensure major work is preceeded by a conversation in a [GitHub Issue](https://github.com/jthegedus/svelte-adatper-firebase/issues).
+
+## Tests
+
+As an integration point between [SvelteKit](https://kit.svelte.dev) and Firebase Hosting with Function rewrites the tests for this package are **important**.
+
+The test suite is broken into three categories:
+- **unit**: test internal functions to the CLI & entrypoint JS code
+- **integration**: runs the `build` command of SvelteKit with demo apps that tests each path of the src/index.js CLI entrypoint.
+- **end-to-end**: runs a shell script which:
+  - creates the SvelteKit Todo skeleton app (via `npm init@svelte <dir>`)
+  - adds Firebase configuration for Hosting & Cloud Functions
+  - adds `svelte-adapter-firebase` (relative add of the repo root, not from `npmjs.com`, to test current code changes before publishing)
+  - creates the Cloud Function which hosts the compiled SvelteKit app (this is the code in `functions/index.js` that the CLI would prompt the user to add)
+  - installs all dependencies for the Todo app & Cloud Functions
+  - builds the app
+  - starts the Firebase Emulator with Hosting & Functions
+  - makes `curl` requests to the Todo app
+    - GET to `/`
+    - GET to `/about`
+    - GET to `/todos`
+    - POST with formdata to `/todos`
