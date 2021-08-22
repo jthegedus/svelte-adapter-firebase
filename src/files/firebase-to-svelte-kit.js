@@ -12,8 +12,8 @@ export function toSvelteKitRequest(request) {
 		method: request.method,
 		headers: toSvelteKitHeaders(request.headers),
 		rawBody: request.rawBody ?
-			new Uint8Array(request.rawBody.buffer) :
-			new Uint8Array(),
+			request.rawBody :
+			Buffer.from(''), // TODO: validate else statement
 		host,
 		path: pathname,
 		query: searchParameters
