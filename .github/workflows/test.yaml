@@ -23,7 +23,7 @@ jobs:
   integration:
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         dirs:
           - "tests/integration/functions_single_site"
