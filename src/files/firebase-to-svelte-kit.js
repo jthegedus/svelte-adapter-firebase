@@ -13,7 +13,7 @@ export function toSvelteKitRequest(request) {
 		headers: toSvelteKitHeaders(request.headers),
 		rawBody: request.rawBody ?
 			request.rawBody :
-			Buffer.from(''), // TODO: validate else statement
+			new Uint8Array(),
 		host,
 		path: pathname,
 		query: searchParameters
