@@ -49,6 +49,12 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: curl -f https://get.pnpm.io/v6.js | node - add --global pnpm@6
       # END: Windows
+      - name: list dirs for debugging
+        run: |
+          echo "$PWD"
+          ls -AlFh
+          cd ${{ matrix.dirs }}
+          ls -AlFh
       - name: Install svelte-adapter-firebase deps
         run: pnpm install
       - name: Install ${{ matrix.dirs }} app deps
