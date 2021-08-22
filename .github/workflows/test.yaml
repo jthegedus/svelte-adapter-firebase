@@ -58,11 +58,13 @@ jobs:
       - name: Install svelte-adapter-firebase deps
         run: pnpm install
       - name: Install ${{ matrix.dirs }} app deps
-        run: pnpm install
-        working-directory: ${{ matrix.dirs }}
+        run: |
+          cd ${{ matrix.dirs }}
+          pnpm install
       - name: Build ${{ matrix.dirs }} app
-        run: pnpm run build
-        working-directory: ${{ matrix.dirs }}
+        run: |
+          cd ${{ matrix.dirs }}
+          pnpm run build
 
   end-to-end:
     runs-on: ubuntu-latest
