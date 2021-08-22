@@ -2,13 +2,13 @@ import {fileURLToPath} from 'url';
 import path from 'path';
 import {test} from 'uvu';
 import * as assert from 'uvu/assert'; // eslint-disable-line node/file-extension-in-import
-import {ensureCompatibleCloudFunctionVersion, ensureStaticResourceDirsDiffer, parseFirebaseConfiguration, validCloudFunctionName, validCloudRunServiceId} from '../src/utils.js';
+import {ensureCompatibleCloudFunctionVersion, ensureStaticResourceDirsDiffer, parseFirebaseConfiguration, validCloudFunctionName, validCloudRunServiceId} from '../../../src/utils.js';
 
 // ParseFirebaseConfiguration: Valid configs
 test(
 	'Firebase config w Cloud Functions & single site',
 	() => {
-		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: fileURLToPath(new URL('./fixtures/successes/cf_site.json', import.meta.url))};
+		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: fileURLToPath(new URL('../fixtures/successes/cf_site.json', import.meta.url))};
 		const result = parseFirebaseConfiguration(config);
 		const expectedResult = {functions: {name: 'some_func', source: path.join(path.dirname(config.firebaseJson), 'functions'), runtime: undefined}, cloudRun: false, publicDir: path.join(path.dirname(config.firebaseJson), 'app'), firebaseJsonDir: path.dirname(config.firebaseJson)};
 
@@ -19,7 +19,7 @@ test(
 test(
 	'Firebase config w Cloud Functions & multiple sites',
 	() => {
-		const config = {hostingSite: 'app', sourceRewriteMatch: '**', firebaseJson: fileURLToPath(new URL('./fixtures/successes/cf_sites.json', import.meta.url))};
+		const config = {hostingSite: 'app', sourceRewriteMatch: '**', firebaseJson: fileURLToPath(new URL('../fixtures/successes/cf_sites.json', import.meta.url))};
 		const result = parseFirebaseConfiguration(config);
 		const expectedResult = {functions: {name: 'some_func', source: path.join(path.dirname(config.firebaseJson), 'functions'), runtime: undefined}, cloudRun: false, publicDir: path.join(path.dirname(config.firebaseJson), 'app'), firebaseJsonDir: path.dirname(config.firebaseJson)};
 
@@ -30,7 +30,7 @@ test(
 test(
 	'Firebase config w Cloud Run & single site',
 	() => {
-		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: fileURLToPath(new URL('./fixtures/successes/cr_site.json', import.meta.url))};
+		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson: fileURLToPath(new URL('../fixtures/successes/cr_site.json', import.meta.url))};
 		const result = parseFirebaseConfiguration(config);
 		const expectedResult = {functions: false, cloudRun: {serviceId: 'some-service', region: 'us-central1'}, publicDir: path.join(path.dirname(config.firebaseJson), 'app'), firebaseJsonDir: path.dirname(config.firebaseJson)};
 
@@ -41,7 +41,7 @@ test(
 test(
 	'Firebase config w Cloud Run & multiple sites',
 	() => {
-		const config = {hostingSite: 'app', sourceRewriteMatch: '**', firebaseJson: fileURLToPath(new URL('./fixtures/successes/cr_sites.json', import.meta.url))};
+		const config = {hostingSite: 'app', sourceRewriteMatch: '**', firebaseJson: fileURLToPath(new URL('../fixtures/successes/cr_sites.json', import.meta.url))};
 		const result = parseFirebaseConfiguration(config);
 		const expectedResult = {functions: false, cloudRun: {serviceId: 'some-service', region: 'us-central1'}, publicDir: path.join(path.dirname(config.firebaseJson), 'app'), firebaseJsonDir: path.dirname(config.firebaseJson)};
 
@@ -62,7 +62,7 @@ test(
 test(
 	'Firebase config is invalid json',
 	() => {
-		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/invalid.json', import.meta.url));
+		const firebaseJson = fileURLToPath(new URL('../fixtures/failures/invalid.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		assert.throws(() => parseFirebaseConfiguration(config), 'See above output. See Hint code SAF1001 in README');
 	}
@@ -71,7 +71,7 @@ test(
 test(
 	'Firebase config without "hosting" field',
 	() => {
-		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/missing_hosting.json', import.meta.url));
+		const firebaseJson = fileURLToPath(new URL('../fixtures/failures/missing_hosting.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		assert.throws(() => parseFirebaseConfiguration(config), 'See above output. See Hint code SAF1010 in README');
 	}
@@ -80,7 +80,7 @@ test(
 test(
 	'Firebase config w multiple sites missing "site" identifier',
 	() => {
-		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/sites_missing_rewrites.json', import.meta.url));
+		const firebaseJson = fileURLToPath(new URL('../fixtures/failures/sites_missing_rewrites.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		assert.throws(() => parseFirebaseConfiguration(config), 'See above output. See Hint code SAF1011 in README');
 	}
@@ -89,7 +89,7 @@ test(
 test(
 	'Firebase config w multiple sites require a "hostingSite" to be specified',
 	() => {
-		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cf_multi_site_requires_hostingSite.json', import.meta.url));
+		const firebaseJson = fileURLToPath(new URL('../fixtures/failures/cf_multi_site_requires_hostingSite.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		assert.throws(() => parseFirebaseConfiguration(config), 'See above output. See Hint code SAF1012 in README');
 	}
@@ -98,7 +98,7 @@ test(
 test(
 	'Firebase config w multiple sites but no match found for a "hostingSite" specified in svelte.config.js adapter config',
 	() => {
-		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cf_multi_site_requires_hostingSite.json', import.meta.url));
+		const firebaseJson = fileURLToPath(new URL('../fixtures/failures/cf_multi_site_requires_hostingSite.json', import.meta.url));
 		const config = {hostingSite: 'no_matching_site', sourceRewriteMatch: '**', firebaseJson};
 		assert.throws(() => parseFirebaseConfiguration(config), 'See above output. See Hint code SAF1013 in README');
 	}
@@ -107,14 +107,14 @@ test(
 test(
 	'Firebase config w missing "public"',
 	() => {
-		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/site_missing_public.json', import.meta.url));
+		const firebaseJson = fileURLToPath(new URL('../fixtures/failures/site_missing_public.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		assert.throws(() => parseFirebaseConfiguration(config), 'See above output. See Hint code SAF1050 in README');
 	}
 );
 
 test('Firebase config w empty "public" string', () => {
-	const firebaseJson = fileURLToPath(new URL('./fixtures/failures/site_empty_public.json', import.meta.url));
+	const firebaseJson = fileURLToPath(new URL('../fixtures/failures/site_empty_public.json', import.meta.url));
 	const config = {sourceRewriteMatch: '**', firebaseJson};
 	assert.throws(() => parseFirebaseConfiguration(config), 'See above output. See Hint code SAF1052 in README');
 });
@@ -122,7 +122,7 @@ test('Firebase config w empty "public" string', () => {
 test(
 	'Firebase config w site missing "rewrites"',
 	() => {
-		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/site_missing_rewrite.json', import.meta.url));
+		const firebaseJson = fileURLToPath(new URL('../fixtures/failures/site_missing_rewrite.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		assert.throws(() => parseFirebaseConfiguration(config), 'See above output. See Hint code SAF1020 in README');
 	}
@@ -131,7 +131,7 @@ test(
 test(
 	'Firebase config w "rewrites" mismatch',
 	() => {
-		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cf_site_rewrite_mismatch.json', import.meta.url));
+		const firebaseJson = fileURLToPath(new URL('../fixtures/failures/cf_site_rewrite_mismatch.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: 'no_match', firebaseJson};
 		assert.throws(() => parseFirebaseConfiguration(config), 'See above output. See Hint code SAF1021 in README');
 	}
@@ -140,7 +140,7 @@ test(
 test(
 	'Firebase config w Cloud Run missing required "serviceId" field',
 	() => {
-		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cr_missing_serviceId.json', import.meta.url));
+		const firebaseJson = fileURLToPath(new URL('../fixtures/failures/cr_missing_serviceId.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		assert.throws(() => parseFirebaseConfiguration(config), 'See above output. See Hint code SAF1030 in README');
 	}
@@ -149,7 +149,7 @@ test(
 test(
 	'Firebase config w Cloud Run incompatible serviceId field',
 	() => {
-		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cr_invalid_serviceId.json', import.meta.url));
+		const firebaseJson = fileURLToPath(new URL('../fixtures/failures/cr_invalid_serviceId.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		assert.throws(() => parseFirebaseConfiguration(config), 'See above output. See Hint code SAF1031 in README');
 	}
@@ -158,7 +158,7 @@ test(
 test(
 	'Firebase config w Cloud Run incompatible region field',
 	() => {
-		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cr_invalid_region.json', import.meta.url));
+		const firebaseJson = fileURLToPath(new URL('../fixtures/failures/cr_invalid_region.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		assert.throws(() => parseFirebaseConfiguration(config), 'See above output. See Hint code SAF1032 in README');
 	}
@@ -167,7 +167,7 @@ test(
 test(
 	'Firebase config w Cloud Function invalid name',
 	() => {
-		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cf_invalid_function_name.json', import.meta.url));
+		const firebaseJson = fileURLToPath(new URL('../fixtures/failures/cf_invalid_function_name.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		assert.throws(() => parseFirebaseConfiguration(config), 'See above output. See Hint code SAF1040 in README');
 	}
@@ -176,7 +176,7 @@ test(
 test(
 	'Firebase config w Cloud Functions & single site missing top-level functions',
 	() => {
-		const firebaseJson = fileURLToPath(new URL('./fixtures/failures/cf_site_missing_functions.json', import.meta.url));
+		const firebaseJson = fileURLToPath(new URL('../fixtures/failures/cf_site_missing_functions.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJson};
 		assert.throws(() => parseFirebaseConfiguration(config), 'See above output. See Hint code SAF1060 in README');
 	}
