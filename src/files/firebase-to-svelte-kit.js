@@ -2,7 +2,7 @@
  * Convert Firebase Cloud Function Request to SvelteKit Request
  *
  * @param {import('firebase-functions').https.Request} request
- * @return {import('@sveltejs/kit/types/internal').Incoming}
+ * @return {import('@sveltejs/kit').IncomingRequest}
  */
 export function toSvelteKitRequest(request) {
 	const host = `${request.headers['x-forwarded-proto']}://${request.headers.host}`;

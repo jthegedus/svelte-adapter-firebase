@@ -3,7 +3,7 @@
 import * as App from '../output/server/app.js';
 import {toSvelteKitRequest} from './firebase-to-svelte-kit.js';
 
-/** @type {import('@sveltejs/kit/types/internal').App} */
+/** @type {import('@sveltejs/kit').App} */
 const app = App;
 
 app.init();
