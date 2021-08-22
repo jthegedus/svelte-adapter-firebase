@@ -1,0 +1,25 @@
+{
+  "hosting": {
+    "public": "public",
+    "site": "svelte-func-single-site",
+    "rewrites": [
+      {
+        "source": "**",
+        "function": "sveltekit"
+      }
+    ]
+  },
+  "functions": {
+    "source": "functions"
+  },
+  "emulators": {
+    "ui": {
+      "enabled": true
+    },
+    "hosting": {
+      "port": 8685
+    },
+    "functions": {
+    }
+  }
+}
