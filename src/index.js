@@ -141,7 +141,7 @@ async function adaptToCloudRun({utils, esbuildBuildOptions, serviceId, region, f
 		pkgjson.dependencies = {};
 	}
 
-	pkgjson.dependencies['@google-cloud/functions-framework'] = '^1.7.1';
+	pkgjson.dependencies['@google-cloud/functions-framework'] = '^1.9.0';
 	pkgjson.engines = {node: '14'};
 	delete pkgjson.type;
 	const data = JSON.stringify(pkgjson, null, 2);
