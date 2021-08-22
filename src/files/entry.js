@@ -1,9 +1,12 @@
 // TODO: hardcoding the relative location makes this brittle
 // @ts-expect-error
-import {init, render} from '../output/server/app.js';
+import * as App from '../output/server/app.js';
 import {toSvelteKitRequest} from './firebase-to-svelte-kit.js';
 
-init();
+/** @type {import('@sveltejs/kit/types/internal').App} */
+const app = App;
+
+app.init();
 
 /**
  * Firebase Cloud Function handler for SvelteKit
@@ -18,7 +21,7 @@ init();
  * @returns {Promise<void>}
  */
 export default async function svelteKit(request, response) {
-	const rendered = await render(toSvelteKitRequest(request));
+	const rendered = await app.render(toSvelteKitRequest(request));
 
 	return rendered ?
 		response.writeHead(rendered.status, rendered.headers).end(rendered.body) :
