@@ -33,6 +33,7 @@ General improvements to any aspect of this adapter are welcome, just ensure majo
 As an integration point between [SvelteKit](https://kit.svelte.dev) and Firebase Hosting with Function rewrites the tests for this package are **important**.
 
 The test suite is broken into three categories:
+
 - **unit**: test internal functions to the CLI & entrypoint JS code
 - **integration**: runs the `build` command of SvelteKit with demo apps that tests each path of the src/index.js CLI entrypoint.
 - **end-to-end**: runs a shell script which:
@@ -48,3 +49,9 @@ The test suite is broken into three categories:
     - GET to `/about`
     - GET to `/todos`
     - POST with formdata to `/todos`
+
+- Unit tests are run pre-push. They can be run manually with `pnpm run test`
+- Integration tests are run in CI.
+- End-to-end tests are run in CI. This script can be run locally with `./tests/end-to-end/test.bash`
+
+All test suites are run in CI pipelines on PR creation.
