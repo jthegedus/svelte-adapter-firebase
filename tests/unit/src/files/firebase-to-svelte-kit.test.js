@@ -56,7 +56,7 @@ test('firebase-functions.https.request GET is converted to SvelteKit Incoming re
 			'x-forwarded-proto': 'https'
 		},
 		url: '/url?some=thing'
-	}
+	};
 
 	const expectedKitRequest = {
 		method: 'GET',
@@ -88,8 +88,8 @@ test('firebase-functions.https.request POST is converted to SvelteKit Incoming r
 		},
 		rawBody: Buffer.from('some-data', 'utf8'),
 		url: '/url?some=thing'
-	}
-	
+	};
+
 	const expectedKitRequest = {
 		method: 'POST',
 		headers: {
