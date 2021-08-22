@@ -24,11 +24,14 @@ cp "${SCRIPT_PATH}/scaffold/.firebaserc" "${TEST_DIR}/.firebaserc"
 cd "${TEST_DIR}" || exit 1
 echo "====> PWD after cd to TEST_DIR: ${PWD}"
 
+echo "====> Set package.json:scripts.build to verbose mode"
+sed -i -e 's/svelte-kit build/svelte-kit build --verbose/g' "${TEST_DIR}/package.json"
+
 echo "====> Install kit template deps"
 npm install
 
 echo "====> Install svelte-adapter-firebase from ${SCRIPT_PATH}/../"
-npm install "${SCRIPT_PATH}/../"
+npm install "${SCRIPT_PATH}/../../"
 
 echo "====> Install functions/ deps"
 npm --prefix functions install
