@@ -26,10 +26,10 @@ jobs:
       fail-fast: false
       matrix:
         dirs:
-          - tests/integration/functions_single_site
-          - tests/integration/nested_app_dirs/app
-          - tests/integration/run_custom_build_dir
-          - tests/integration/run_single_site
+          - "tests/integration/functions_single_site"
+          - "tests/integration/nested_app_dirs/app"
+          - "tests/integration/run_custom_build_dir"
+          - "tests/integration/run_single_site"
         os:
           - ubuntu-latest
           - macos-latest
