@@ -14,12 +14,13 @@
   },
   "emulators": {
     "ui": {
-      "enabled": true
+      "enabled": false
     },
     "hosting": {
       "port": 8685
     },
     "functions": {
+      "port": 5001
     }
   }
 }
