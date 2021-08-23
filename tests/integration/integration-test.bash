@@ -35,8 +35,8 @@ echo "${INDICATOR}init SvelteKit Todos app"
 yes "" | "$(npm init svelte@next "${TEST_DIR}/${NESTED_APP_DIR}")"
 echo "${INDICATOR}Complete SvelteKit init"
 
-cp -R "${SCRIPT_PATH}"/"${SOURCE_DIR}"/scaffold/* "${TEST_DIR}"
-cp "${SCRIPT_PATH}/${SOURCE_DIR}/scaffold/.firebaserc" "${TEST_DIR}/.firebaserc"
+cp -R "${SCRIPT_PATH}"/"${SOURCE_DIR}"/* "${TEST_DIR}"
+cp "${SCRIPT_PATH}/${SOURCE_DIR}/.firebaserc" "${TEST_DIR}/.firebaserc"
 
 cd "${TEST_DIR}/${NESTED_APP_DIR}" || exit 1
 echo "${INDICATOR}PWD after cd to TEST_DIR: ${PWD}"
