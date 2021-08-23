@@ -31,6 +31,9 @@ trap 'echo "${INDICATOR}Exiting, removing ${TEST_DIR}" && rm -rf -- "$TEST_DIR"'
 echo "${INDICATOR}TEST_DIR: ${TEST_DIR}"
 echo "${INDICATOR}PWD: ${PWD}"
 
+echo "${INDICATOR}Install svelte-adapter-firebase ${SCRIPT_PATH}/../../ deps"
+npm install 
+
 echo "${INDICATOR}init SvelteKit Todos app"
 yes "" | "$(npm init svelte@next "${TEST_DIR}/${NESTED_APP_DIR}")"
 echo "${INDICATOR}Complete SvelteKit init"
