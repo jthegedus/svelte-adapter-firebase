@@ -1,6 +1,13 @@
 # Changelog
 
 
+## [0.11.0](https://www.github.com/jthegedus/svelte-adapter-firebase/compare/v0.10.5...v0.11.0) (2021-08-23)
+
+
+### Features
+
+* new rawBody type on SvelteKit req ([#123](https://www.github.com/jthegedus/svelte-adapter-firebase/issues/123)) ([fec3174](https://www.github.com/jthegedus/svelte-adapter-firebase/commit/fec31742415274110a1b068915cd166029dec6ad))
+
 ### [0.10.5](https://www.github.com/jthegedus/svelte-adapter-firebase/compare/v0.10.4...v0.10.5) (2021-07-21)
 
 
