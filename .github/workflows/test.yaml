@@ -52,7 +52,7 @@ jobs:
             }
         os:
           - ubuntu-latest
-          - macos-latest
+          # - macos-latest # skip macos as it hangs often for whatever reason
           #- windows-latest # skip windows as script is in bash (could probably rewrite as ShellJS, but this isn't meant to test platform specific stuff)
     steps:
       - uses: actions/checkout@v2

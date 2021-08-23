@@ -1,9 +1,18 @@
 #!/usr/bin/env bash
 
-# Requires deps in .tool-versions at repo root
-
-# set -euo pipefail
+# undefined vars are errors
+set -u
 IFS=$'\n\t'
+
+# Execute end-to-end tests of the SvelteKit Todo template app built with
+# the svelte-adapter-firebase adapter hosted on the Cloud Function using 
+# the Firebase Emulator in CI
+#
+# Curl API and assert response payload
+#
+# Usage:
+#
+# tests/integration/test.bash
 
 SCRIPT_PATH=$(dirname "$(realpath -s "$0")")
 TEST_DIR="$(mktemp -dt svelte-adapter-firebase-XXXX)"
@@ -15,6 +24,10 @@ trap 'echo "====> Exiting, removing ${TEST_DIR} & killing all processes matching
 echo "TEST_DIR: ${TEST_DIR}"
 echo "PWD: ${PWD}"
 
+echo "${INDICATOR}Install svelte-adapter-firebase ${SCRIPT_PATH}/../../ deps"
+npm install 
+
+echo "${INDICATOR}init SvelteKit Todos app"
 yes "" | "$(npm init svelte@next "${TEST_DIR}")"
 echo "====> Complete SvelteKit init"
 
@@ -72,10 +85,9 @@ if [[ "${RESULT}" != *"${EXPECTED_SUBSTRING}"* ]]; then
 fi
 
 echo "====> Test POST to '/todos' API"
-EXPECTED_SUBSTRING='"text": "asdf"'
+EXPECTED_SUBSTRING='"text":"asdf"'
 # expected result = {"uid":"","created_at":01234,"text":"asdf","done":false}
-# RESULT="$(curl "http://localhost:${PORT}/todos.json" -H 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0' -H 'Accept: application/json' -H 'Accept-Language: en-GB,en;q=0.5' --compressed -H 'Referer: http://localhost:3000/todos' -H 'Content-Type: multipart/form-data; boundary=---------------------------349341627025106406523834848301' -H 'Origin: http://localhost:3000' -H 'Connection: keep-alive' -H 'Cookie: userid=0a52e7d5-25d4-4b12-b307-38756d00bbcb' -H 'Sec-Fetch-Dest: empty' -H 'Sec-Fetch-Mode: cors' -H 'Sec-Fetch-Site: same-origin' -H 'Sec-GPC: 1' --data-binary $'-----------------------------349341627025106406523834848301\r\nContent-Disposition: form-data; name="text"\r\n\r\nasdf\r\n-----------------------------349341627025106406523834848301--\r\n')"
-generated from the browser & copied with 'copy for cURL' browser context menu
+# generated from the browser & copied with 'copy for cURL' browser context menu
 RESULT="$(curl "http://localhost:${PORT}/todos.json" \
 	-H "User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0" \
 	-H "Accept: application/json" \
