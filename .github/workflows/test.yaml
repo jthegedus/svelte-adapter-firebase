@@ -61,7 +61,7 @@ jobs:
         uses: asdf-vm/actions/install@v1
       - name: list dirs for debugging
         run: |
-          tests/integration/integration-test.bash ${{ params.test_dir }} ${{ params.validation_app_dir }} ${{ params.validation_compute_dir }} ${{ params.nested_dir }}
+          tests/integration/integration-test.bash ${{ matrix.params.test_dir }} ${{ matrix.params.validation_app_dir }} ${{ matrix.params.validation_compute_dir }} ${{ matrix.params.nested_dir }}
 
   end-to-end:
     runs-on: ubuntu-latest
