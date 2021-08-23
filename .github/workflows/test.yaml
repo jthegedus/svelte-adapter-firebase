@@ -8,8 +8,7 @@ on:
 
 env:
   CI: true
-  # ASDF_DIR: /home/runner/.asdf
-  # FIREBASE_EMULATORS_PATH: ${{ github.workspace }}/emulator-cache
+  FIREBASE_EMULATORS_PATH: ${{ github.workspace }}/emulator-cache
 
 jobs:
   unit:
@@ -22,65 +21,59 @@ jobs:
       - run: pnpm run test
 
   integration:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
+    needs:
+      - unit
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
-        dirs:
-          - examples/functions_single_site
-          - examples/nested_app_dirs/app
-          - examples/run_custom_build_dir
-          - examples/run_single_site
-        os:
-          - ubuntu-latest
-          - macos-latest
-          - windows-latest
+        params:
+          - {
+              test_dir: "functions_single_site",
+              validation_app_dir: "public/about/index.html",
+              validation_compute_dir: "functions/sveltekit/index.js",
+              nested_dir: "."
+            }
+          - {
+              test_dir: "nested_app_dirs",
+              validation_app_dir: "public/about/index.html",
+              validation_compute_dir: "functions/sveltekit/index.js",
+              nested_dir: "app"
+            }
+          - {
+              test_dir: "run_custom_build_dir",
+              validation_app_dir: "public/about/index.html",
+              validation_compute_dir: "custom-cloud-run-build-dir/index.js",
+              nested_dir: "."
+            }
+          - {
+              test_dir: "run_single_site",
+              validation_app_dir: "public/about/index.html",
+              validation_compute_dir: ".cloudrun/index.js",
+              nested_dir: "."
+            }
     steps:
       - uses: actions/checkout@v2
       - name: install asdf
-        if: matrix.os != 'windows-latest'
         uses: asdf-vm/actions/install@v1
-      # START: Windows
-      - name: install Node.js on Windows
-        if: matrix.os == 'windows-latest'
-        uses: actions/setup-node@v2
+      - name: Run Integration test for ${{ matrix.params.test_dir }}
+        run: |
+          bash ./tests/integration/integration-test.bash ${{ matrix.params.test_dir }} ${{ matrix.params.validation_app_dir }} ${{ matrix.params.validation_compute_dir }} ${{ matrix.params.nested_dir }}
+
+  end-to-end:
+    runs-on: ubuntu-latest
+    needs:
+      - unit
+    steps:
+      - uses: actions/checkout@v2
+      - name: install asdf
+        uses: asdf-vm/actions/install@v1
+      - name: Cache firebase emulators
+        uses: actions/cache@v2
         with:
-          node-version: 14.16.1
-      - name: install pnpm on Windows
-        if: matrix.os == 'windows-latest'
-        run: curl -f https://get.pnpm.io/v6.js | node - add --global pnpm@6
-      # END: Windows
-      - name: Install svelte-adapter-firebase deps
-        run: pnpm install
-      - name: Install example app deps
-        run: pnpm install
-        working-directory: ${{ matrix.dirs }}
-      - name: Build example app
-        run: pnpm run build
-        working-directory: ${{ matrix.dirs }}
-  # end-to-end:
-  #   runs-on: ubuntu-latest
-  #   if: github.event_name == 'push'
-  #   needs: [unit, integration]
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: install asdf
-  #       uses: asdf-vm/actions/install@v1
-  #       with:
-  #         before_install: bash -c '${ASDF_DATA_DIR:=$HOME/.asdf}/plugins/nodejs/bin/import-release-team-keyring'
-  #     - name: Cache firebase emulators
-  #       uses: actions/cache@v2
-  #       with:
-  #         path: ${{ env.FIREBASE_EMULATORS_PATH }}
-  #         key: ${{ runner.os }}-firebase-emulators-${{ hashFiles('emulator-cache/**') }}
-  #     - name: Install svelte-adapter-firebase deps
-  #       run: pnpm install
-  #     - name: Install example app deps
-  #       run: pnpm install
-  #       working-directory: examples/functions_single_site
-  #     - name: Build example app
-  #       run: pnpm run build
-  #       working-directory: examples/functions_single_site
-  #     - name: E2E tests with Firebase Emulator
-  #       run: firebase emulators:exec --only hosting,functions
-  #       working-directory: examples/functions_single_site '[ "$(curl localhost:5000/ -o /dev/stderr -w "%{http_code}")" -eq 200 ]'
+          path: ${{ env.FIREBASE_EMULATORS_PATH }}
+          key: ${{ runner.os }}-firebase-emulators-${{ hashFiles('emulator-cache/**') }}
+        continue-on-error: true
+      - name: Run end-to-end test script
+        run: |
+          bash ./tests/end-to-end/test.bash

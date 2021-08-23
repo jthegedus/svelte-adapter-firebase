@@ -35,33 +35,33 @@
     "node": "^14.13.1 || >= 16"
   },
   "dependencies": {
-    "esbuild": "^0.11.23",
+    "esbuild": "^0.12.20",
     "kleur": "^4.1.4"
   },
   "peerDependencies": {
-    "@sveltejs/kit": "^1.0.0-next.132"
+    "@sveltejs/kit": "^1.0.0-next.155"
   },
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
-    "@sveltejs/kit": "1.0.0-next.132",
+    "@sveltejs/kit": "^1.0.0-next.155",
     "@types/express": "^4.17.12",
     "@types/node": "^14.14.35",
-    "ava": "^3.15.0",
-    "firebase-functions": "^3.14.1",
+    "firebase-functions": "^3.15.4",
     "husky": "^5.0.8",
     "typescript": "^4.2.3",
+    "uvu": "^0.5.1",
     "xo": "^0.40.3"
   },
   "scripts": {
     "prepare": "husky install",
     "fix": "xo --fix",
-    "test": "xo && ava",
-    "test:e2e": "./tests/e2e-healthcheck.sh"
+    "test": "xo && uvu tests/unit"
   },
   "xo": {
     "ignores": [
-      "examples"
+      "tests/end-to-end",
+      "tests/integration"
     ],
     "rules": {
       "unicorn/prefer-node-protocol": "off"

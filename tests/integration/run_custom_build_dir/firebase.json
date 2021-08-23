@@ -1,0 +1,25 @@
+{
+  "hosting": {
+    "public": "public",
+    "site": "custom-cloud-run-build-dir-site",
+    "rewrites": [
+      {
+        "source": "**",
+        "run": {
+          "serviceId": "custom-cloud-run-build-dir"
+        }
+      }
+    ]
+  },
+  "emulators": {
+    "ui": {
+      "enabled": false
+    },
+    "hosting": {
+      "port": 8685
+    },
+    "functions": {
+      "port": 5001
+    }
+  }
+}

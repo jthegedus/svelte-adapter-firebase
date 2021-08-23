@@ -1,0 +1,26 @@
+{
+  "hosting": {
+    "public": "app/public",
+    "site": "nested-app-dir-site",
+    "rewrites": [
+      {
+        "source": "**",
+        "function": "sveltekit"
+      }
+    ]
+  },
+  "functions": {
+    "source": "functions"
+  },
+  "emulators": {
+    "ui": {
+      "enabled": false
+    },
+    "hosting": {
+      "port": 8685
+    },
+    "functions": {
+      "port": 5001
+    }
+  }
+}

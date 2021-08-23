@@ -102,9 +102,9 @@ async function adaptToCloudFunctions({utils, esbuildBuildOptions, name, source, 
 let ${ssrSvelteFunctionName};
 exports.${name} = functions.https.onRequest(async (request, response) => {
 	if (!${ssrSvelteFunctionName}) {
-		functions.logger.info("Initialising SvelteKit SSR Handler");
+		functions.logger.info("Initialising SvelteKit SSR entry");
 		${ssrSvelteFunctionName} = require("./${ssrDirname}/index").default;
-		functions.logger.info("SvelteKit SSR Handler initialised!");
+		functions.logger.info("SvelteKit SSR entry initialised!");
 	}
 	functions.logger.info("Requested resource: " + request.originalUrl);
 	return ${ssrSvelteFunctionName}(request, response);
@@ -141,7 +141,7 @@ async function adaptToCloudRun({utils, esbuildBuildOptions, serviceId, region, f
 		pkgjson.dependencies = {};
 	}
 
-	pkgjson.dependencies['@google-cloud/functions-framework'] = '^1.7.1';
+	pkgjson.dependencies['@google-cloud/functions-framework'] = '^1.9.0';
 	pkgjson.engines = {node: '14'};
 	delete pkgjson.type;
 	const data = JSON.stringify(pkgjson, null, 2);
@@ -173,13 +173,16 @@ async function prepareEntrypoint({utils, esbuildBuildOptions, serverOutputDir}) 
 	utils.rimraf(serverOutputDir);
 
 	const files = fileURLToPath(new URL('./files', import.meta.url));
-	const handlerSource = path.join(files, 'handler.js');
-	const handlerDest = path.join(temporaryDir, 'handler.js');
-	utils.copy(handlerSource, handlerDest);
+	const entrySource = path.join(files, 'entry.js');
+	const entryDest = path.join(temporaryDir, 'entry.js');
+	utils.copy(entrySource, entryDest);
+	const firebaseToSvelteKitSource = path.join(files, 'firebase-to-svelte-kit.js');
+	const firebaseToSvelteKitDest = path.join(temporaryDir, 'firebase-to-svelte-kit.js');
+	utils.copy(firebaseToSvelteKitSource, firebaseToSvelteKitDest);
 
 	/** @type {BuildOptions} */
 	const defaultOptions = {
-		entryPoints: [path.join(temporaryDir, 'handler.js')],
+		entryPoints: [path.join(temporaryDir, 'entry.js')],
 		outfile: path.join(serverOutputDir, 'index.js'),
 		bundle: true,
 		inject: [path.join(files, 'shims.js')],

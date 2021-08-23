@@ -1,0 +1,25 @@
+{
+  "hosting": {
+    "public": "public",
+    "site": "svelte-run-single-site",
+    "rewrites": [
+      {
+        "source": "**",
+        "run": {
+          "serviceId": "cloudrun"
+        }
+      }
+    ]
+  },
+  "emulators": {
+    "ui": {
+      "enabled": false
+    },
+    "hosting": {
+      "port": 8685
+    },
+    "functions": {
+      "port": 5001
+    }
+  }
+}
