@@ -59,7 +59,7 @@ jobs:
       - name: install asdf
         if: matrix.os != 'windows-latest'
         uses: asdf-vm/actions/install@v1
-      - name: list dirs for debugging
+      - name: run integration test for ${{ matrix.params.test_dir }}
         run: |
           tests/integration/integration-test.bash ${{ matrix.params.test_dir }} ${{ matrix.params.validation_app_dir }} ${{ matrix.params.validation_compute_dir }} ${{ matrix.params.nested_dir }}
 
