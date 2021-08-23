@@ -21,7 +21,9 @@ jobs:
       - run: pnpm run test
 
   integration:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
+    needs:
+      - unit
     strategy:
       fail-fast: true
       matrix:
@@ -50,35 +52,21 @@ jobs:
               validation_compute_dir: ".cloudrun/index.js",
               nested_dir: "."
             }
-        os:
-          - ubuntu-latest
-          # - macos-latest # skip macos as it hangs often for whatever reason
-          #- windows-latest # skip windows as script is in bash (could probably rewrite as ShellJS, but this isn't meant to test platform specific stuff)
     steps:
       - uses: actions/checkout@v2
       - name: install asdf
-        if: matrix.os != 'windows-latest'
         uses: asdf-vm/actions/install@v1
       - name: run integration test for ${{ matrix.params.test_dir }}
         run: |
-          tests/integration/integration-test.bash ${{ matrix.params.test_dir }} ${{ matrix.params.validation_app_dir }} ${{ matrix.params.validation_compute_dir }} ${{ matrix.params.nested_dir }}
+          bash ./tests/integration/integration-test.bash ${{ matrix.params.test_dir }} ${{ matrix.params.validation_app_dir }} ${{ matrix.params.validation_compute_dir }} ${{ matrix.params.nested_dir }}
 
   end-to-end:
     runs-on: ubuntu-latest
-    needs: [unit, integration]
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - ubuntu-latest
-          - macos-latest
-          #- windows-latest # skip windows as script is in bash (could probably rewrite as ShellJS, but this isn't meant to test platform specific stuff)
-        kit_version:
-          - next
+    needs:
+      - unit
     steps:
       - uses: actions/checkout@v2
       - name: install asdf
-        if: matrix.os != 'windows-latest'
         uses: asdf-vm/actions/install@v1
       - name: Cache firebase emulators
         uses: actions/cache@v2
