@@ -11,15 +11,15 @@ IFS=$'\n\t'
 #
 # Usage:
 #
-# tests/integration/integration-test.bash "functions_single_site" "public/about/index.html" "functions/sveltekit/index.js"
+# tests/integration/integration-test.bash "functions_single_site" "public/about/index.html" "functions/sveltekit/index.js" "."
 # tests/integration/integration-test.bash "nested_app_dirs" "public/about/index.html" "functions/sveltekit/index.js" "app"
-# tests/integration/integration-test.bash "run_custom_build_dir" "public/about/index.html" "custom-cloud-run-build-dir/index.js"
-# tests/integration/integration-test.bash "run_single_site" "public/about/index.html" ".cloudrun/index.js"
+# tests/integration/integration-test.bash "run_custom_build_dir" "public/about/index.html" "custom-cloud-run-build-dir/index.js" "."
+# tests/integration/integration-test.bash "run_single_site" "public/about/index.html" ".cloudrun/index.js" "."
 
 SOURCE_DIR="$1"
 PUBLIC_FILENAME="$2"
 KIT_FILENAME="$3"
-NESTED_APP_DIR="${4:-"."}"
+NESTED_APP_DIR="${4}"
 
 INDICATOR="====> "
 SCRIPT_PATH=$(dirname "$(realpath -s "$0")")

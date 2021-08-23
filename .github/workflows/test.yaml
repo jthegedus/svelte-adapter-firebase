@@ -26,10 +26,30 @@ jobs:
       fail-fast: true
       matrix:
         params:
-          - '"functions_single_site" "public/about/index.html" "functions/sveltekit/index.js"'
-          - '"nested_app_dirs" "public/about/index.html" "functions/sveltekit/index.js" "app"'
-          - '"run_custom_build_dir" "public/about/index.html" "custom-cloud-run-build-dir/index.js"'
-          - '"run_single_site" "public/about/index.html" ".cloudrun/index.js"'
+          - {
+              test_dir: "functions_single_site",
+              validation_app_dir: "public/about/index.html",
+              validation_compute_dir: "functions/sveltekit/index.js",
+              nested_dir: "."
+            }
+          - {
+              test_dir: "nested_app_dirs",
+              validation_app_dir: "public/about/index.html",
+              validation_compute_dir: "functions/sveltekit/index.js",
+              nested_dir: "app"
+            }
+          - {
+              test_dir: "run_custom_build_dir",
+              validation_app_dir: "public/about/index.html",
+              validation_compute_dir: "custom-cloud-run-build-dir/index.js",
+              nested_dir: "."
+            }
+          - {
+              test_dir: "run_single_site",
+              validation_app_dir: "public/about/index.html",
+              validation_compute_dir: ".cloudrun/index.js",
+              nested_dir: "."
+            }
         os:
           - ubuntu-latest
           - macos-latest
@@ -41,7 +61,7 @@ jobs:
         uses: asdf-vm/actions/install@v1
       - name: list dirs for debugging
         run: |
-          tests/integration/integration-test.bash ${{ params }}
+          tests/integration/integration-test.bash ${{ params.test_dir }} ${{ params.validation_app_dir }} ${{ params.validation_compute_dir }} ${{ params.nested_dir }}
 
   end-to-end:
     runs-on: ubuntu-latest
