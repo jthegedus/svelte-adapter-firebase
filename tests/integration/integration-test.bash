@@ -45,13 +45,13 @@ echo "${INDICATOR}Set package.json:scripts.build to verbose mode"
 sed -i -e 's/svelte-kit build/svelte-kit build --verbose/g' "${TEST_DIR}/${NESTED_APP_DIR}/package.json"
 
 echo "${INDICATOR}Install kit template deps"
-npm install
+pnpm install
 
 echo "${INDICATOR}Install svelte-adapter-firebase from ${SCRIPT_PATH}/../../"
-npm install "${SCRIPT_PATH}/../../"
+pnpm install "${SCRIPT_PATH}/../../"
 
 echo "${INDICATOR}Build Kit todos site"
-npm run build
+pnpm run build
 
 # Check ${PUBLIC_FILENAME} exists
 if [ ! -f "${TEST_DIR}/${NESTED_APP_DIR}/${PUBLIC_FILENAME}" ]; then
