@@ -34,6 +34,7 @@ echo "${INDICATOR}Complete SvelteKit init"
 
 cp -R "${SCRIPT_PATH}"/scaffold/* "${TEST_DIR}"
 cp "${SCRIPT_PATH}/scaffold/.firebaserc" "${TEST_DIR}/.firebaserc"
+cp ".tool-versions" "${TEST_DIR}/.tool-versions"
 
 cd "${TEST_DIR}" || exit 1
 echo "${INDICATOR}PWD after cd to TEST_DIR: ${PWD}"
