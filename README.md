@@ -68,8 +68,7 @@ output to the configured dir in `firebase.json:hosting.public`.
 In your standard SvelteKit project:
 
 - `npm install --save-dev svelte-adapter-firebase`
-- add adapter to `svelte.config.js` (see options in
-  [Adapter Configurations](#adapter-configurations)):
+- add adapter to `svelte.config.js`:
 
 ```diff
 +import firebase from "svelte-adapter-firebase";
@@ -95,7 +94,10 @@ export default {
   }
 ```
 
-- `npm run build`. **Read and repeat, the output is meant as a guide!**
+- Setup your `firebase.json` according to your required firebase setup (see options in
+  [Adapter Configurations](#adapter-configurations)). For ease of setup, run `firebase init` to setup hosting and cloud functions first.
+
+- `npm run build`. **Read and repeat, the output is meant as a guide: meaning, after your first build, you need manually add the produced cloud function in index.js**
 
 <!-- TODO: on 1.0.0 release, delete this section -->
 
