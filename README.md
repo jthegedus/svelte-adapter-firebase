@@ -94,8 +94,8 @@ export default {
   }
 ```
 
-- Setup your `firebase.json` according to your required firebase setup (see options in
-  [Adapter Configurations](#adapter-configurations)). For ease of setup, run `firebase init` to setup hosting and cloud functions first.
+- Setup `firebase.json` according to your required Firebase setup (see options in
+  [Adapter Configurations](#adapter-configurations)). `firebase init` will guide you during initial setup. Hosting and Cloud Functions are required.
 
 - `npm run build`. **Read and repeat, the output is meant as a guide: meaning, after your first build, you need manually add the produced cloud function in index.js**
 
