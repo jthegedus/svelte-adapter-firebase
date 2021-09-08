@@ -771,7 +771,7 @@ compute environment is best for your application:
 | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | Firebase Emulator Integration                                     | :heavy_check_mark:                                                                                      | :x:                                                                                                                      |
 | Unified deployment - Firebase Hosting & Compute deployed together | :heavy_check_mark:                                                                                      | :x:                                                                                                                      |
-| Cold start mitigations                                            | :x: (stay tuned)                                                                                        | :heavy_check_mark: ([`min_instances`](https://cloud.google.com/run/docs/configuring/min-instances))                      |
+| Cold start mitigations                                            | :heavy_check_mark: ([`min_instances` in Runtime Options](https://firebase.google.com/docs/functions/manage-functions#min-max-instances)) | :heavy_check_mark: ([`min_instances`](https://cloud.google.com/run/docs/configuring/min-instances))                      |
 | Regions                                                           | :x: only `us-central1` shown in [docs](https://firebase.google.com/docs/hosting/functions) (stay tuned) | :heavy_check_mark: full list in [docs](https://firebase.google.com/docs/hosting/full-config#rewrite-cloud-run-container) |
 
 Cloud Functions seems do be a better default, with some improvements coming in
@@ -833,24 +833,28 @@ as the older version of the SDK has issues and a larger bundle size.
 
 > Cold Starts
 
-Depends on your application load. Typically, Cloud Functions will require more
-instances to handle the same number of requests as each Cloud Run as each CR
-instance can handle up to 250 (default maximum at the time of writing). Though
-in my experience, bumping the memory/cpu configuration dramatically reduces the
-response times.
-
 Since the purpose of using this adapter is to leverage the Firebase Hosting CDN,
 you should consider improving the user experience with targetted caching/TTLs.
 
-If cold starts are still an issue for your application, Cloud Run has support
-for
-[`min_instances`](https://cloud.google.com/run/docs/configuring/min-instances)
-which will keep `x` number of instances warm. This incurs additional costs,
-though
-[as discussed by Ahmet Alp Balkan here](https://github.com/ahmetb/cloud-run-faq#how-to-keep-a-cloud-run-service-warm)
-can be cheaper than an equivalent Compute Engine instance. See the
-[official Cloud Run pricing documentation](https://cloud.google.com/run/pricing)
-for more.
+If cold start are still an issue for your application, Cloud Functions has support for `min_instances` which will keep `X` number of instances warm. From the docs:
+
+>A minimum number of instances kept running incur billing costs at idle rates. Typically, to keep one idle function instance warm costs less than $6.00 a month. The Firebase CLI provides a cost estimate at deployment time for functions with reserved minimum instances. Refer to Cloud Functions Pricing to calculate costs.
+>
+> -[Firebase docs](https://firebase.google.com/docs/functions/manage-functions#min-max-instances)
+
+To implement this, configure your [`runWith`](https://github.com/firebase/firebase-functions/blob/d46ec6191e61f560f3f21f13333e0f3285d3de90/src/function-configuration.ts#L101) options like so:
+
+```diff
+const myRuntimeOptions = {
+	memory: "1GB",
++	min_instances: 1,
+}
+exports.myFunc = functions.runWith(myRuntimeOptions).https.onRequest(async (request, response) => {
+	...
+});
+```
+
+Note: this is still single concurrency (if an instance does not exist to handle a request when it hits the backend a new Function instance is created). Watch this space!
 
 ## Caveats
 
