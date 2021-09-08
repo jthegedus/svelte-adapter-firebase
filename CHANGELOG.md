@@ -1,6 +1,13 @@
 # Changelog
 
 
+### [0.11.1](https://www.github.com/jthegedus/svelte-adapter-firebase/compare/v0.11.0...v0.11.1) (2021-09-08)
+
+
+### Bug Fixes
+
+* support nodejs16 env ([#129](https://www.github.com/jthegedus/svelte-adapter-firebase/issues/129)) ([3645519](https://www.github.com/jthegedus/svelte-adapter-firebase/commit/36455197594c49bed10b286a3fd7f35a0eb951f1))
+
 ## [0.11.0](https://www.github.com/jthegedus/svelte-adapter-firebase/compare/v0.10.5...v0.11.0) (2021-08-23)
 
 
