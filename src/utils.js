@@ -29,7 +29,7 @@ import kleur from 'kleur';
  * @typedef FunctionsConfig
  * @type {object} functions
  * @property {undefined|string} functions.source
- * @property {undefined|'nodejs14'} functions.runtime
+ * @property {undefined|'nodejs14'|'nodejs16'} functions.runtime
 */
 
 /**
@@ -333,17 +333,17 @@ function ensureStaticResourceDirsDiffer({source, dest}) {
  */
 function ensureCompatibleCloudFunctionVersion({functionsPackageJsonEngine, firebaseJsonFunctionsRuntime}) {
 	const validPackageJsonValues = [
-		'14'
-		// "16"
+		'14',
+		'16'
 	];
 	const validFirebaseJsonValues = [
-		'nodejs14'
-		// 'nodejs16'
+		'nodejs14',
+		'nodejs16'
 	];
 
 	if (!validPackageJsonValues.includes(functionsPackageJsonEngine) && !validFirebaseJsonValues.includes(firebaseJsonFunctionsRuntime)) {
 		logErrorThrow({
-			why: 'Node.js runtime not supported. SvelteKit on Cloud Functions requires Node.js 14 or newer runtime.',
+			why: `Node.js runtime not supported. SvelteKit on Cloud Functions requires one of runtime: ${validFirebaseJsonValues}`,
 			hint: `Set this in "package.json:engines.node" with one of "${validPackageJsonValues}" or "firebase.json:functions.runtime" with one of "${validFirebaseJsonValues}"`,
 			docs: 'https://firebase.google.com/docs/functions/manage-functions#set_nodejs_version',
 			hintCode: 1061

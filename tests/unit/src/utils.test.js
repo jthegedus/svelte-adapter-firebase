@@ -247,11 +247,17 @@ test(
 );
 
 // EnsureCompatibleCloudFunctionVersion
-test('Valid Function runtime version in package.json', () => {
+test('Valid Function runtime (nodejs14) version in package.json', () => {
 	assert.not.throws(() => ensureCompatibleCloudFunctionVersion({functionsPackageJsonEngine: '14'}));
 });
-test('Valid Function runtime version in firebase.json', () => {
+test('Valid Function runtime (nodejs14) version in firebase.json', () => {
 	assert.not.throws(() => ensureCompatibleCloudFunctionVersion({firebaseJsonFunctionsRuntime: 'nodejs14'}));
+});
+test('Valid Function runtime (nodejs16) version in package.json', () => {
+	assert.not.throws(() => ensureCompatibleCloudFunctionVersion({functionsPackageJsonEngine: '16'}));
+});
+test('Valid Function runtime (nodejs16) version in firebase.json', () => {
+	assert.not.throws(() => ensureCompatibleCloudFunctionVersion({firebaseJsonFunctionsRuntime: 'nodejs16'}));
 });
 
 test(
