@@ -24,7 +24,10 @@
   "version": "0.11.1",
   "type": "module",
   "exports": {
-    "import": "./src/index.js"
+    ".": {
+      "import": "./src/index.js"
+    },
+    "./package.json": "./package.json"
   },
   "main": "src/index.js",
   "types": "src/index.d.ts",
