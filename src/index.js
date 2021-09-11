@@ -59,7 +59,9 @@ const entrypoint = function (options = {}) {
 				platform: 'node',
 			};
 
-			const buildOptions = esbuildOptions ? await esbuildOptions(defaultOptions) : defaultOptions;
+			const buildOptions = esbuildOptions
+				? await esbuildOptions(defaultOptions)
+				: defaultOptions;
 			await esbuild.build(buildOptions);
 			utils.log.minor(logRelativeDir('Writing Cloud Function server assets to', dirs.serverPath));
 

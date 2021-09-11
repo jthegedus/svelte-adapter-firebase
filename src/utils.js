@@ -7,7 +7,7 @@ import kleur from 'kleur';
  * @typedef CloudRunRewriteConfig
  * @type {object} cloudrun
  * @property {undefined|string} cloudrun.serviceId
- * @property {undefined|'us-central1'} cloudrun.region
+ * @property {undefined|'us-west1'} cloudrun.region
  */
 
 /**
@@ -214,11 +214,11 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 		});
 	}
 
-	if (rewriteConfig?.run && rewriteConfig?.run?.region) {
+	if (rewriteConfig?.run && rewriteConfig?.run?.region && (rewriteConfig?.run?.region !== 'us-west1')) {
 		logErrorThrow({
 			why: 'Cloud Run "region" is invalid',
 			got: `\n${JSON.stringify(rewriteConfig.run, null, 2)}`,
-			wanted: `one of\n\t${[...CLOUD_RUN_REGIONS].join('\n\t').toString()}`,
+			wanted: 'must be us-west1',
 			hint: `Firebase Hosting rewrites with Cloud Run only supports specific regions. Update ${kleur.italic('firebase.json')} accordingly.`,
 			docs: 'https://firebase.google.com/docs/hosting/full-config#rewrite-cloud-run-container',
 			hintCode: 1032,
@@ -249,7 +249,7 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 
 	return {
 		functions: {
-			name: rewriteConfig.function,
+			name: rewriteConfig.function ?? rewriteConfig.run.serviceId,
 			source: path.join(path.dirname(firebaseJson), firebaseConfig.functions.source),
 			runtime: firebaseConfig.functions?.runtime,
 		},
@@ -320,7 +320,10 @@ function ensureCompatibleCloudFunctionVersion({functionsPackageJsonEngine, fireb
 		'nodejs16',
 	];
 
-	if (!validPackageJsonValues.includes(functionsPackageJsonEngine) && !validFirebaseJsonValues.includes(firebaseJsonFunctionsRuntime)) {
+	const validPkgJsonVersion = validPackageJsonValues.includes(functionsPackageJsonEngine);
+	const validFirebaseJsonVersion = validFirebaseJsonValues.includes(firebaseJsonFunctionsRuntime);
+
+	if (!validPkgJsonVersion && !validFirebaseJsonVersion) {
 		logErrorThrow({
 			why: `Node.js runtime not supported. SvelteKit on Cloud Functions requires one of runtime: ${validFirebaseJsonValues}`,
 			hint: `Set this in "package.json:engines.node" with one of "${validPackageJsonValues}" or "firebase.json:functions.runtime" with one of "${validFirebaseJsonValues}"`,
@@ -373,28 +376,6 @@ function logErrorThrow({why, got, wanted, hint, docs, hintCode}) {
 	console.log();
 	throw new Error(`See above output. See Hint code SAF${hintCode} in README`);
 }
-
-const CLOUD_RUN_REGIONS = new Set(['asia-east1',
-	'asia-east2',
-	'asia-northeast1',
-	'asia-northeast2',
-	'asia-northeast3',
-	'asia-south1',
-	'asia-southeast1',
-	'asia-southeast2',
-	'australia-southeast1',
-	'europe-north1',
-	'europe-west1',
-	'europe-west2',
-	'europe-west3',
-	'europe-west4',
-	'europe-west6',
-	'northamerica-northeast1',
-	'southamerica-east1',
-	'us-central1',
-	'us-east1',
-	'us-east4',
-	'us-west1']);
 
 export {
 	ensureCompatibleCloudFunctionVersion,
