@@ -1,4 +1,4 @@
-import Buffer from 'buffer';
+import {Buffer} from 'buffer';
 import {test} from 'uvu';
 import * as assert from 'uvu/assert'; // eslint-disable-line node/file-extension-in-import
 
