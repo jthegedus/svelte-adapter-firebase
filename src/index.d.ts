@@ -5,7 +5,7 @@ type AdapterOptions = {
 	hostingSite?: string;
 	sourceRewriteMatch?: string;
 	firebaseJsonPath?: string;
-	esbuild?: (defaultOptions: BuildOptions) => Promise<BuildOptions> | BuildOptions;
+	esbuildOptions?: (defaultOptions: BuildOptions) => Promise<BuildOptions> | BuildOptions;
 };
 
 declare function plugin(options?: AdapterOptions): Adapter;

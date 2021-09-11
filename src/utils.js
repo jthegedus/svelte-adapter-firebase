@@ -1,4 +1,4 @@
-import {copyFileSync, existsSync, readFileSync} from 'fs';
+import {existsSync, readFileSync} from 'fs';
 import path from 'path';
 import process from 'process';
 import kleur from 'kleur';
@@ -56,17 +56,15 @@ function isString(parameter) {
  * @param {{
  * 	hostingSite: string|undefined;
  * 	sourceRewriteMatch: string;
- * 	firebaseJson: string
+ * 	firebaseJsonPath: string
  * }} param
  * @returns {{
- * 	functions: false | { name: string, source: string, runtime: string | undefined };
- * 	cloudRun: false | { serviceId: string, region: string };
- * 	firebaseJsonDir: string;
+ * 	functions: { name: string, source: string, runtime: string | undefined };
  * 	publicDir: string
- * }} Functions or Run config with `public` dir and `firebase.json` root dir
+ * }} Functions config with `public` dir
  */
-function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJson}) {
-	firebaseJson = path.resolve(firebaseJson);
+function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJsonPath}) {
+	const firebaseJson = path.resolve(firebaseJsonPath);
 	if (!existsSync(firebaseJson)) {
 		logErrorThrow({
 			why: 'File does not exist',
@@ -216,7 +214,7 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 		});
 	}
 
-	if (rewriteConfig?.run && rewriteConfig?.run?.region && !CLOUD_RUN_REGIONS.has(rewriteConfig.run.region)) {
+	if (rewriteConfig?.run && rewriteConfig?.run?.region) {
 		logErrorThrow({
 			why: 'Cloud Run "region" is invalid',
 			got: `\n${JSON.stringify(rewriteConfig.run, null, 2)}`,
@@ -250,17 +248,12 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 	}
 
 	return {
-		functions: rewriteConfig?.function ? {
+		functions: {
 			name: rewriteConfig.function,
 			source: path.join(path.dirname(firebaseJson), firebaseConfig.functions.source),
 			runtime: firebaseConfig.functions?.runtime,
-		} : false,
-		cloudRun: rewriteConfig?.run ? {
-			serviceId: rewriteConfig.run.serviceId,
-			region: rewriteConfig.run?.region || 'us-central1',
-		} : false,
+		},
 		publicDir: path.join(path.dirname(firebaseJson), hostingConfig.public),
-		firebaseJsonDir: path.dirname(firebaseJson),
 	};
 }
 
@@ -290,17 +283,6 @@ function validCloudRunServiceId(serviceId) {
  */
 function validCloudFunctionName(name) {
 	return /^\w{1,62}$/.test(name);
-}
-
-/**
- * Copy File If Exists (synchronously)
- * @param {string} filename source file path
- * @param {string} destDir destination directory
- */
-function copyFileIfExistsSync(filename, destDir) {
-	if (existsSync(filename)) {
-		copyFileSync(filename, path.join(destDir, filename));
-	}
 }
 
 /**
@@ -415,7 +397,6 @@ const CLOUD_RUN_REGIONS = new Set(['asia-east1',
 	'us-west1']);
 
 export {
-	copyFileIfExistsSync,
 	ensureCompatibleCloudFunctionVersion,
 	ensureStaticResourceDirsDiffer,
 	logRelativeDir,
