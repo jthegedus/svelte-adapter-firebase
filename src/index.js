@@ -27,14 +27,13 @@ const entrypoint = function (options = {}) {
 			const {functions, publicDir} = parseFirebaseConfiguration({firebaseJsonPath, hostingSite, sourceRewriteMatch});
 			ensureStaticResourceDirsDiffer({source: path.join(process.cwd(), config.kit.files.assets), dest: publicDir});
 
-			// START: Adapt to Cloud Function
 			const functionsPackageJson = JSON.parse(readFileSync(path.join(functions.source, 'package.json'), 'utf-8'));
 			if (!functionsPackageJson?.main) {
 				throw new Error(`Error reading ${functionsPackageJson}. Required field "main" missing.`);
 			}
 
-			const files = fileURLToPath(new URL('./files', import.meta.url));
 			const dirs = {
+				files: fileURLToPath(new URL('./files', import.meta.url)),
 				serverDirname: functions.name ?? 'svelteKit',
 				serverPath: path.join(functions.source, path.dirname(functionsPackageJson.main), functions.name ?? 'svelteKit'),
 				tmp: path.join('.svelte-kit', 'firebase'),
@@ -47,15 +46,15 @@ const entrypoint = function (options = {}) {
 			ensureCompatibleCloudFunctionVersion({functionsPackageJsonEngine: functionsPackageJson?.engines?.node, firebaseJsonFunctionsRuntime: functions.runtime});
 			utils.rimraf(dirs.tmp);
 			utils.rimraf(dirs.serverPath);
-			utils.copy(path.join(files, 'entry.js'), path.join(dirs.tmp, 'entry.js'));
-			utils.copy(path.join(files, 'firebase-to-svelte-kit.js'), path.join(dirs.tmp, 'firebase-to-svelte-kit.js'));
+			utils.copy(path.join(dirs.files, 'entry.js'), path.join(dirs.tmp, 'entry.js'));
+			utils.copy(path.join(dirs.files, 'firebase-to-svelte-kit.js'), path.join(dirs.tmp, 'firebase-to-svelte-kit.js'));
 
 			/** @type {esbuild.BuildOptions} */
 			const defaultOptions = {
 				entryPoints: [path.join(dirs.tmp, 'entry.js')],
 				outfile: path.join(dirs.serverPath, 'index.js'),
 				bundle: true,
-				inject: [path.join(files, 'shims.js')],
+				inject: [path.join(dirs.files, 'shims.js')],
 				platform: 'node',
 			};
 
@@ -65,7 +64,6 @@ const entrypoint = function (options = {}) {
 			await esbuild.build(buildOptions);
 			utils.log.minor(logRelativeDir('Writing Cloud Function server assets to', dirs.serverPath));
 
-			// Prepare Cloud Function
 			try {
 				if (!readFileSync(ssrFunc.entrypoint, 'utf-8').includes(`${functions.name} =`)) {
 					utils.log.info(`Add the following Cloud Function to ${ssrFunc.entrypoint}`);
@@ -85,7 +83,6 @@ exports.${functions.name} = functions.https.onRequest(async (request, response) 
 			} catch (error) {
 				throw new Error(`Error reading Cloud Function entrypoint file: ${ssrFunc.entrypoint}. ${error.message}`);
 			}
-			// END: Adapt to Cloud Function
 
 			utils.log.minor(logRelativeDir('Erasing destination static asset dir before processing', publicDir));
 			utils.rimraf(publicDir);
