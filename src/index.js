@@ -1,5 +1,6 @@
 import {readFileSync, writeFileSync} from 'fs';
 import path from 'path';
+import process from 'process';
 import {fileURLToPath} from 'url';
 import esbuild from 'esbuild';
 import kleur from 'kleur';
@@ -8,7 +9,7 @@ import {
 	ensureCompatibleCloudFunctionVersion,
 	ensureStaticResourceDirsDiffer,
 	logRelativeDir,
-	parseFirebaseConfiguration
+	parseFirebaseConfiguration,
 } from './utils.js';
 
 /**
@@ -34,7 +35,7 @@ const entrypoint = function (options = {}) {
 				hostingSite = undefined,
 				sourceRewriteMatch = '**',
 				cloudRunBuildDir = undefined,
-				esbuildBuildOptions
+				esbuildBuildOptions,
 			} = options;
 
 			utils.log.minor(`Adapter configuration:\n\t${kleur.italic(JSON.stringify(options))}`);
@@ -60,7 +61,7 @@ const entrypoint = function (options = {}) {
 
 			utils.log.minor(logRelativeDir('Prerendering static pages to', publicDir));
 			await utils.prerender({dest: publicDir});
-		}
+		},
 	};
 
 	return adapter;
@@ -186,7 +187,7 @@ async function prepareEntrypoint({utils, esbuildBuildOptions, serverOutputDir}) 
 		outfile: path.join(serverOutputDir, 'index.js'),
 		bundle: true,
 		inject: [path.join(files, 'shims.js')],
-		platform: 'node'
+		platform: 'node',
 	};
 
 	const esbuildOptions = esbuildBuildOptions ? await esbuildBuildOptions(defaultOptions) : defaultOptions;

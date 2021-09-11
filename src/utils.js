@@ -1,5 +1,6 @@
 import {copyFileSync, existsSync, readFileSync} from 'fs';
 import path from 'path';
+import process from 'process';
 import kleur from 'kleur';
 
 /**
@@ -72,8 +73,8 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 			got: `${kleur.italic(firebaseJson)}`,
 			hint: `The adapter requires a ${kleur.italic('firebase.json')} file. The above file is computed using the adapter config: firebaseJson. If the default adapter config is not working, consider updating it in ${kleur.italic('svelte.config.js')}`,
 			docs: 'https://github.com/jthegedus/svelte-adapter-firebase#configuration-overview',
-			hintCode: 1000
-		}
+			hintCode: 1000,
+		},
 		);
 	}
 
@@ -88,7 +89,7 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 			why: `Error parsing ${kleur.italic('firebase.json')}`,
 			got: error.message,
 			docs: 'https://jsonlint.com/ & https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse',
-			hintCode: 1001
+			hintCode: 1001,
 		});
 	}
 
@@ -99,7 +100,7 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 			wanted: `${kleur.bold('"hosting"')}`,
 			hint: 'Add the field or fix the typo in your ' + kleur.italic('firebase.json') + ' file',
 			docs: 'https://firebase.google.com/docs/hosting/full-config#firebase-json_example',
-			hintCode: 1010
+			hintCode: 1010,
 		});
 	}
 
@@ -116,15 +117,15 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 					wanted: `Field named ${kleur.bold('"site": "<site_name>"')}`,
 					hint: 'Add the "site" field to the above Hosting Configuration in ' + kleur.italic('firebase.json'),
 					docs: 'https://firebase.google.com/docs/hosting/multisites',
-					hintCode: 1011
+					hintCode: 1011,
 				});
 			}
 		}
 	}
 
-	const hostingConfig = firebaseHostingConfig.length === 1 ?
-		firebaseHostingConfig[0] :
-		firebaseHostingConfig.find(item => item.site === hostingSite);
+	const hostingConfig = firebaseHostingConfig.length === 1
+		? firebaseHostingConfig[0]
+		: firebaseHostingConfig.find(item => item.site === hostingSite);
 
 	if (!hostingConfig) {
 		if (!hostingSite) {
@@ -133,20 +134,18 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 				got: kleur.bold(`"hostingSite": ${hostingSite}`),
 				wanted: kleur.bold('"hostingSite": "<site_name>"') + ` in ${kleur.italic('svelte.config.js')} adapter config`,
 				docs: 'https://github.com/jthegedus/svelte-adapter-firebase#configuration-overview',
-				hintCode: 1012
+				hintCode: 1012,
 			});
 		}
 
-		const hostingConfigSiteValues = firebaseHostingConfig.map(item => {
-			return {site: item.site};
-		});
+		const hostingConfigSiteValues = firebaseHostingConfig.map(item => ({site: item.site}));
 		logErrorThrow({
 			why: `Multiple ${kleur.bold('hosting')} configurations found in ${kleur.italic('firebase.json')} but no match found for ${kleur.bold('hostingSite')} specified in ${kleur.italic('svelte.config.js')} adapter config.`,
 			got: `"hosting[].site" values -\n${kleur.bold(JSON.stringify(hostingConfigSiteValues, null, 2))}`,
 			wanted: `One to be ${kleur.bold(`{"site": "${hostingSite}"}`)}`,
 			hint: `Update adapter config "${kleur.bold('hostingSite')}" in ${kleur.italic('svelte.config.js')} to match one of the above Hosting configs.`,
 			docs: 'https://github.com/jthegedus/svelte-adapter-firebase#configuration-overview',
-			hintCode: 1013
+			hintCode: 1013,
 		});
 	}
 
@@ -157,7 +156,7 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 			wanted: '"public": "<some_dir>"',
 			hint: 'Add a "public" field to the matched hosting config in firebase.json',
 			docs: 'https://firebase.google.com/docs/hosting/full-config#public',
-			hintCode: 1050
+			hintCode: 1050,
 		});
 	}
 
@@ -168,7 +167,7 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 			wanted: '"public": "<some_non_empty_dir_name>"',
 			hint: '"public" should be a directory name',
 			docs: 'https://firebase.google.com/docs/hosting/full-config#public',
-			hintCode: 1052
+			hintCode: 1052,
 		});
 	}
 
@@ -179,13 +178,11 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 			wanted: '"rewrites": [{...}]',
 			hint: `Hosting conifig requires a rewrites array with either Cloud Run or Cloud Function with rewrite rule matching "source":"${sourceRewriteMatch}"`,
 			docs: 'https://firebase.google.com/docs/hosting/full-config#rewrite-functions',
-			hintCode: 1020
+			hintCode: 1020,
 		});
 	}
 
-	const rewriteConfig = hostingConfig.rewrites.find(item => {
-		return item.source === sourceRewriteMatch && (item.function || item.run);
-	});
+	const rewriteConfig = hostingConfig.rewrites.find(item => item.source === sourceRewriteMatch && (item.function || item.run));
 
 	if (!rewriteConfig) {
 		logErrorThrow({
@@ -194,7 +191,7 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 			wanted: '"rewrites": [{...}]',
 			hint: `Hosting conifig requires a rewrites array with rules for either Cloud Run or Cloud Function with "source":"${sourceRewriteMatch}"`,
 			docs: 'https://firebase.google.com/docs/hosting/full-config#rewrite-functions',
-			hintCode: 1021
+			hintCode: 1021,
 		});
 	}
 
@@ -205,7 +202,7 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 			wanted: '"serviceId": "<cloud run service name>"',
 			hint: 'Add the field or fix the typo for the rewrite rule in the ' + kleur.italic('firebase.json') + ' file',
 			docs: 'https://firebase.google.com/docs/hosting/full-config#rewrite-cloud-run-container',
-			hintCode: 1030
+			hintCode: 1030,
 		});
 	}
 
@@ -215,7 +212,7 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 			got: `${rewriteConfig.run.serviceId}`,
 			hint: 'Cloud Run "serviceId" must use only lowercase alphanumeric characters and dashes, cannot begin or end with a dash, and cannot be longer than 63 characters. Update ' + kleur.italic('firebase.json') + ' accordingly.',
 			docs: 'https://firebase.google.com/docs/hosting/full-config#rewrite-cloud-run-container',
-			hintCode: 1031
+			hintCode: 1031,
 		});
 	}
 
@@ -226,7 +223,7 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 			wanted: `one of\n\t${[...CLOUD_RUN_REGIONS].join('\n\t').toString()}`,
 			hint: `Firebase Hosting rewrites with Cloud Run only supports specific regions. Update ${kleur.italic('firebase.json')} accordingly.`,
 			docs: 'https://firebase.google.com/docs/hosting/full-config#rewrite-cloud-run-container',
-			hintCode: 1032
+			hintCode: 1032,
 		});
 	}
 
@@ -236,7 +233,7 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 			got: `\n${JSON.stringify(rewriteConfig.function, null, 2)}`,
 			hint: 'Function name must use only alphanumeric characters and underscores and cannot be longer than 62 characters. Update ' + kleur.italic('firebase.json') + ' accordingly.',
 			docs: 'https://firebase.google.com/docs/hosting/full-config#rewrite-functions',
-			hintCode: 1040
+			hintCode: 1040,
 		});
 	}
 
@@ -248,7 +245,7 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 			wanted: `${kleur.bold('"functions": { "source": "<functions dir>"}')}`,
 			hint: 'Add the field or fix the typo in your ' + kleur.italic('firebase.json') + ' file',
 			docs: 'https://firebase.google.com/docs/functions/manage-functions#deploy_functions',
-			hintCode: 1060
+			hintCode: 1060,
 		});
 	}
 
@@ -256,14 +253,14 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 		functions: rewriteConfig?.function ? {
 			name: rewriteConfig.function,
 			source: path.join(path.dirname(firebaseJson), firebaseConfig.functions.source),
-			runtime: firebaseConfig.functions?.runtime
+			runtime: firebaseConfig.functions?.runtime,
 		} : false,
 		cloudRun: rewriteConfig?.run ? {
 			serviceId: rewriteConfig.run.serviceId,
-			region: rewriteConfig.run?.region || 'us-central1'
+			region: rewriteConfig.run?.region || 'us-central1',
 		} : false,
 		publicDir: path.join(path.dirname(firebaseJson), hostingConfig.public),
-		firebaseJsonDir: path.dirname(firebaseJson)
+		firebaseJsonDir: path.dirname(firebaseJson),
 	};
 }
 
@@ -319,7 +316,7 @@ function ensureStaticResourceDirsDiffer({source, dest}) {
 			why: 'firebase.json:hosting.public must be a different directory to svelte.config.js:kit.files.assets',
 			hint: 'Ideally keep svelte.config.js kit.files.assets as "static" and firebase.json:hosting.public as "public"',
 			docs: 'https://github.com/jthegedus/svelte-adapter-firebase/issues/22#issuecomment-831170396',
-			hintCode: 1051
+			hintCode: 1051,
 		});
 	}
 }
@@ -334,11 +331,11 @@ function ensureStaticResourceDirsDiffer({source, dest}) {
 function ensureCompatibleCloudFunctionVersion({functionsPackageJsonEngine, firebaseJsonFunctionsRuntime}) {
 	const validPackageJsonValues = [
 		'14',
-		'16'
+		'16',
 	];
 	const validFirebaseJsonValues = [
 		'nodejs14',
-		'nodejs16'
+		'nodejs16',
 	];
 
 	if (!validPackageJsonValues.includes(functionsPackageJsonEngine) && !validFirebaseJsonValues.includes(firebaseJsonFunctionsRuntime)) {
@@ -346,7 +343,7 @@ function ensureCompatibleCloudFunctionVersion({functionsPackageJsonEngine, fireb
 			why: `Node.js runtime not supported. SvelteKit on Cloud Functions requires one of runtime: ${validFirebaseJsonValues}`,
 			hint: `Set this in "package.json:engines.node" with one of "${validPackageJsonValues}" or "firebase.json:functions.runtime" with one of "${validFirebaseJsonValues}"`,
 			docs: 'https://firebase.google.com/docs/functions/manage-functions#set_nodejs_version',
-			hintCode: 1061
+			hintCode: 1061,
 		});
 	}
 }
@@ -424,5 +421,5 @@ export {
 	logRelativeDir,
 	parseFirebaseConfiguration,
 	validCloudRunServiceId,
-	validCloudFunctionName
+	validCloudFunctionName,
 };

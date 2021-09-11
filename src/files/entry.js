@@ -1,5 +1,4 @@
-// TODO: hardcoding the relative location makes this brittle
-// @ts-expect-error
+// @ts-expect-error will be resolve by https://github.com/sveltejs/kit/pull/2285
 import * as App from '../output/server/app.js';
 import {toSvelteKitRequest} from './firebase-to-svelte-kit.js';
 
@@ -23,7 +22,7 @@ app.init();
 export default async function svelteKit(request, response) {
 	const rendered = await app.render(toSvelteKitRequest(request));
 
-	return rendered ?
-		response.writeHead(rendered.status, rendered.headers).end(rendered.body) :
-		response.writeHead(404, 'Not Found').end();
+	return rendered
+		? response.writeHead(rendered.status, rendered.headers).end(rendered.body)
+		: response.writeHead(404, 'Not Found').end();
 }

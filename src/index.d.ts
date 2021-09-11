@@ -1,12 +1,13 @@
-type BuildOptions = import('esbuild').BuildOptions;
-declare function plugin(
-	options: {
-		hostingSite?: string;
-		sourceRewriteMatch?: string;
-		firebaseJson?: string;
-		cloudRunBuildDir?: string;
-		esbuild?: (defaultOptions: BuildOptions) => Promise<BuildOptions> | BuildOptions;
-	}
-): import('@sveltejs/kit').Adapter;
+import {Adapter} from '@sveltejs/kit';
+import {BuildOptions} from 'esbuild';
+
+type AdapterOptions = {
+	hostingSite?: string;
+	sourceRewriteMatch?: string;
+	firebaseJsonPath?: string;
+	esbuild?: (defaultOptions: BuildOptions) => Promise<BuildOptions> | BuildOptions;
+};
+
+declare function plugin(options?: AdapterOptions): Adapter;
 
 export = plugin;
