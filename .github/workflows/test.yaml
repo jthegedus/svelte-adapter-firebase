@@ -43,7 +43,7 @@ jobs:
           - {
               test_dir: "run_service_id",
               validation_app_dir: "public/about/index.html",
-              validation_compute_dir: "functions/svelte-run-serviceid/index.js",
+              validation_compute_dir: "functions/cloudrun/index.js",
               nested_dir: ".",
             }
     steps:
