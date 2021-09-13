@@ -1,0 +1,5 @@
+node_modules/
+
+# Specific to this app's firebase.json
+# ignore SvelteKit build output in Cloud Function
+sveltekit/

@@ -11,12 +11,12 @@ export function toSvelteKitRequest(request) {
 	return {
 		method: request.method,
 		headers: toSvelteKitHeaders(request.headers),
-		rawBody: request.rawBody ?
-			request.rawBody :
-			new Uint8Array(),
+		rawBody: request.rawBody
+			? request.rawBody
+			: new Uint8Array(),
 		host,
 		path: pathname,
-		query: searchParameters
+		query: searchParameters,
 	};
 }
 
@@ -38,9 +38,9 @@ export function toSvelteKitHeaders(headers) {
 
 	// Assume string | string[] types for all values
 	for (const [key, value] of Object.entries(headers)) {
-		finalHeaders[key] = Array.isArray(value) ?
-			value.join(',') :
-			value;
+		finalHeaders[key] = Array.isArray(value)
+			? value.join(',')
+			: value;
 	}
 
 	return finalHeaders;

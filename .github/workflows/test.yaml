@@ -32,25 +32,19 @@ jobs:
               test_dir: "functions_single_site",
               validation_app_dir: "public/about/index.html",
               validation_compute_dir: "functions/sveltekit/index.js",
-              nested_dir: "."
+              nested_dir: ".",
             }
           - {
               test_dir: "nested_app_dirs",
               validation_app_dir: "public/about/index.html",
               validation_compute_dir: "functions/sveltekit/index.js",
-              nested_dir: "app"
+              nested_dir: "app",
             }
           - {
-              test_dir: "run_custom_build_dir",
+              test_dir: "run_service_id",
               validation_app_dir: "public/about/index.html",
-              validation_compute_dir: "custom-cloud-run-build-dir/index.js",
-              nested_dir: "."
-            }
-          - {
-              test_dir: "run_single_site",
-              validation_app_dir: "public/about/index.html",
-              validation_compute_dir: ".cloudrun/index.js",
-              nested_dir: "."
+              validation_compute_dir: "functions/cloudrun/index.js",
+              nested_dir: ".",
             }
     steps:
       - uses: actions/checkout@v2

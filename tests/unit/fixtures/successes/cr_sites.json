@@ -16,5 +16,8 @@
 			"site": "blog",
 			"public": "blog"
 		}
-	]
+	],
+	"functions": {
+		"source": "functions"
+	}
 }
