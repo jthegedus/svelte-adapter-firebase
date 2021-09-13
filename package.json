@@ -56,7 +56,6 @@
     "xo": "^0.44.0"
   },
   "scripts": {
-    "prepare": "husky install",
     "fix": "xo --fix",
     "test": "xo && uvu tests/unit"
   },
