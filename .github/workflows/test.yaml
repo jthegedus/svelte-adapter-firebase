@@ -41,9 +41,9 @@ jobs:
               nested_dir: "app",
             }
           - {
-              test_dir: "run_single_site",
+              test_dir: "run_service_id",
               validation_app_dir: "public/about/index.html",
-              validation_compute_dir: "functions/sveltekit/index.js",
+              validation_compute_dir: "functions/svelte-run-serviceid/index.js",
               nested_dir: ".",
             }
     steps:

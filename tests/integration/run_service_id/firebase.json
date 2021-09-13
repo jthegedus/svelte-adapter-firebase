@@ -1,7 +1,7 @@
 {
   "hosting": {
     "public": "public",
-    "site": "svelte-run-single-site",
+    "site": "svelte-run-serviceid",
     "rewrites": [
       {
         "source": "**",
