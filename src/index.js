@@ -43,7 +43,7 @@ const entrypoint = function (options = {}) {
 				svelteSSR: dirs.serverDirname.replace(/\W/g, '') + 'Server',
 			};
 
-			// TODO: improve this func & return version for use in esbuildOption.target
+			// TODO(jthegedus): improve this func & return version for use in esbuildOption.target
 			ensureCompatibleCloudFunctionVersion({functionsPackageJsonEngine: functionsPackageJson?.engines?.node, firebaseJsonFunctionsRuntime: functions.runtime});
 			utils.rimraf(dirs.tmp);
 			utils.rimraf(dirs.serverPath);
