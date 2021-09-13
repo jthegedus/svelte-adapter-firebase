@@ -17,10 +17,10 @@ const entrypoint = function (options = {}) {
 		name: 'svelte-adapter-firebase',
 		async adapt({utils, config}) {
 			const {
+				esbuildOptions = undefined,
 				firebaseJsonPath = 'firebase.json',
 				hostingSite = undefined,
 				sourceRewriteMatch = '**',
-				esbuildOptions = undefined,
 			} = options;
 
 			utils.log.minor(`Adapter configuration:\n\t${kleur.italic(JSON.stringify(options))}`);
