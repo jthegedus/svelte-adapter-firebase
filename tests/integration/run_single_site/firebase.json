@@ -11,6 +11,9 @@
       }
     ]
   },
+  "functions": {
+    "source": "functions"
+  },
   "emulators": {
     "ui": {
       "enabled": false
