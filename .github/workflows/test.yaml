@@ -43,7 +43,7 @@ jobs:
           - {
               test_dir: "run_single_site",
               validation_app_dir: "public/about/index.html",
-              validation_compute_dir: ".cloudrun/index.js",
+              validation_compute_dir: "functions/sveltekit/index.js",
               nested_dir: ".",
             }
     steps:
