@@ -72,7 +72,7 @@ const entrypoint = function (options = {}) {
 					utils.log.info(`Add the following Cloud Function to ${ssrFunc.entrypoint}`);
 					utils.log.info(kleur.bold().cyan(`
 let ${ssrFunc.svelteSSR};
-exports.${functions.name} = functions.https.onRequest(async (request, response) => {
+exports.${functions.name} = functions.region("us-central1").https.onRequest(async (request, response) => {
 	if (!${ssrFunc.svelteSSR}) {
 		functions.logger.info("Initialising SvelteKit SSR entry");
 		${ssrFunc.svelteSSR} = require("./${dirs.serverDirname}/index").default;
