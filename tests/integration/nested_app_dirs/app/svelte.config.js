@@ -5,7 +5,7 @@ const config = {
 	kit: {
 		// Hydrate the <div id="svelte"> element in src/app.html
 		adapter: firebase({
-			firebaseJson: '../firebase.json'
+			firebaseJsonPath: '../firebase.json'
 		}),
 		target: '#svelte'
 	}
