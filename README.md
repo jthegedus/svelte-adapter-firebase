@@ -48,7 +48,6 @@ Cloud Functions!
 - [Caveats](#caveats)
 - [Non-Goals](#non-goals)
 - [FAQ](#faq)
-- [Hints with Codes](#hints-with-codes)
 - [Contributing](#contributing)
 
 ## Setup
@@ -611,71 +610,6 @@ this space!
   stable and SvelteKit is released for general use.
 
 <!-- END -->
-
-## Hints with Codes
-
-The adapter is intended to guide you through the configuration of your
-`firebase.json` and `svelte.config.js` file. As such, when you have a
-misconfiguration the adapter will log a hint. Codes for these hints are listed
-here:
-
-**firebase.json file**
-
-- SAF1000: provided `firebase.json` file does not exist. It is computed from
-  adapter config `firebaseJsonPath`. If the default adapter config is not
-  working, consider updating it in `svelte.config.js`
-- SAF1001: `JSON.parse` error of `firebase.json`
-
-**firebase.json:hosting[]**
-
-- SAF1010: `hosting` field required in `firebase.json`
-- SAF1011: Multiple hosting configurations found, which requires each to have a
-  `site` field, one does not.
-- SAF1012: Multiple `hosting` configurations found in `firebase.json` but no
-  `hostingSite` specified in `svelte.config.js` adapter config.
-- SAF1013: Multiple `hosting` configurations found in `firebase.json` but no
-  match found for `hostingSite` specified in `svelte.config.js` adapter config.
-
-**firebase.json:hosting[].rewrites**
-
-- SAF1020: Required `hosting[].rewrites` field not found for matched hosting
-  config.
-- SAF1021: Required `hosting[].rewrites[]` does not contain a config with
-  `source` matching adapter config `sourceRewriteMatch` and either `function` or
-  `run` entries.
-
-**firebase.json:hosting[].rewrites Cloud Run config**
-
-- SAF1030: Required `serviceId` field not found for Cloud Run rewrite rule in
-  `firebase.json`.
-- SAF1031: Cloud Run `serviceId` is invalid. Cloud Run `serviceId` must use only
-  lowercase alphanumeric characters and dashes, cannot begin or end with a dash,
-  and cannot be longer than 63 characters. Update `firebase.json` accordingly.
-- SAF1032: Cloud Run `region` is invalid. Firebase Hosting rewrites only support
-  `"regions":"us-central1"`. Update `firebase.json` accordingly.
-
-**firebase.json:hosting[].rewrites Cloud Function config**
-
-- SAF1040: Function name for rewrite rule is invalid. Function name must use
-  only alphanumeric characters and underscores and cannot be longer than 62
-  characters. Update `firebase.json` accordingly.
-
-**firebase.json:hosting[].public**
-
-- SAF1050: Required `hosting.public` field not found for hosting configuration.
-  Add a `public` field to the matched hosting config in `firebase.json`.
-- SAF1051: `firebase.json:hosting.public` must be a different directory to
-  `svelte.config.js:kit.files.assets`.
-- SAF1052: Required "hosting.public" field is an empty string. "public" should
-  be a directory name.
-
-**firebase.json:functions**
-
-- SAF1060: Required `functions.source` field missing from `firebase.json` file.
-- SAF1061: Node.js runtime not supported. SvelteKit on Cloud Functions requires
-  Node.js 14 or newer runtime. Set the version in either:
-  `<cloud function dir>/package.json:engines.node` or
-  `firebase.json:functions.runtime`.
 
 ## Contributing
 
