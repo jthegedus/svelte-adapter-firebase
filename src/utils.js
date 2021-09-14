@@ -67,7 +67,7 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 	const firebaseJson = path.resolve(firebaseJsonPath);
 
 	if (!existsSync(firebaseJson)) {
-		throw new Error('Error: The adapter requires a "firebase.json" file.', 'firebaseJsonPath:', firebaseJsonPath, 'does not exist.');
+		throw new Error(`Error: The adapter requires a "firebase.json" file. "firebaseJsonPath:${firebaseJsonPath}" does not exist.`);
 	}
 
 	/**
