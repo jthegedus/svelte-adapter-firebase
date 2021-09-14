@@ -55,7 +55,7 @@ test(
 	() => {
 		const firebaseJsonPath = fileURLToPath(new URL('./does_not_exist.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
-		assert.throws(() => parseFirebaseConfiguration(config), 'See above output. See Hint code SAF1000 in README');
+		assert.throws(() => parseFirebaseConfiguration(config), /TODO/);
 	},
 );
 
@@ -64,7 +64,7 @@ test(
 	() => {
 		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/invalid.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
-		assert.throws(() => parseFirebaseConfiguration(config), 'See above output. See Hint code SAF1001 in README');
+		assert.throws(() => parseFirebaseConfiguration(config), /TODO/);
 	},
 );
 
@@ -73,7 +73,7 @@ test(
 	() => {
 		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/missing_hosting.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
-		assert.throws(() => parseFirebaseConfiguration(config), 'See above output. See Hint code SAF1010 in README');
+		assert.throws(() => parseFirebaseConfiguration(config), /TODO/);
 	},
 );
 
@@ -82,7 +82,7 @@ test(
 	() => {
 		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/sites_missing_rewrites.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
-		assert.throws(() => parseFirebaseConfiguration(config), 'See above output. See Hint code SAF1011 in README');
+		assert.throws(() => parseFirebaseConfiguration(config), /TODO/);
 	},
 );
 
@@ -91,7 +91,7 @@ test(
 	() => {
 		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/cf_multi_site_requires_hostingSite.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
-		assert.throws(() => parseFirebaseConfiguration(config), 'See above output. See Hint code SAF1012 in README');
+		assert.throws(() => parseFirebaseConfiguration(config), /TODO/);
 	},
 );
 
@@ -100,7 +100,7 @@ test(
 	() => {
 		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/cf_multi_site_requires_hostingSite.json', import.meta.url));
 		const config = {hostingSite: 'no_matching_site', sourceRewriteMatch: '**', firebaseJsonPath};
-		assert.throws(() => parseFirebaseConfiguration(config), 'See above output. See Hint code SAF1013 in README');
+		assert.throws(() => parseFirebaseConfiguration(config), /TODO/);
 	},
 );
 
@@ -109,14 +109,14 @@ test(
 	() => {
 		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/site_missing_public.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
-		assert.throws(() => parseFirebaseConfiguration(config), 'See above output. See Hint code SAF1050 in README');
+		assert.throws(() => parseFirebaseConfiguration(config), /TODO/);
 	},
 );
 
 test('Firebase config w empty "public" string', () => {
 	const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/site_empty_public.json', import.meta.url));
 	const config = {sourceRewriteMatch: '**', firebaseJsonPath};
-	assert.throws(() => parseFirebaseConfiguration(config), 'See above output. See Hint code SAF1052 in README');
+	assert.throws(() => parseFirebaseConfiguration(config), /TODO/);
 });
 
 test(
@@ -124,7 +124,7 @@ test(
 	() => {
 		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/site_missing_rewrite.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
-		assert.throws(() => parseFirebaseConfiguration(config), 'See above output. See Hint code SAF1020 in README');
+		assert.throws(() => parseFirebaseConfiguration(config), /TODO/);
 	},
 );
 
@@ -133,7 +133,7 @@ test(
 	() => {
 		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/cf_site_rewrite_mismatch.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: 'no_match', firebaseJsonPath};
-		assert.throws(() => parseFirebaseConfiguration(config), 'See above output. See Hint code SAF1021 in README');
+		assert.throws(() => parseFirebaseConfiguration(config), /TODO/);
 	},
 );
 
@@ -142,7 +142,7 @@ test(
 	() => {
 		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/cr_missing_serviceId.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
-		assert.throws(() => parseFirebaseConfiguration(config), 'See above output. See Hint code SAF1030 in README');
+		assert.throws(() => parseFirebaseConfiguration(config), /TODO/);
 	},
 );
 
@@ -151,7 +151,7 @@ test(
 	() => {
 		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/cr_invalid_serviceId.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
-		assert.throws(() => parseFirebaseConfiguration(config), 'See above output. See Hint code SAF1031 in README');
+		assert.throws(() => parseFirebaseConfiguration(config), /TODO/);
 	},
 );
 
@@ -160,7 +160,7 @@ test(
 	() => {
 		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/cr_invalid_region.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
-		assert.throws(() => parseFirebaseConfiguration(config), 'See above output. See Hint code SAF1032 in README');
+		assert.throws(() => parseFirebaseConfiguration(config), /TODO/);
 	},
 );
 
@@ -169,7 +169,7 @@ test(
 	() => {
 		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/cf_invalid_function_name.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
-		assert.throws(() => parseFirebaseConfiguration(config), 'See above output. See Hint code SAF1040 in README');
+		assert.throws(() => parseFirebaseConfiguration(config), /TODO/);
 	},
 );
 
@@ -178,7 +178,7 @@ test(
 	() => {
 		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/cf_site_missing_functions.json', import.meta.url));
 		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
-		assert.throws(() => parseFirebaseConfiguration(config), 'See above output. See Hint code SAF1060 in README');
+		assert.throws(() => parseFirebaseConfiguration(config), /TODO/);
 	},
 );
 
@@ -242,40 +242,44 @@ test('Static asset source and dest different dirs', () => {
 test(
 	'Static asset source and dest the same dir',
 	() => {
-		assert.throws(() => ensureStaticResourceDirsDiffer({source: 'a', dest: 'a'}), 'See above output. See Hint code SAF1051 in README');
+		assert.throws(() => ensureStaticResourceDirsDiffer({source: 'a', dest: 'a'}), /TODO/);
 	},
 );
 
 // EnsureCompatibleCloudFunctionVersion
 test('Valid Function runtime (nodejs14) version in package.json', () => {
 	assert.not.throws(() => ensureCompatibleCloudFunctionVersion({functionsPackageJsonEngine: '14'}));
+	// TODO(jthegedus): assert returned version
 });
 test('Valid Function runtime (nodejs14) version in firebase.json', () => {
 	assert.not.throws(() => ensureCompatibleCloudFunctionVersion({firebaseJsonFunctionsRuntime: 'nodejs14'}));
+	// TODO(jthegedus): assert returned version
 });
 test('Valid Function runtime (nodejs16) version in package.json', () => {
 	assert.not.throws(() => ensureCompatibleCloudFunctionVersion({functionsPackageJsonEngine: '16'}));
+	// TODO(jthegedus): assert returned version
 });
 test('Valid Function runtime (nodejs16) version in firebase.json', () => {
 	assert.not.throws(() => ensureCompatibleCloudFunctionVersion({firebaseJsonFunctionsRuntime: 'nodejs16'}));
+	// TODO(jthegedus): assert returned version
 });
 
 test(
 	'No Function runtime provided',
 	() => {
-		assert.throws(() => ensureCompatibleCloudFunctionVersion({}), 'See above output. See Hint code SAF1061 in README');
+		assert.throws(() => ensureCompatibleCloudFunctionVersion({}), /TODO/);
 	},
 );
 test(
 	'Invalid Function runtime in package.json',
 	() => {
-		assert.throws(() => ensureCompatibleCloudFunctionVersion({functionsPackageJsonEngine: '12'}), 'See above output. See Hint code SAF1061 in README');
+		assert.throws(() => ensureCompatibleCloudFunctionVersion({functionsPackageJsonEngine: '12'}), /TODO/);
 	},
 );
 test(
 	'Invalid Function runtime in firebase.json',
 	() => {
-		assert.throws(() => ensureCompatibleCloudFunctionVersion({firebaseJsonFunctionsRuntime: 'nodejs12'}), 'See above output. See Hint code SAF1061 in README');
+		assert.throws(() => ensureCompatibleCloudFunctionVersion({firebaseJsonFunctionsRuntime: 'nodejs12'}), /TODO/);
 	},
 );
 
