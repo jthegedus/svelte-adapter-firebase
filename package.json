@@ -38,20 +38,18 @@
     "node": "^14.13.1 || >= 16"
   },
   "dependencies": {
-    "esbuild": "^0.12.20",
+    "esbuild": "^0.12.28",
     "kleur": "^4.1.4"
   },
   "peerDependencies": {
     "@sveltejs/kit": "^1.0.0-next.166"
   },
   "devDependencies": {
-    "@commitlint/cli": "^11.0.0",
-    "@commitlint/config-conventional": "^11.0.0",
     "@sveltejs/kit": "^1.0.0-next.166",
-    "@types/express": "^4.17.12",
-    "@types/node": "^14.14.35",
-    "firebase-functions": "^3.15.4",
-    "typescript": "^4.2.3",
+    "@types/express": "^4.17.13",
+    "@types/node": "^14.17.15",
+    "firebase-functions": "^3.15.5",
+    "typescript": "^4.4.3",
     "uvu": "^0.5.1",
     "xo": "^0.44.0"
   },
@@ -67,10 +65,5 @@
     "rules": {
       "unicorn/prefer-node-protocol": "off"
     }
-  },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
   }
 }
