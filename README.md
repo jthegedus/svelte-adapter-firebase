@@ -2,8 +2,8 @@
 
 <!-- TODO: on 1.0.0 release, delete this section -->
 
-| :warning: WARNING: this project is considered to be in ALPHA until SvelteKit is available for general use and the Adapter API is stable! |
-| ---------------------------------------------------------------------------------------------------------------------------------------- |
+| :warning: WARNING: this project is considered to be in BETA until SvelteKit is available for general use and the Adapter API is stable! |
+| --------------------------------------------------------------------------------------------------------------------------------------- |
 
 <!-- END -->
 
