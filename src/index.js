@@ -3,7 +3,6 @@ import path from 'path';
 import process from 'process';
 import {fileURLToPath} from 'url';
 import esbuild from 'esbuild';
-import kleur from 'kleur';
 import {
 	ensureCompatibleCloudFunctionVersion,
 	ensureStaticResourceDirsDiffer,
@@ -23,7 +22,7 @@ const entrypoint = function (options = {}) {
 				sourceRewriteMatch = '**',
 			} = options;
 
-			utils.log.minor(`Adapter configuration:\n\t${kleur.italic(JSON.stringify(options))}`);
+			utils.log.minor(`Adapter configuration:\n\t${JSON.stringify(options)}`);
 			const {functions, publicDir} = parseFirebaseConfiguration({firebaseJsonPath, hostingSite, sourceRewriteMatch});
 			ensureStaticResourceDirsDiffer({source: path.join(process.cwd(), config.kit.files.assets), dest: publicDir});
 
@@ -43,8 +42,10 @@ const entrypoint = function (options = {}) {
 				svelteSSR: dirs.serverDirname.replace(/\W/g, '') + 'Server',
 			};
 
-			// TODO(jthegedus): improve this func & return version for use in esbuildOption.target
-			ensureCompatibleCloudFunctionVersion({functionsPackageJsonEngine: functionsPackageJson?.engines?.node, firebaseJsonFunctionsRuntime: functions.runtime});
+			const runtimeVersion = ensureCompatibleCloudFunctionVersion({
+				functionsPackageJsonEngine: functionsPackageJson?.engines?.node,
+				firebaseJsonFunctionsRuntime: functions.runtime,
+			});
 			utils.rimraf(dirs.tmp);
 			utils.rimraf(dirs.serverPath);
 			utils.copy(path.join(dirs.files, 'entry.js'), path.join(dirs.tmp, 'entry.js'));
@@ -57,8 +58,7 @@ const entrypoint = function (options = {}) {
 				bundle: true,
 				inject: [path.join(dirs.files, 'shims.js')],
 				platform: 'node',
-				// TODO(jthegedus): detect target from functionsPackageJsonEngine / firebaseJsonFunctionsRuntime
-				// target: 'node16',
+				target: `node${runtimeVersion}`,
 			};
 
 			const buildOptions = esbuildOptions
@@ -70,7 +70,7 @@ const entrypoint = function (options = {}) {
 			try {
 				if (!readFileSync(ssrFunc.entrypoint, 'utf-8').includes(`${functions.name} =`)) {
 					utils.log.info(`Add the following Cloud Function to ${ssrFunc.entrypoint}`);
-					utils.log.info(kleur.bold().cyan(`
+					utils.log.info(`
 let ${ssrFunc.svelteSSR};
 exports.${functions.name} = functions.region("us-central1").https.onRequest(async (request, response) => {
 	if (!${ssrFunc.svelteSSR}) {
@@ -81,7 +81,7 @@ exports.${functions.name} = functions.region("us-central1").https.onRequest(asyn
 	functions.logger.info("Requested resource: " + request.originalUrl);
 	return ${ssrFunc.svelteSSR}(request, response);
 });
-		`));
+		`);
 				}
 			} catch (error) {
 				throw new Error(`Error reading Cloud Function entrypoint file: ${ssrFunc.entrypoint}. ${error.message}`);
