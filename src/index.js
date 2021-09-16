@@ -69,8 +69,8 @@ const entrypoint = function (options = {}) {
 
 			try {
 				if (!readFileSync(ssrFunc.entrypoint, 'utf-8').includes(`${functions.name} =`)) {
-					utils.log.info(`Add the following Cloud Function to ${ssrFunc.entrypoint}`);
-					utils.log.info(`
+					utils.log.warn(`Add the following Cloud Function to ${ssrFunc.entrypoint}`);
+					utils.log.warn(`
 let ${ssrFunc.svelteSSR};
 exports.${functions.name} = functions.region("us-central1").https.onRequest(async (request, response) => {
 	if (!${ssrFunc.svelteSSR}) {
