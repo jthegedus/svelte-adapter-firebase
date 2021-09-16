@@ -67,7 +67,7 @@ test('firebase-functions.https.request GET is converted to SvelteKit Incoming re
 			host: 'us-central1-func.cloudfunctions.net',
 			'x-forwarded-proto': 'https',
 		},
-		rawBody: new Uint8Array(),
+		rawBody: null,
 		host: 'https://us-central1-func.cloudfunctions.net',
 		path: '/url',
 		query: new URL('/url?some=thing', 'https://us-central1-func.cloudfunctions.net').searchParams,
