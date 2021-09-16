@@ -117,7 +117,7 @@ Adapter options:
   - path to your `firebase.json` file, **relative** from where `svelte build` is
     called
   - default: `./firebase.json`
-- `hostingSite`
+- `target`
   - required when `firebase.json:hosting` is an array (contains many site
     configurations)
   - default: no default value
@@ -143,7 +143,7 @@ the `firebase.json` config.
 The 3 step process is:
 
 1. select Hosting config from `firebase.json`. If more than one site, match
-   using `hostingSite`
+   using `target`
 2. output static assets to the directory in the `public` field
 3. identify the rewrite rule for SSR to determine Cloud Function output. The
    rewrite rule is determined by a lookup of the `rewrites.source` against
@@ -184,7 +184,7 @@ config if a Cloud Function rewrite is used. These are the combintations:
 {
   "hosting": [
     {
-      "site": "blog",
+      "target": "blog",
       "public": "<someDir>",
       "rewrites": [
         {
@@ -203,7 +203,7 @@ config if a Cloud Function rewrite is used. These are the combintations:
 }
 ```
 
-To correctly lookup the `blog` site, `hostingSite` will need to be set in
+To correctly lookup the `blog` site, `target` will need to be set in
 `svelte.config.js`:
 
 ```js
@@ -212,7 +212,7 @@ import firebase from "svelte-adapter-firebase";
 /** @type {import('@sveltejs/kit').Config} */
 export default {
   kit: {
-    adapter: firebase({ hostingSite: "blog" }),
+    adapter: firebase({ target: "blog" }),
     target: "#svelte",
   },
 };
@@ -235,7 +235,7 @@ export default {
     adapter: firebase({
       esbuildBuildOptions: (defaultOptions: BuildOptions) => Promise<BuildOptions> | BuildOptions,
       firebaseJsonPath: "",
-      hostingSite: "",
+      target: "",
       sourceRewriteMatch: "",
     }),
     target: "#svelte",
@@ -329,17 +329,18 @@ export default {
 </details>
 
 <details>
-<summary><code>hostingSite</code></summary>
+<summary><code>target</code></summary>
 
-If `firebase.json:hosting` is an array of sites, then you must provide a `site`
-with `hostingSite` to correctly match against. For example:
+If `firebase.json:hosting` is an array of sites, the each hosting config must
+list a `target` or `site` field that matches the adatper's `target` option. For
+example:
 
 ```json
 // firebase.json
 {
   "hosting": [
     {
-      "site": "blog",
+      "target": "blog",
       "public": "<someDir>",
       "rewrites": [
         {
@@ -351,7 +352,7 @@ with `hostingSite` to correctly match against. For example:
       ]
     },
     {
-      "site": "adminPanel",
+      "target": "adminPanel",
       "public": "<anotherDir>"
     }
   ]
@@ -364,11 +365,15 @@ import firebase from "svelte-adapter-firebase";
 /** @type {import('@sveltejs/kit').Config} */
 export default {
   kit: {
-    adapter: firebase({ hostingSite: "blog" }),
+    adapter: firebase({ target: "blog" }),
     target: "#svelte",
   },
 };
 ```
+
+The Firebase config & adapter config match `firebase.json:hosting[0].target` ===
+adapter `target`, so therefore we know which Firebase Hosting site you want to
+build the SvelteKit site for.
 
 </details>
 
@@ -486,11 +491,11 @@ myApp/				<-- Static assets to go to Firebase Hosting CDN
 <details>
 <summary>Output with Multiple Sites</summary>
 
-In a multi-site setup, the `site` name from hosting config in `firebase.json` is
-used as the server output dir:
+In a multi-site setup, the `target` or `site` field from hosting config in
+`firebase.json` is used as the server output dir:
 
 ```
-firebase.json ("site": "myCoolSite","public": "myApp")
+firebase.json ("target": "myCoolSite","public": "myApp")
 package.json
 svelte.config.js
 src/
@@ -513,7 +518,7 @@ be placed in your `index.js` or `index.ts` manually.
 This is a flexible solution that allows integrating with other Cloud Functions
 in your project. You can edit the provided code as you see fit. The
 import/require of the generated code will not change unless you change the
-`firebase.json:hosting.site` or `package.json:main` fields, so you shouldn't
+`firebase.json:hosting.target` or `package.json:main` fields, so you shouldn't
 need to update this code after adding it.
 
 ## Cloud Function Firebase Emulator local Testing
