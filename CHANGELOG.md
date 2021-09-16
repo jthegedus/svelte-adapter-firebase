@@ -8,7 +8,7 @@
 
 * compute esbuild target from Function runtime version ([#137](https://www.github.com/jthegedus/svelte-adapter-firebase/issues/137)) ([61f2b3b](https://www.github.com/jthegedus/svelte-adapter-firebase/commit/61f2b3bbc4c3c008a48b38890e4424956f06f9d9))
 * deprecate Cloud Run support ([#135](https://www.github.com/jthegedus/svelte-adapter-firebase/issues/135)) ([ee5d92a](https://www.github.com/jthegedus/svelte-adapter-firebase/commit/ee5d92a2cf19508959846ef9090f679773d299de))
-* rename adapter config `firebaseJson` to `firebaseJsonPath`
+* rename adapter config `firebaseJson` to `firebaseJsonPath` ([#135](https://www.github.com/jthegedus/svelte-adapter-firebase/issues/135)) ([ee5d92a](https://www.github.com/jthegedus/svelte-adapter-firebase/commit/ee5d92a2cf19508959846ef9090f679773d299de))
 
 ### Bug Fixes
 
