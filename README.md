@@ -539,6 +539,11 @@ Test your production build locally before pushing to git or deploying!
 
 ## Caveats
 
+- Using `firebase.json:hosting[].site` is preferred to
+  `firebase.json:hosting[].target` as
+  [Firebase deploy targets](https://firebase.google.com/docs/cli/targets) only
+  supports Hosting, Storage & Databases and not Functions which are required to
+  be deployed alongside your site due to the SSR nature of this solution.
 - [Firebase Hosting Preview Channels](https://firebase.google.com/docs/hosting/test-preview-deploy)
   currently lacks first-party support for SSR applications. This adapter doesn't
   attempt to remedy this issue and doesn't produce a different SSR Function for
