@@ -93,7 +93,7 @@ function parseFirebaseConfiguration({target, sourceRewriteMatch, firebaseJsonPat
 	// Force "site" field to be included in "hosting" if more than 1 hosting site config
 	if (firebaseHostingConfig.length > 1) {
 		for (const item of firebaseHostingConfig) {
-			if (!item.target && !item.site) {
+			if (!item.site && !item.target) {
 				throw new Error('Error: Multiple "hosting" configurations found, each requires either a "site" field or "target" field, one does not. https://firebase.google.com/docs/hosting/multisites');
 			}
 		}
@@ -101,7 +101,7 @@ function parseFirebaseConfiguration({target, sourceRewriteMatch, firebaseJsonPat
 
 	const hostingConfig = firebaseHostingConfig.length === 1
 		? firebaseHostingConfig[0]
-		: firebaseHostingConfig.find(item => (item.target === target && item.target !== undefined) || (item.site === target && item.site !== undefined));
+		: firebaseHostingConfig.find(item => (item.site === target && item.site !== undefined) || (item.target === target && item.target !== undefined));
 
 	if (!hostingConfig) {
 		if (!target) {
