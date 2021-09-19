@@ -5,31 +5,32 @@ import process from 'process';
 /**
  * @typedef CloudRunRewriteConfig
  * @type {object} cloudrun
- * @property {undefined|string} cloudrun.serviceId
  * @property {undefined|'us-west1'} cloudrun.region
+ * @property {undefined|string} cloudrun.serviceId
  */
 
 /**
  * @typedef HostingRewriteConfig
  * @type {object} rewrite
- * @property {undefined|string} rewrite.source
  * @property {undefined|string} rewrite.function
  * @property {undefined|CloudRunRewriteConfig} rewrite.run
+ * @property {undefined|string} rewrite.source
  */
 
 /**
  * @typedef HostingConfig
  * @type {object} hosting
- * @property {undefined|string} hosting.site
  * @property {undefined|string} hosting.public
  * @property {undefined|Array.<HostingRewriteConfig>} hosting.rewrites
+ * @property {undefined|string} hosting.site
+ * @property {undefined|string} hosting.target
  */
 
 /**
  * @typedef FunctionsConfig
  * @type {object} functions
- * @property {undefined|string} functions.source
  * @property {undefined|'nodejs14'|'nodejs16'} functions.runtime
+ * @property {undefined|string} functions.source
 */
 
 /**
@@ -37,8 +38,8 @@ import process from 'process';
  *
  * @typedef FirebaseConfig
  * @type {object} config
- * @property {undefined|HostingConfig|Array.<HostingConfig>} hosting
  * @property {undefined|FunctionsConfig} functions
+ * @property {undefined|HostingConfig|Array.<HostingConfig>} hosting
  */
 
 /**
@@ -51,19 +52,19 @@ function isString(parameter) {
 }
 
 /**
- * Parse provided firebase.json to match against SvelteKit config for HostingSite & Rewrite rule.
+ * Parse provided firebase.json to match against SvelteKit config for target & Rewrite rule.
  *
  * @param {{
- * 	hostingSite: string|undefined;
- * 	sourceRewriteMatch: string;
  * 	firebaseJsonPath: string
+ * 	sourceRewriteMatch: string;
+ * 	target: string|undefined;
  * }} param
  * @returns {{
  * 	functions: { name: string, source: string, runtime: string | undefined };
  * 	publicDir: string
  * }} Functions config with `public` dir
  */
-function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJsonPath}) {
+function parseFirebaseConfiguration({target, sourceRewriteMatch, firebaseJsonPath}) {
 	const firebaseJson = path.resolve(firebaseJsonPath);
 
 	if (!existsSync(firebaseJson)) {
@@ -85,29 +86,30 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 	}
 
 	// Force "hosting" field to be array
-	const firebaseHostingConfig = Array.isArray(firebaseConfig.hosting) ? firebaseConfig.hosting : [{...firebaseConfig.hosting}];
+	const firebaseHostingConfig = Array.isArray(firebaseConfig.hosting)
+		? firebaseConfig.hosting
+		: [{...firebaseConfig.hosting}];
 
 	// Force "site" field to be included in "hosting" if more than 1 hosting site config
 	if (firebaseHostingConfig.length > 1) {
 		for (const item of firebaseHostingConfig) {
-			// TODO(jthegedus): support 'target' field as well
-			if (!item.site) {
-				throw new Error('Error: Multiple hosting configurations found, each requires a "site" field, but one does not. https://firebase.google.com/docs/hosting/multisites');
+			if (!item.site && !item.target) {
+				throw new Error('Error: Multiple "hosting" configurations found, each requires either a "site" field or "target" field, one does not. https://firebase.google.com/docs/hosting/multisites');
 			}
 		}
 	}
 
 	const hostingConfig = firebaseHostingConfig.length === 1
 		? firebaseHostingConfig[0]
-		: firebaseHostingConfig.find(item => item.site === hostingSite);
+		: firebaseHostingConfig.find(item => (item.site === target && item.site !== undefined) || (item.target === target && item.target !== undefined));
 
 	if (!hostingConfig) {
-		if (!hostingSite) {
-			throw new Error('Error: Multiple hosting configurations found, but no "hostingSite" specified in "svelte.config.js" adapter config. Provide one so we can match the config correctly.');
+		if (!target) {
+			throw new Error('Error: Multiple "hosting" configurations found, but no "target" specified in "svelte.config.js" adapter config. Provide one so we can match the config correctly.');
 		}
 
-		const hostingConfigSiteValues = firebaseHostingConfig.map(item => ({site: item.site}));
-		throw new Error(`Error: Multiple "hosting" configurations found in "firebase.json" but not match found for ${hostingSite} specified in "svelte.config.js" adapter config. "hosting[].site" values ${hostingConfigSiteValues}`);
+		const hostingConfigValues = firebaseHostingConfig.map(item => (item.target ? {target: item.target} : {site: item.site}));
+		throw new Error(`Error: Multiple "hosting" configurations found in "firebase.json" but not match found for ${target} specified in "svelte.config.js" adapter config. "hosting[].site" & "hosting[].target" values ${JSON.stringify(hostingConfigValues)}`);
 	}
 
 	if (!isString(hostingConfig?.public)) {

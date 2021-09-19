@@ -1,22 +1,20 @@
 {
 	"hosting": [
 		{
-			"site": "app",
+			"target": "app",
 			"public": "app",
 			"rewrites": [
 				{
 					"source": "**",
-					"function": "some_func"
+					"run": {
+						"serviceId": "some-service"
+					}
 				}
 			]
 		},
 		{
-			"site": "blog",
+			"target": "blog",
 			"public": "blog"
-		},
-		{
-			"site": "marketing",
-			"public": "marketing"
 		}
 	],
 	"functions": {

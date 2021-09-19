@@ -117,10 +117,10 @@ Adapter options:
   - path to your `firebase.json` file, **relative** from where `svelte build` is
     called
   - default: `./firebase.json`
-- `hostingSite`
+- `target`
   - required when `firebase.json:hosting` is an array (contains many site
     configurations)
-  - default: no default value
+  - default: `undefined`
 - `sourceRewriteMatch`
   - used to lookup the rewrite config to determine whether to output SSR code
     for Cloud Functions. See
@@ -142,8 +142,9 @@ the `firebase.json` config.
 
 The 3 step process is:
 
-1. select Hosting config from `firebase.json`. If more than one site, match
-   using `hostingSite`
+1. select Hosting config from `firebase.json`. If more than one site present in
+   config, match `svelte.config.js:target` field with either
+   `firebase.json:hosting[].site` or `.target` fields.
 2. output static assets to the directory in the `public` field
 3. identify the rewrite rule for SSR to determine Cloud Function output. The
    rewrite rule is determined by a lookup of the `rewrites.source` against
@@ -203,7 +204,7 @@ config if a Cloud Function rewrite is used. These are the combintations:
 }
 ```
 
-To correctly lookup the `blog` site, `hostingSite` will need to be set in
+To correctly lookup the `blog` site, `target` will need to be set in
 `svelte.config.js`:
 
 ```js
@@ -212,7 +213,7 @@ import firebase from "svelte-adapter-firebase";
 /** @type {import('@sveltejs/kit').Config} */
 export default {
   kit: {
-    adapter: firebase({ hostingSite: "blog" }),
+    adapter: firebase({ target: "blog" }),
     target: "#svelte",
   },
 };
@@ -235,7 +236,7 @@ export default {
     adapter: firebase({
       esbuildBuildOptions: (defaultOptions: BuildOptions) => Promise<BuildOptions> | BuildOptions,
       firebaseJsonPath: "",
-      hostingSite: "",
+      target: "",
       sourceRewriteMatch: "",
     }),
     target: "#svelte",
@@ -288,8 +289,8 @@ The default options for this version are as follows:
 }
 ```
 
-where `target` is computed from the Node.js runtime version defined for your
-Cloud Functions.
+where esbuild `target` is computed from the Node.js runtime version defined for
+your Cloud Functions.
 
 </details>
 
@@ -329,10 +330,11 @@ export default {
 </details>
 
 <details>
-<summary><code>hostingSite</code></summary>
+<summary><code>target</code></summary>
 
-If `firebase.json:hosting` is an array of sites, then you must provide a `site`
-with `hostingSite` to correctly match against. For example:
+If `firebase.json:hosting` is an array of sites, then each hosting config must
+list a `site` or `target` field that matches the adatper's `target` option. For
+example:
 
 ```json
 // firebase.json
@@ -340,6 +342,8 @@ with `hostingSite` to correctly match against. For example:
   "hosting": [
     {
       "site": "blog",
+      // or
+      // "target": "blog",
       "public": "<someDir>",
       "rewrites": [
         {
@@ -352,6 +356,8 @@ with `hostingSite` to correctly match against. For example:
     },
     {
       "site": "adminPanel",
+      // or
+      // "target": "adminPanel",
       "public": "<anotherDir>"
     }
   ]
@@ -364,11 +370,15 @@ import firebase from "svelte-adapter-firebase";
 /** @type {import('@sveltejs/kit').Config} */
 export default {
   kit: {
-    adapter: firebase({ hostingSite: "blog" }),
+    adapter: firebase({ target: "blog" }),
     target: "#svelte",
   },
 };
 ```
+
+The Firebase config & adapter config match (`firebase.json:hosting[0].site` ===
+adapter `target`), so therefore we know which Firebase Hosting site you want to
+build the SvelteKit site for.
 
 </details>
 
@@ -486,8 +496,8 @@ myApp/				<-- Static assets to go to Firebase Hosting CDN
 <details>
 <summary>Output with Multiple Sites</summary>
 
-In a multi-site setup, the `site` name from hosting config in `firebase.json` is
-used as the server output dir:
+In a multi-site setup, the `site` or `target` field from hosting config in
+`firebase.json` is used as the server output dir:
 
 ```
 firebase.json ("site": "myCoolSite","public": "myApp")
@@ -530,6 +540,14 @@ Test your production build locally before pushing to git or deploying!
 
 ## Caveats
 
+- Using `firebase.json:hosting[].site` is preferred to
+  `firebase.json:hosting[].target` as
+  [Firebase Deploy Targets](https://firebase.google.com/docs/cli/targets) only
+  supports Hosting, Storage & Databases and not Functions. This means you can
+  use Deploy targets `target` field to identify your site for the adapter to
+  **build**, but you **CANNOT use Deploy Targes when deploying** as you need to
+  deploy the Hosting _& Functions_ at the same time for this solution to work as
+  expected.
 - [Firebase Hosting Preview Channels](https://firebase.google.com/docs/hosting/test-preview-deploy)
   currently lacks first-party support for SSR applications. This adapter doesn't
   attempt to remedy this issue and doesn't produce a different SSR Function for
