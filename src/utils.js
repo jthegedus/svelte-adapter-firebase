@@ -93,7 +93,7 @@ function parseFirebaseConfiguration({target, sourceRewriteMatch, firebaseJsonPat
 		for (const item of firebaseHostingConfig) {
 			// TODO(jthegedus): support 'target' field as well
 			if (!item.site) {
-				throw new Error('Error: Multiple hosting configurations found, each requires a "site" field, but one does not. https://firebase.google.com/docs/hosting/multisites');
+				throw new Error('Error: Multiple "hosting" configurations found, each requires a "site" field, but one does not. https://firebase.google.com/docs/hosting/multisites');
 			}
 		}
 	}
@@ -104,11 +104,11 @@ function parseFirebaseConfiguration({target, sourceRewriteMatch, firebaseJsonPat
 
 	if (!hostingConfig) {
 		if (!target) {
-			throw new Error('Error: Multiple hosting configurations found, but no "target" specified in "svelte.config.js" adapter config. Provide one so we can match the config correctly.');
+			throw new Error('Error: Multiple "hosting" configurations found, but no "target" specified in "svelte.config.js" adapter config. Provide one so we can match the config correctly.');
 		}
 
 		const hostingConfigSiteValues = firebaseHostingConfig.map(item => ({site: item.site}));
-		throw new Error(`Error: Multiple "hosting" configurations found in "firebase.json" but not match found for ${target} specified in "svelte.config.js" adapter config. "hosting[].site" values ${hostingConfigSiteValues}`);
+		throw new Error(`Error: Multiple "hosting" configurations found in "firebase.json" but not match found for ${target} specified in "svelte.config.js" adapter config. "hosting[].site" values ${JSON.stringify(hostingConfigSiteValues)}`);
 	}
 
 	if (!isString(hostingConfig?.public)) {

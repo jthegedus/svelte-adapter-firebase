@@ -1,11 +1,10 @@
 import {Buffer} from 'buffer';
-import {test} from 'uvu';
-import * as assert from 'uvu/assert'; // eslint-disable-line node/file-extension-in-import
+import test from 'ava';
 
 import {toSvelteKitRequest, toSvelteKitHeaders} from '../../../../src/files/firebase-to-svelte-kit.js';
 
 // Headers
-test('leave headers without string[] untouched', () => {
+test('leave headers without string[] untouched', t => {
 	const input = {
 		accept: 'something',
 		'accept-language': 'en',
@@ -13,10 +12,10 @@ test('leave headers without string[] untouched', () => {
 	const expected = input;
 	const result = toSvelteKitHeaders(input);
 
-	assert.equal(result, expected, 'match');
+	t.deepEqual(result, expected);
 });
 
-test('convert string[] headers to csv string values', () => {
+test('convert string[] headers to csv string values', t => {
 	const expected = {
 		accept: 'something',
 		'accept-language': 'en',
@@ -28,10 +27,10 @@ test('convert string[] headers to csv string values', () => {
 		'set-cookie': ['some', 'cookie', 'data'],
 	});
 
-	assert.equal(result, expected, 'string[] has been converted to csv string');
+	t.deepEqual(result, expected);
 });
 
-test('convert string[] headers of any kind to csv string values', () => {
+test('convert string[] headers of any kind to csv string values', t => {
 	const expected = {
 		accept: 'something',
 		'accept-language': 'en',
@@ -43,11 +42,11 @@ test('convert string[] headers of any kind to csv string values', () => {
 		'user-defined-header': ['some', 'user', 'defined', 'header', 'data'],
 	});
 
-	assert.equal(result, expected, 'string[] has been converted to csv string');
+	t.deepEqual(result, expected);
 });
 
 // Request
-test('firebase-functions.https.request GET is converted to SvelteKit Incoming request type correctly', () => {
+test('firebase-functions.https.request GET is converted to SvelteKit Incoming request type correctly', t => {
 	const firebaseRequest = {
 		method: 'GET',
 		headers: {
@@ -75,10 +74,10 @@ test('firebase-functions.https.request GET is converted to SvelteKit Incoming re
 
 	const result = toSvelteKitRequest(firebaseRequest);
 
-	assert.equal(result, expectedKitRequest, 'match');
+	t.deepEqual(result, expectedKitRequest);
 });
 
-test('firebase-functions.https.request POST is converted to SvelteKit Incoming request type correctly', () => {
+test('firebase-functions.https.request POST is converted to SvelteKit Incoming request type correctly', t => {
 	const firebaseRequest = {
 		method: 'POST',
 		headers: {
@@ -107,7 +106,5 @@ test('firebase-functions.https.request POST is converted to SvelteKit Incoming r
 
 	const result = toSvelteKitRequest(firebaseRequest);
 
-	assert.equal(result, expectedKitRequest, 'match');
+	t.deepEqual(result, expectedKitRequest);
 });
-
-test.run();
