@@ -1,7 +1,7 @@
 {
   "hosting": {
     "public": "app/public",
-    "target": "nested-app-dir-site",
+    "site": "nested-app-dir-site",
     "rewrites": [
       {
         "source": "**",
