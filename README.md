@@ -143,7 +143,8 @@ the `firebase.json` config.
 The 3 step process is:
 
 1. select Hosting config from `firebase.json`. If more than one site present in
-   config, match using `target` field
+   config, match `svelte.config.js:target` field with either
+   `firebase.json:hosting[].site` or `.target` fields.
 2. output static assets to the directory in the `public` field
 3. identify the rewrite rule for SSR to determine Cloud Function output. The
    rewrite rule is determined by a lookup of the `rewrites.source` against
