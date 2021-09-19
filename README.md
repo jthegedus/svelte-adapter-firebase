@@ -120,7 +120,7 @@ Adapter options:
 - `target`
   - required when `firebase.json:hosting` is an array (contains many site
     configurations)
-  - default: no default value
+  - default: `undefined`
 - `sourceRewriteMatch`
   - used to lookup the rewrite config to determine whether to output SSR code
     for Cloud Functions. See
