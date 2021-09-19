@@ -16,9 +16,20 @@ test(
 );
 
 test(
-	'Firebase config w Cloud Functions & multiple sites',
+	'Firebase config w Cloud Functions & multiple sites using "firebase.json:hosting[].site" field',
 	t => {
-		const config = {target: 'app', sourceRewriteMatch: '**', firebaseJsonPath: fileURLToPath(new URL('../fixtures/successes/cf_sites.json', import.meta.url))};
+		const config = {target: 'app', sourceRewriteMatch: '**', firebaseJsonPath: fileURLToPath(new URL('../fixtures/successes/cf_sites_w_site.json', import.meta.url))};
+		const result = parseFirebaseConfiguration(config);
+		const expectedResult = {functions: {name: 'some_func', source: path.join(path.dirname(config.firebaseJsonPath), 'functions'), runtime: undefined}, publicDir: path.join(path.dirname(config.firebaseJsonPath), 'app')};
+
+		t.deepEqual(result, expectedResult);
+	},
+);
+
+test(
+	'Firebase config w Cloud Functions & multiple sites using "firebase.json:hosting[].target" field',
+	t => {
+		const config = {target: 'app', sourceRewriteMatch: '**', firebaseJsonPath: fileURLToPath(new URL('../fixtures/successes/cf_sites_w_target.json', import.meta.url))};
 		const result = parseFirebaseConfiguration(config);
 		const expectedResult = {functions: {name: 'some_func', source: path.join(path.dirname(config.firebaseJsonPath), 'functions'), runtime: undefined}, publicDir: path.join(path.dirname(config.firebaseJsonPath), 'app')};
 
@@ -38,9 +49,20 @@ test(
 );
 
 test(
-	'Firebase config w Cloud Run & multiple sites',
+	'Firebase config w Cloud Run & multiple sites using "firebase.json:hosting[].site" field',
 	t => {
-		const config = {target: 'app', sourceRewriteMatch: '**', firebaseJsonPath: fileURLToPath(new URL('../fixtures/successes/cr_sites.json', import.meta.url))};
+		const config = {target: 'app', sourceRewriteMatch: '**', firebaseJsonPath: fileURLToPath(new URL('../fixtures/successes/cr_sites_w_site.json', import.meta.url))};
+		const result = parseFirebaseConfiguration(config);
+		const expectedResult = {functions: {name: 'some-service', source: path.join(path.dirname(config.firebaseJsonPath), 'functions'), runtime: undefined}, publicDir: path.join(path.dirname(config.firebaseJsonPath), 'app')};
+
+		t.deepEqual(result, expectedResult);
+	},
+);
+
+test(
+	'Firebase config w Cloud Run & multiple sites using "firebase.json:hosting[].target" field',
+	t => {
+		const config = {target: 'app', sourceRewriteMatch: '**', firebaseJsonPath: fileURLToPath(new URL('../fixtures/successes/cr_sites_w_target.json', import.meta.url))};
 		const result = parseFirebaseConfiguration(config);
 		const expectedResult = {functions: {name: 'some-service', source: path.join(path.dirname(config.firebaseJsonPath), 'functions'), runtime: undefined}, publicDir: path.join(path.dirname(config.firebaseJsonPath), 'app')};
 
@@ -83,18 +105,18 @@ test(
 );
 
 test(
-	'Firebase config w multiple sites missing "site" identifier',
+	'Firebase config w multiple sites missing "site" or "target" identifier',
 	t => {
 		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/sites_missing_rewrites.json', import.meta.url));
 		const config = {target: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
 		t.throws(
 			() => parseFirebaseConfiguration(config),
-			{message: 'Error: Multiple "hosting" configurations found, each requires a "site" field, but one does not. https://firebase.google.com/docs/hosting/multisites'});
+			{message: 'Error: Multiple "hosting" configurations found, each requires either a "site" field or "target" field, one does not. https://firebase.google.com/docs/hosting/multisites'});
 	},
 );
 
 test(
-	'Firebase config w multiple sites require a "target" to be specified',
+	'Firebase config w multiple sites requires a "svelte.config.js:target" field to be specified',
 	t => {
 		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/cf_multi_site_requires_target.json', import.meta.url));
 		const config = {target: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
@@ -111,7 +133,7 @@ test(
 		const config = {target: 'no_matching_site', sourceRewriteMatch: '**', firebaseJsonPath};
 		t.throws(
 			() => parseFirebaseConfiguration(config),
-			{message: 'Error: Multiple "hosting" configurations found in "firebase.json" but not match found for no_matching_site specified in "svelte.config.js" adapter config. "hosting[].site" values [{"site":"app"},{"site":"blog"},{"site":"marketing"}]'});
+			{message: 'Error: Multiple "hosting" configurations found in "firebase.json" but not match found for no_matching_site specified in "svelte.config.js" adapter config. "hosting[].site" & "hosting[].target" values [{"target":"app"},{"site":"blog"},{"site":"marketing"}]'});
 	},
 );
 

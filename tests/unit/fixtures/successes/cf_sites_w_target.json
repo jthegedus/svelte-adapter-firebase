@@ -11,12 +11,8 @@
 			]
 		},
 		{
-			"site": "blog",
+			"target": "blog",
 			"public": "blog"
-		},
-		{
-			"site": "marketing",
-			"public": "marketing"
 		}
 	],
 	"functions": {
