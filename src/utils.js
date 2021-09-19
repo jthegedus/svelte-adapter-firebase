@@ -5,31 +5,32 @@ import process from 'process';
 /**
  * @typedef CloudRunRewriteConfig
  * @type {object} cloudrun
- * @property {undefined|string} cloudrun.serviceId
  * @property {undefined|'us-west1'} cloudrun.region
+ * @property {undefined|string} cloudrun.serviceId
  */
 
 /**
  * @typedef HostingRewriteConfig
  * @type {object} rewrite
- * @property {undefined|string} rewrite.source
  * @property {undefined|string} rewrite.function
  * @property {undefined|CloudRunRewriteConfig} rewrite.run
+ * @property {undefined|string} rewrite.source
  */
 
 /**
  * @typedef HostingConfig
  * @type {object} hosting
- * @property {undefined|string} hosting.site
  * @property {undefined|string} hosting.public
  * @property {undefined|Array.<HostingRewriteConfig>} hosting.rewrites
+ * @property {undefined|string} hosting.site
+ * @property {undefined|string} hosting.target
  */
 
 /**
  * @typedef FunctionsConfig
  * @type {object} functions
- * @property {undefined|string} functions.source
  * @property {undefined|'nodejs14'|'nodejs16'} functions.runtime
+ * @property {undefined|string} functions.source
 */
 
 /**
@@ -37,8 +38,8 @@ import process from 'process';
  *
  * @typedef FirebaseConfig
  * @type {object} config
- * @property {undefined|HostingConfig|Array.<HostingConfig>} hosting
  * @property {undefined|FunctionsConfig} functions
+ * @property {undefined|HostingConfig|Array.<HostingConfig>} hosting
  */
 
 /**
