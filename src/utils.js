@@ -55,9 +55,9 @@ function isString(parameter) {
  * Parse provided firebase.json to match against SvelteKit config for target & Rewrite rule.
  *
  * @param {{
- * 	target: string|undefined;
- * 	sourceRewriteMatch: string;
  * 	firebaseJsonPath: string
+ * 	sourceRewriteMatch: string;
+ * 	target: string|undefined;
  * }} param
  * @returns {{
  * 	functions: { name: string, source: string, runtime: string | undefined };
