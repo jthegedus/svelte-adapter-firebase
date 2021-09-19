@@ -78,7 +78,7 @@ test(
 		const config = {target: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
 		t.throws(
 			() => parseFirebaseConfiguration(config),
-			{message: 'Error: The adapter requires a "firebase.json" file. "firebaseJsonPath:/home/jthegedus/projects/svelte-adapter-firebase/tests/unit/src/does_not_exist.json" does not exist.'});
+			{message: `Error: The adapter requires a "firebase.json" file. "firebaseJsonPath:${fileURLToPath(new URL('../src/does_not_exist.json', import.meta.url))}" does not exist.`});
 	},
 );
 
@@ -89,7 +89,7 @@ test(
 		const config = {target: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
 		t.throws(
 			() => parseFirebaseConfiguration(config),
-			{message: 'Error: failure while parsing /home/jthegedus/projects/svelte-adapter-firebase/tests/unit/fixtures/failures/invalid.json. Unexpected token } in JSON at position 28'});
+			{message: `Error: failure while parsing ${fileURLToPath(new URL('../fixtures/failures/invalid.json', import.meta.url))}. Unexpected token } in JSON at position 28`});
 	},
 );
 
