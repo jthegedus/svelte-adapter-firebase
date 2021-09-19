@@ -8,7 +8,7 @@ import {ensureCompatibleCloudFunctionVersion, ensureStaticResourceDirsDiffer, pa
 test(
 	'Firebase config w Cloud Functions & single site',
 	() => {
-		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJsonPath: fileURLToPath(new URL('../fixtures/successes/cf_site.json', import.meta.url))};
+		const config = {target: undefined, sourceRewriteMatch: '**', firebaseJsonPath: fileURLToPath(new URL('../fixtures/successes/cf_site.json', import.meta.url))};
 		const result = parseFirebaseConfiguration(config);
 		const expectedResult = {functions: {name: 'some_func', source: path.join(path.dirname(config.firebaseJsonPath), 'functions'), runtime: undefined}, publicDir: path.join(path.dirname(config.firebaseJsonPath), 'app')};
 
@@ -19,7 +19,7 @@ test(
 test(
 	'Firebase config w Cloud Functions & multiple sites',
 	() => {
-		const config = {hostingSite: 'app', sourceRewriteMatch: '**', firebaseJsonPath: fileURLToPath(new URL('../fixtures/successes/cf_sites.json', import.meta.url))};
+		const config = {target: 'app', sourceRewriteMatch: '**', firebaseJsonPath: fileURLToPath(new URL('../fixtures/successes/cf_sites.json', import.meta.url))};
 		const result = parseFirebaseConfiguration(config);
 		const expectedResult = {functions: {name: 'some_func', source: path.join(path.dirname(config.firebaseJsonPath), 'functions'), runtime: undefined}, publicDir: path.join(path.dirname(config.firebaseJsonPath), 'app')};
 
@@ -30,7 +30,7 @@ test(
 test(
 	'Firebase config w Cloud Run & single site',
 	() => {
-		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJsonPath: fileURLToPath(new URL('../fixtures/successes/cr_site.json', import.meta.url))};
+		const config = {target: undefined, sourceRewriteMatch: '**', firebaseJsonPath: fileURLToPath(new URL('../fixtures/successes/cr_site.json', import.meta.url))};
 		const result = parseFirebaseConfiguration(config);
 		const expectedResult = {functions: {name: 'some-service', source: path.join(path.dirname(config.firebaseJsonPath), 'functions'), runtime: undefined}, publicDir: path.join(path.dirname(config.firebaseJsonPath), 'app')};
 
@@ -41,7 +41,7 @@ test(
 test(
 	'Firebase config w Cloud Run & multiple sites',
 	() => {
-		const config = {hostingSite: 'app', sourceRewriteMatch: '**', firebaseJsonPath: fileURLToPath(new URL('../fixtures/successes/cr_sites.json', import.meta.url))};
+		const config = {target: 'app', sourceRewriteMatch: '**', firebaseJsonPath: fileURLToPath(new URL('../fixtures/successes/cr_sites.json', import.meta.url))};
 		const result = parseFirebaseConfiguration(config);
 		const expectedResult = {functions: {name: 'some-service', source: path.join(path.dirname(config.firebaseJsonPath), 'functions'), runtime: undefined}, publicDir: path.join(path.dirname(config.firebaseJsonPath), 'app')};
 
@@ -54,7 +54,7 @@ test(
 	'Firebase config does not exist',
 	() => {
 		const firebaseJsonPath = fileURLToPath(new URL('./does_not_exist.json', import.meta.url));
-		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
+		const config = {target: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
 		assert.throws(
 			() => parseFirebaseConfiguration(config),
 		);
@@ -65,7 +65,7 @@ test(
 	'Firebase config is invalid json',
 	() => {
 		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/invalid.json', import.meta.url));
-		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
+		const config = {target: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
 		assert.throws(
 			() => parseFirebaseConfiguration(config),
 		);
@@ -76,7 +76,7 @@ test(
 	'Firebase config without "hosting" field',
 	() => {
 		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/missing_hosting.json', import.meta.url));
-		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
+		const config = {target: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
 		assert.throws(
 			() => parseFirebaseConfiguration(config),
 		);
@@ -87,7 +87,7 @@ test(
 	'Firebase config w multiple sites missing "site" identifier',
 	() => {
 		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/sites_missing_rewrites.json', import.meta.url));
-		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
+		const config = {target: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
 		assert.throws(
 			() => parseFirebaseConfiguration(config),
 		);
@@ -95,10 +95,10 @@ test(
 );
 
 test(
-	'Firebase config w multiple sites require a "hostingSite" to be specified',
+	'Firebase config w multiple sites require a "target" to be specified',
 	() => {
-		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/cf_multi_site_requires_hostingSite.json', import.meta.url));
-		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
+		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/cf_multi_site_requires_target.json', import.meta.url));
+		const config = {target: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
 		assert.throws(
 			() => parseFirebaseConfiguration(config),
 		);
@@ -106,10 +106,10 @@ test(
 );
 
 test(
-	'Firebase config w multiple sites but no match found for a "hostingSite" specified in svelte.config.js adapter config',
+	'Firebase config w multiple sites but no match found for a "target" specified in svelte.config.js adapter config',
 	() => {
-		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/cf_multi_site_requires_hostingSite.json', import.meta.url));
-		const config = {hostingSite: 'no_matching_site', sourceRewriteMatch: '**', firebaseJsonPath};
+		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/cf_multi_site_requires_target.json', import.meta.url));
+		const config = {target: 'no_matching_site', sourceRewriteMatch: '**', firebaseJsonPath};
 		assert.throws(
 			() => parseFirebaseConfiguration(config),
 		);
@@ -120,7 +120,7 @@ test(
 	'Firebase config w missing "public"',
 	() => {
 		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/site_missing_public.json', import.meta.url));
-		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
+		const config = {target: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
 		assert.throws(
 			() => parseFirebaseConfiguration(config),
 		);
@@ -139,7 +139,7 @@ test(
 	'Firebase config w site missing "rewrites"',
 	() => {
 		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/site_missing_rewrite.json', import.meta.url));
-		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
+		const config = {target: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
 		assert.throws(
 			() => parseFirebaseConfiguration(config),
 		);
@@ -150,7 +150,7 @@ test(
 	'Firebase config w "rewrites" mismatch',
 	() => {
 		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/cf_site_rewrite_mismatch.json', import.meta.url));
-		const config = {hostingSite: undefined, sourceRewriteMatch: 'no_match', firebaseJsonPath};
+		const config = {target: undefined, sourceRewriteMatch: 'no_match', firebaseJsonPath};
 		assert.throws(
 			() => parseFirebaseConfiguration(config),
 		);
@@ -161,7 +161,7 @@ test(
 	'Firebase config w Cloud Run missing required "serviceId" field',
 	() => {
 		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/cr_missing_serviceId.json', import.meta.url));
-		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
+		const config = {target: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
 		assert.throws(
 			() => parseFirebaseConfiguration(config),
 		);
@@ -172,7 +172,7 @@ test(
 	'Firebase config w Cloud Run incompatible serviceId field',
 	() => {
 		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/cr_invalid_serviceId.json', import.meta.url));
-		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
+		const config = {target: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
 		assert.throws(
 			() => parseFirebaseConfiguration(config),
 		);
@@ -183,7 +183,7 @@ test(
 	'Firebase config w Cloud Run incompatible region field',
 	() => {
 		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/cr_invalid_region.json', import.meta.url));
-		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
+		const config = {target: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
 		assert.throws(
 			() => parseFirebaseConfiguration(config),
 		);
@@ -194,7 +194,7 @@ test(
 	'Firebase config w Cloud Function invalid name',
 	() => {
 		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/cf_invalid_function_name.json', import.meta.url));
-		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
+		const config = {target: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
 		assert.throws(
 			() => parseFirebaseConfiguration(config),
 		);
@@ -205,7 +205,7 @@ test(
 	'Firebase config w Cloud Functions & single site missing top-level functions',
 	() => {
 		const firebaseJsonPath = fileURLToPath(new URL('../fixtures/failures/cf_site_missing_functions.json', import.meta.url));
-		const config = {hostingSite: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
+		const config = {target: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
 		assert.throws(
 			() => parseFirebaseConfiguration(config),
 		);

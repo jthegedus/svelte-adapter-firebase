@@ -52,10 +52,10 @@ function isString(parameter) {
 }
 
 /**
- * Parse provided firebase.json to match against SvelteKit config for HostingSite & Rewrite rule.
+ * Parse provided firebase.json to match against SvelteKit config for target & Rewrite rule.
  *
  * @param {{
- * 	hostingSite: string|undefined;
+ * 	target: string|undefined;
  * 	sourceRewriteMatch: string;
  * 	firebaseJsonPath: string
  * }} param
@@ -64,7 +64,7 @@ function isString(parameter) {
  * 	publicDir: string
  * }} Functions config with `public` dir
  */
-function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJsonPath}) {
+function parseFirebaseConfiguration({target, sourceRewriteMatch, firebaseJsonPath}) {
 	const firebaseJson = path.resolve(firebaseJsonPath);
 
 	if (!existsSync(firebaseJson)) {
@@ -100,15 +100,15 @@ function parseFirebaseConfiguration({hostingSite, sourceRewriteMatch, firebaseJs
 
 	const hostingConfig = firebaseHostingConfig.length === 1
 		? firebaseHostingConfig[0]
-		: firebaseHostingConfig.find(item => item.site === hostingSite);
+		: firebaseHostingConfig.find(item => item.site === target);
 
 	if (!hostingConfig) {
-		if (!hostingSite) {
-			throw new Error('Error: Multiple hosting configurations found, but no "hostingSite" specified in "svelte.config.js" adapter config. Provide one so we can match the config correctly.');
+		if (!target) {
+			throw new Error('Error: Multiple hosting configurations found, but no "target" specified in "svelte.config.js" adapter config. Provide one so we can match the config correctly.');
 		}
 
 		const hostingConfigSiteValues = firebaseHostingConfig.map(item => ({site: item.site}));
-		throw new Error(`Error: Multiple "hosting" configurations found in "firebase.json" but not match found for ${hostingSite} specified in "svelte.config.js" adapter config. "hosting[].site" values ${hostingConfigSiteValues}`);
+		throw new Error(`Error: Multiple "hosting" configurations found in "firebase.json" but not match found for ${target} specified in "svelte.config.js" adapter config. "hosting[].site" values ${hostingConfigSiteValues}`);
 	}
 
 	if (!isString(hostingConfig?.public)) {
