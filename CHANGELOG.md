@@ -1,6 +1,19 @@
 # Changelog
 
 
+## [0.13.0](https://www.github.com/jthegedus/svelte-adapter-firebase/compare/v0.12.0...v0.13.0) (2021-09-19)
+
+
+### Features
+
+* fb deploy targets. Rename opt `hostingSite` to `target` ([#144](https://www.github.com/jthegedus/svelte-adapter-firebase/issues/144)) ([2ffe777](https://www.github.com/jthegedus/svelte-adapter-firebase/commit/2ffe7774d41de9d4f88dc7d7935e5397e5999b44))
+
+
+### Bug Fixes
+
+* e2e tests with latest emulator ([#140](https://www.github.com/jthegedus/svelte-adapter-firebase/issues/140)) ([5227bb5](https://www.github.com/jthegedus/svelte-adapter-firebase/commit/5227bb5ced4576b530d0b9e6c38f91920e9863fe))
+* pass null if no req.rawBody ([#143](https://www.github.com/jthegedus/svelte-adapter-firebase/issues/143)) ([15c9ca4](https://www.github.com/jthegedus/svelte-adapter-firebase/commit/15c9ca4bbd6783ab43614cb6b49692e4685372b8))
+
 ## [0.12.0](https://www.github.com/jthegedus/svelte-adapter-firebase/compare/v0.11.2...v0.12.0) (2021-09-16)
 
 
