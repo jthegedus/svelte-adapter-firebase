@@ -4,7 +4,7 @@ import {BuildOptions} from 'esbuild';
 type AdapterOptions = {
 	esbuildOptions?: (defaultOptions: BuildOptions) => Promise<BuildOptions> | BuildOptions;
 	firebaseJsonPath?: string;
-	hostingSite?: string;
+	target?: string;
 	sourceRewriteMatch?: string;
 };
 
