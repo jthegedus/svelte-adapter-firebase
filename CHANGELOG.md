@@ -1,6 +1,13 @@
 # Changelog
 
 
+### [0.13.1](https://www.github.com/jthegedus/svelte-adapter-firebase/compare/v0.13.0...v0.13.1) (2021-10-10)
+
+
+### Bug Fixes
+
+* missed rename of hostingSite to target, bump kit for types ([#149](https://www.github.com/jthegedus/svelte-adapter-firebase/issues/149)) ([cebf821](https://www.github.com/jthegedus/svelte-adapter-firebase/commit/cebf8210c22291967b8ee2cbf3511736ddfbaef1))
+
 ## [0.13.0](https://www.github.com/jthegedus/svelte-adapter-firebase/compare/v0.12.0...v0.13.0) (2021-09-19)
 
 
