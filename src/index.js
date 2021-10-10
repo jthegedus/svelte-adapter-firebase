@@ -18,12 +18,12 @@ const entrypoint = function (options = {}) {
 			const {
 				esbuildOptions = undefined,
 				firebaseJsonPath = 'firebase.json',
-				hostingSite = undefined,
+				target = undefined,
 				sourceRewriteMatch = '**',
 			} = options;
 
 			utils.log.minor(`Adapter configuration:\n\t${JSON.stringify(options)}`);
-			const {functions, publicDir} = parseFirebaseConfiguration({firebaseJsonPath, hostingSite, sourceRewriteMatch});
+			const {functions, publicDir} = parseFirebaseConfiguration({firebaseJsonPath, target, sourceRewriteMatch});
 			ensureStaticResourceDirsDiffer({source: path.join(process.cwd(), config.kit.files.assets), dest: publicDir});
 
 			const functionsPackageJson = JSON.parse(readFileSync(path.join(functions.source, 'package.json'), 'utf-8'));
