@@ -41,10 +41,10 @@
     "esbuild": "^0.12.28"
   },
   "peerDependencies": {
-    "@sveltejs/kit": "^1.0.0-next.168"
+    "@sveltejs/kit": "^1.0.0-next.180"
   },
   "devDependencies": {
-    "@sveltejs/kit": "^1.0.0-next.168",
+    "@sveltejs/kit": "^1.0.0-next.180",
     "@types/express": "^4.17.13",
     "@types/node": "^14.17.15",
     "ava": "^3.15.0",
