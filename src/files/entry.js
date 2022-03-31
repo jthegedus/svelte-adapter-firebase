@@ -1,11 +1,8 @@
-// @ts-expect-error will be resolve by https://github.com/sveltejs/kit/pull/2285
-import * as App from '../output/server/app.js';
-import {toSvelteKitRequest} from './firebase-to-svelte-kit.js';
+import { Server } from 'SERVER';
+import { manifest } from 'MANIFEST';
+import { toSvelteKitRequest } from './firebase-to-svelte-kit.js';
 
-/** @type {import('@sveltejs/kit').App} */
-const app = App;
-
-app.init();
+const server = new Server(manifest);
 
 /**
  * Firebase Cloud Function handler for SvelteKit
@@ -20,9 +17,10 @@ app.init();
  * @returns {Promise<void>}
  */
 export default async function svelteKit(request, response) {
-	const rendered = await app.render(toSvelteKitRequest(request));
+  const rendered = await server.respond(toSvelteKitRequest(request));
+  const body = await rendered.text();
 
-	return rendered
-		? response.writeHead(rendered.status, rendered.headers).end(rendered.body)
-		: response.writeHead(404, 'Not Found').end();
+  return rendered
+    ? response.writeHead(rendered.status, rendered.headers).end(body)
+    : response.writeHead(404, 'Not Found').end();
 }
