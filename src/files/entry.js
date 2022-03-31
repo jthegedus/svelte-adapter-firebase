@@ -17,10 +17,10 @@ const server = new Server(manifest);
  * @returns {Promise<void>}
  */
 export default async function svelteKit(request, response) {
-  const rendered = await server.respond(toSvelteKitRequest(request));
-  const body = await rendered.text();
+    const rendered = await server.respond(toSvelteKitRequest(request));
+    const body = await rendered.text();
 
-  return rendered
-    ? response.writeHead(rendered.status, rendered.headers).end(body)
-    : response.writeHead(404, 'Not Found').end();
+    return rendered
+        ? response.writeHead(rendered.status, rendered.headers).end(body)
+        : response.writeHead(404, 'Not Found').end();
 }
