@@ -1,7 +1,7 @@
-import {readFileSync} from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 import path from 'path';
 import process from 'process';
-import {fileURLToPath} from 'url';
+import { fileURLToPath } from 'url';
 import esbuild from 'esbuild';
 import {
 	ensureCompatibleCloudFunctionVersion,
@@ -14,7 +14,7 @@ import {
 const entrypoint = function (options = {}) {
 	return {
 		name: 'svelte-adapter-firebase',
-		async adapt({utils, config}) {
+		async adapt(builder) {
 			const {
 				esbuildOptions = undefined,
 				firebaseJsonPath = 'firebase.json',
@@ -22,9 +22,9 @@ const entrypoint = function (options = {}) {
 				sourceRewriteMatch = '**',
 			} = options;
 
-			utils.log.minor(`Adapter configuration:\n\t${JSON.stringify(options)}`);
-			const {functions, publicDir} = parseFirebaseConfiguration({firebaseJsonPath, target, sourceRewriteMatch});
-			ensureStaticResourceDirsDiffer({source: path.join(process.cwd(), config.kit.files.assets), dest: publicDir});
+			builder.log.minor(`Adapter configuration:\n\t${JSON.stringify(options)}`);
+			const { functions, publicDir } = parseFirebaseConfiguration({ firebaseJsonPath, target, sourceRewriteMatch });
+			ensureStaticResourceDirsDiffer({ source: path.join(process.cwd(), builder.getStaticDirectory()), dest: publicDir });
 
 			const functionsPackageJson = JSON.parse(readFileSync(path.join(functions.source, 'package.json'), 'utf-8'));
 			if (!functionsPackageJson?.main) {
@@ -42,14 +42,26 @@ const entrypoint = function (options = {}) {
 				svelteSSR: dirs.serverDirname.replace(/\W/g, '') + 'Server',
 			};
 
+			const relativePath = path.posix.relative(dirs.tmp, builder.getServerDirectory());
 			const runtimeVersion = ensureCompatibleCloudFunctionVersion({
 				functionsPackageJsonEngine: functionsPackageJson?.engines?.node,
 				firebaseJsonFunctionsRuntime: functions.runtime,
 			});
-			utils.rimraf(dirs.tmp);
-			utils.rimraf(dirs.serverPath);
-			utils.copy(path.join(dirs.files, 'entry.js'), path.join(dirs.tmp, 'entry.js'));
-			utils.copy(path.join(dirs.files, 'firebase-to-svelte-kit.js'), path.join(dirs.tmp, 'firebase-to-svelte-kit.js'));
+			builder.rimraf(dirs.tmp);
+			builder.rimraf(dirs.serverPath);
+			builder.copy(
+				path.join(dirs.files, 'entry.js')
+				, path.join(dirs.tmp, 'entry.js'), {
+				replace: { SERVER: `${relativePath}/index.js`, MANIFEST: `./manifest.js` }
+			});
+			builder.copy(path.join(dirs.files, 'firebase-to-svelte-kit.js'), path.join(dirs.tmp, 'firebase-to-svelte-kit.js'));
+
+			writeFileSync(
+				`${dirs.tmp}/manifest.js`,
+				`export const manifest = ${builder.generateManifest({
+					relativePath
+				})};\n`
+			);
 
 			/** @type {esbuild.BuildOptions} */
 			const defaultOptions = {
@@ -65,37 +77,36 @@ const entrypoint = function (options = {}) {
 				? await esbuildOptions(defaultOptions)
 				: defaultOptions;
 			await esbuild.build(buildOptions);
-			utils.log.minor(logRelativeDir('Writing Cloud Function server assets to', dirs.serverPath));
+			builder.log.minor(logRelativeDir('Writing Cloud Function server assets to', dirs.serverPath));
 
 			try {
 				if (!readFileSync(ssrFunc.entrypoint, 'utf-8').includes(`${functions.name} =`)) {
-					utils.log.warn(`Add the following Cloud Function to ${ssrFunc.entrypoint}`);
-					utils.log.warn(`
-let ${ssrFunc.svelteSSR};
-exports.${functions.name} = functions.region("us-central1").https.onRequest(async (request, response) => {
-	if (!${ssrFunc.svelteSSR}) {
-		functions.logger.info("Initialising SvelteKit SSR entry");
-		${ssrFunc.svelteSSR} = require("./${dirs.serverDirname}/index").default;
-		functions.logger.info("SvelteKit SSR entry initialised!");
-	}
-	functions.logger.info("Requested resource: " + request.originalUrl);
-	return ${ssrFunc.svelteSSR}(request, response);
-});
-		`);
+					builder.log.warn(`Add the following Cloud Function to ${ssrFunc.entrypoint}`);
+					builder.log.warn(`
+              let ${ssrFunc.svelteSSR};
+              exports.${functions.name} = functions.region("us-central1").https.onRequest(async (request, response) => {
+                if (!${ssrFunc.svelteSSR}) {
+                  functions.logger.info("Initialising SvelteKit SSR entry");
+                  ${ssrFunc.svelteSSR} = require("./${dirs.serverDirname}/index").default;
+                  functions.logger.info("SvelteKit SSR entry initialised!");
+                }
+                functions.logger.info("Requested resource: " + request.originalUrl);
+                return ${ssrFunc.svelteSSR}(request, response);
+              });
+                  `);
 				}
 			} catch (error) {
 				throw new Error(`Error reading Cloud Function entrypoint file: ${ssrFunc.entrypoint}. ${error.message}`);
 			}
 
-			utils.log.minor(logRelativeDir('Erasing destination static asset dir before processing', publicDir));
-			utils.rimraf(publicDir);
+			builder.log.minor(logRelativeDir('Erasing destination static asset dir before processing', publicDir));
+			builder.rimraf(publicDir);
 
-			utils.log.minor(logRelativeDir('Writing client application to', publicDir));
-			utils.copy_static_files(publicDir);
-			utils.copy_client_files(publicDir);
+			builder.log.minor(logRelativeDir('Writing client application to', publicDir));
+			builder.writeStatic(publicDir);
+			builder.writeClient(publicDir);
 
-			utils.log.minor(logRelativeDir('Prerendering static pages to', publicDir));
-			await utils.prerender({dest: publicDir});
+			builder.log.minor(logRelativeDir('Prerendering static pages to', publicDir));
 		},
 	};
 };
