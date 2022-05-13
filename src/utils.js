@@ -52,39 +52,12 @@ function isString(parameter) {
 }
 
 /**
- * Parse provided firebase.json to match against SvelteKit config for target & Rewrite rule.
- *
- * @param {{
- * 	firebaseJsonPath: string
- * 	sourceRewriteMatch: string;
- * 	target: string|undefined;
- * }} param
- * @returns {{
- * 	functions: { name: string, source: string, runtime: string | undefined };
- * 	publicDir: string
- * }} Functions config with `public` dir
+ * Extract Hosting Config from FirebaseConfig
+ * @type {FirebaseConfig}
+ * sourceRewriteMatch: string;
+ * target: string|undefined;
  */
-function parseFirebaseConfiguration({target, sourceRewriteMatch, firebaseJsonPath}) {
-	const firebaseJson = path.resolve(firebaseJsonPath);
-
-	if (!existsSync(firebaseJson)) {
-		throw new Error(`Error: The adapter requires a "firebase.json" file. "firebaseJsonPath:${firebaseJsonPath}" does not exist.`);
-	}
-
-	/**
-	 * @type {FirebaseConfig}
-	 */
-	let firebaseConfig;
-	try {
-		firebaseConfig = JSON.parse(readFileSync(firebaseJson, 'utf-8'));
-	} catch (error) {
-		throw new Error(`Error: failure while parsing ${firebaseJsonPath}. ${error.message}`);
-	}
-
-	if (!firebaseConfig?.hosting) {
-		throw new Error('Error: "hosting" config missing from "firebase.json"');
-	}
-
+function extractHostingConfig(firebaseConfig, sourceRewriteMatch, target) {
 	// Force "hosting" field to be array
 	const firebaseHostingConfig = Array.isArray(firebaseConfig.hosting)
 		? firebaseConfig.hosting
@@ -123,6 +96,46 @@ function parseFirebaseConfiguration({target, sourceRewriteMatch, firebaseJsonPat
 	if (!Array.isArray(hostingConfig?.rewrites)) {
 		throw new TypeError(`Error: Required "hosting[].rewrites" field not found for matched hosting configuration. Specify your Cloud Function with rewrite rule matching "source":"${sourceRewriteMatch}"`);
 	}
+
+	return hostingConfig;
+}
+
+/**
+ * Parse provided firebase.json to mat
+ against SvelteKit config for target & Rewrite rule.
+ *
+ * @param {{
+ * 	firebaseJsonPath: string
+ * 	sourceRewriteMatch: string;
+ * 	target: string|undefined;
+ * }} param
+ * @returns {{
+ * 	functions: { name: string, source: string, runtime: string | undefined };
+ * 	publicDir: string
+ * }} Functions config with `public` dir
+ */
+function parseFirebaseConfiguration({target, sourceRewriteMatch, firebaseJsonPath}) {
+	const firebaseJson = path.resolve(firebaseJsonPath);
+
+	if (!existsSync(firebaseJson)) {
+		throw new Error(`Error: The adapter requires a "firebase.json" file. "firebaseJsonPath:${firebaseJsonPath}" does not exist.`);
+	}
+
+	/**
+	 * @type {FirebaseConfig}
+	 */
+	let firebaseConfig;
+	try {
+		firebaseConfig = JSON.parse(readFileSync(firebaseJson, 'utf-8'));
+	} catch (error) {
+		throw new Error(`Error: failure while parsing ${firebaseJsonPath}. ${error.message}`);
+	}
+
+	if (!firebaseConfig?.hosting) {
+		throw new Error('Error: "hosting" config missing from "firebase.json"');
+	}
+
+	const hostingConfig = extractHostingConfig(firebaseConfig, sourceRewriteMatch, target);
 
 	const rewriteConfig = hostingConfig.rewrites.find(item => item.source === sourceRewriteMatch && (item.function || item.run));
 

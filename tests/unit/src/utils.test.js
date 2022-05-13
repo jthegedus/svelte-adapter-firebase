@@ -74,7 +74,7 @@ test(
 test(
 	'Firebase config does not exist',
 	t => {
-		const firebaseJsonPath = fileURLToPath(new URL('./does_not_exist.json', import.meta.url));
+		const firebaseJsonPath = fileURLToPath(new URL('does_not_exist.json', import.meta.url));
 		const config = {target: undefined, sourceRewriteMatch: '**', firebaseJsonPath};
 		t.throws(
 			() => parseFirebaseConfiguration(config),

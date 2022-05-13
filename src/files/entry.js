@@ -1,6 +1,6 @@
-import { Server } from 'SERVER';
-import { manifest } from 'MANIFEST';
-import { toSvelteKitRequest } from './firebase-to-svelte-kit.js';
+import {Server} from 'SERVER';
+import {manifest} from 'MANIFEST';
+import {toSvelteKitRequest} from './firebase-to-svelte-kit.js';
 
 const server = new Server(manifest);
 
