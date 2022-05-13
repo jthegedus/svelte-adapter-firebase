@@ -1,7 +1,7 @@
-import { readFileSync, writeFileSync } from 'fs';
+import {readFileSync, writeFileSync} from 'fs';
 import path from 'path';
 import process from 'process';
-import { fileURLToPath } from 'url';
+import {fileURLToPath} from 'url';
 import esbuild from 'esbuild';
 import {
 	ensureCompatibleCloudFunctionVersion,
@@ -23,8 +23,8 @@ const entrypoint = function (options = {}) {
 			} = options;
 
 			builder.log.minor(`Adapter configuration:\n\t${JSON.stringify(options)}`);
-			const { functions, publicDir } = parseFirebaseConfiguration({ firebaseJsonPath, target, sourceRewriteMatch });
-			ensureStaticResourceDirsDiffer({ source: path.join(process.cwd(), builder.getStaticDirectory()), dest: publicDir });
+			const {functions, publicDir} = parseFirebaseConfiguration({firebaseJsonPath, target, sourceRewriteMatch});
+			ensureStaticResourceDirsDiffer({source: path.join(process.cwd(), builder.getStaticDirectory()), dest: publicDir});
 
 			const functionsPackageJson = JSON.parse(readFileSync(path.join(functions.source, 'package.json'), 'utf-8'));
 			if (!functionsPackageJson?.main) {
@@ -32,7 +32,7 @@ const entrypoint = function (options = {}) {
 			}
 
 			const dirs = {
-				files: fileURLToPath(new URL('./files', import.meta.url)),
+				files: fileURLToPath(new URL('files', import.meta.url)),
 				serverDirname: functions.name ?? 'svelteKit',
 				serverPath: path.join(functions.source, path.dirname(functionsPackageJson.main), functions.name ?? 'svelteKit'),
 				tmp: path.join('.svelte-kit', 'firebase'),
@@ -52,15 +52,15 @@ const entrypoint = function (options = {}) {
 			builder.copy(
 				path.join(dirs.files, 'entry.js')
 				, path.join(dirs.tmp, 'entry.js'), {
-				replace: { SERVER: `${relativePath}/index.js`, MANIFEST: `./manifest.js` }
-			});
+					replace: {SERVER: `${relativePath}/index.js`, MANIFEST: './manifest.js'},
+				});
 			builder.copy(path.join(dirs.files, 'firebase-to-svelte-kit.js'), path.join(dirs.tmp, 'firebase-to-svelte-kit.js'));
 
 			writeFileSync(
 				`${dirs.tmp}/manifest.js`,
 				`export const manifest = ${builder.generateManifest({
-					relativePath
-				})};\n`
+					relativePath,
+				})};\n`,
 			);
 
 			/** @type {esbuild.BuildOptions} */

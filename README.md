@@ -68,7 +68,6 @@ In your standard SvelteKit project:
 export default {
   kit: {
 +   adapter: firebase(),
-    target: "#svelte",
   },
 };
 ```
@@ -87,6 +86,7 @@ the Adapter and SvelteKit becoming incompatible. Here is a compatibility table:
 
 | Adapter Version | SvelteKit Version    |
 | --------------- | -------------------- |
+| `0.14.0`        | `1.0.0-next.329`     |
 | `0.13.1`        | `1.0.0-next.180`     |
 | `0.13.0`        | `1.0.0-next.168`     |
 | `0.12.x`        | `1.0.0-next.165`     |
@@ -216,7 +216,6 @@ import firebase from "svelte-adapter-firebase";
 export default {
   kit: {
     adapter: firebase({ target: "blog" }),
-    target: "#svelte",
   },
 };
 ```
@@ -238,10 +237,9 @@ export default {
     adapter: firebase({
       esbuildBuildOptions: (defaultOptions: BuildOptions) => Promise<BuildOptions> | BuildOptions,
       firebaseJsonPath: "",
-      target: "",
+      target: "svelte-func-single-site",
       sourceRewriteMatch: "",
     }),
-    target: "#svelte",
   },
 };
 ```
@@ -265,6 +263,7 @@ import firebase from "svelte-adapter-firebase";
 export default {
   kit: {
     adapter: firebase({
+      target: "svelte-func-single-site",
       esbuildBuildOptions(defaultOptions) {
         return {
           ...defaultOptions,
@@ -272,8 +271,7 @@ export default {
           plugins: [],
         };
       },
-    }),
-    target: "#svelte",
+    })
   },
 };
 ```
@@ -323,8 +321,10 @@ import firebase from "svelte-adapter-firebase";
 /** @type {import('@sveltejs/kit').Config} */
 export default {
   kit: {
-    adapter: firebase({ firebaseJsonPath: "../firebase.json" }),
-    target: "#svelte",
+    adapter: firebase({
+      target: "svelte-func-single-site",
+      firebaseJsonPath: "../firebase.json",
+    }),
   },
 };
 ```
