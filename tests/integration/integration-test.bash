@@ -47,6 +47,9 @@ echo "${INDICATOR}PWD after cd to TEST_DIR: ${PWD}"
 echo "${INDICATOR}Set package.json:scripts.build to verbose mode"
 sed -i -e 's/svelte-kit build/svelte-kit build --verbose/g' "${TEST_DIR}/${NESTED_APP_DIR}/package.json"
 
+echo "${INDICATOR}Install kit template deps"
+npm install 
+
 echo "${INDICATOR}Install svelte-adapter-firebase from ${SCRIPT_PATH}/../../"
 npm install "${SCRIPT_PATH}/../../"
 
