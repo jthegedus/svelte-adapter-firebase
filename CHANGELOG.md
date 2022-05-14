@@ -4,7 +4,7 @@
 
 ### Bug Fixes
 
-- Supports the latest sveltekit apis (tested up until sveltekit 329) ([[#159](https://github.com/jthegedus/svelte-adapter-firebase/issues/159))
+- Supports the latest sveltekit apis (tested up until sveltekit 330) ([[#159](https://github.com/jthegedus/svelte-adapter-firebase/issues/159))
 - Thanks to nielsvandermolen and co3k for the patch submissions.
 
 ### [0.13.1](https://www.github.com/jthegedus/svelte-adapter-firebase/compare/v0.13.0...v0.13.1) (2021-10-10)

@@ -54,8 +54,11 @@ npm --prefix functions install
 echo "${INDICATOR}Build Kit todos site"
 npm run build
 
+echo "${INDICATOR}Install firebase-tools"
+npm install firebase-tools
+
 echo "${INDICATOR}Starting emulator"
-firebase emulators:start --only functions,hosting &
+npx firebase emulators:start --only functions,hosting &
 
 sleep 8
 
