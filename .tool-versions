@@ -4,4 +4,4 @@ pnpm 6.13.0
 
 # use for Firebase Emulator
 
-java openjdk-14.0.2
+java openjdk-18.0.1.1
