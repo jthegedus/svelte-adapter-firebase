@@ -1,7 +1,7 @@
 import {Server} from 'SERVER';
 import {manifest} from 'MANIFEST';
 import {toSvelteKitRequest} from './firebase-to-svelte-kit.js';
-/** @type {import('@sveltejs/kit').App} */
+
 const server = new Server(manifest);
 /**
  * Firebase Cloud Function handler for SvelteKit

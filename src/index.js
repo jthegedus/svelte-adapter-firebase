@@ -25,7 +25,6 @@ const entrypoint = function (options = {}) {
 			builder.log.minor(`Adapter configuration:\n\t${JSON.stringify(options)}`);
 			const {functions, publicDir} = parseFirebaseConfiguration({firebaseJsonPath, target, sourceRewriteMatch});
 			ensureStaticResourceDirsDiffer({source: path.join(process.cwd(), builder.getStaticDirectory()), dest: publicDir});
-
 			const functionsPackageJson = JSON.parse(readFileSync(path.join(functions.source, 'package.json'), 'utf-8'));
 			if (!functionsPackageJson?.main) {
 				throw new Error(`Error reading ${functionsPackageJson}. Required field "main" missing.`);
