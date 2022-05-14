@@ -1,2 +1,3 @@
-import { installFetch } from '@sveltejs/kit/install-fetch';
+import {installFetch} from '@sveltejs/kit/install-fetch';
+
 installFetch();

@@ -11,10 +11,9 @@ IFS=$'\n\t'
 #
 # Usage:
 #
-# tests/integration/integration-test.bash "functions_single_site" "public/about/index.html" "functions/sveltekit/index.js" "."
-# tests/integration/integration-test.bash "nested_app_dirs" "public/about/index.html" "functions/sveltekit/index.js" "app"
-# tests/integration/integration-test.bash "run_custom_build_dir" "public/about/index.html" "custom-cloud-run-build-dir/index.js" "."
-# tests/integration/integration-test.bash "run_single_site" "public/about/index.html" ".cloudrun/index.js" "."
+# tests/integration/integration-test.bash "functions_single_site" "public/_app/manifest.json" "functions/sveltekit/index.js" "."
+# tests/integration/integration-test.bash "nested_app_dirs" "public/_app/manifest.json" "functions/sveltekit/index.js" "app"
+# tests/integration/integration-test.bash "run_service_id" "public/_app/manifest.json" "functions/cloudrun/index.js" "."
 
 SOURCE_DIR="$1"
 PUBLIC_FILENAME="$2"
@@ -49,7 +48,7 @@ echo "${INDICATOR}Set package.json:scripts.build to verbose mode"
 sed -i -e 's/svelte-kit build/svelte-kit build --verbose/g' "${TEST_DIR}/${NESTED_APP_DIR}/package.json"
 
 echo "${INDICATOR}Install kit template deps"
-npm install
+npm install 
 
 echo "${INDICATOR}Install svelte-adapter-firebase from ${SCRIPT_PATH}/../../"
 npm install "${SCRIPT_PATH}/../../"

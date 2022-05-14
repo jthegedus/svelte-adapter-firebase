@@ -1,7 +1,7 @@
-import { readFileSync, writeFileSync } from 'fs';
+import {readFileSync, writeFileSync} from 'fs';
 import path from 'path';
 import process from 'process';
-import { fileURLToPath } from 'url';
+import {fileURLToPath} from 'url';
 import esbuild from 'esbuild';
 import {
 	ensureCompatibleCloudFunctionVersion,
@@ -23,15 +23,15 @@ const entrypoint = function (options = {}) {
 			} = options;
 
 			builder.log.minor(`Adapter configuration:\n\t${JSON.stringify(options)}`);
-			const { functions, publicDir } = parseFirebaseConfiguration({ firebaseJsonPath, target, sourceRewriteMatch });
-			ensureStaticResourceDirsDiffer({ source: path.join(process.cwd(), builder.getStaticDirectory()), dest: publicDir });
+			const {functions, publicDir} = parseFirebaseConfiguration({firebaseJsonPath, target, sourceRewriteMatch});
+			ensureStaticResourceDirsDiffer({source: path.join(process.cwd(), builder.getStaticDirectory()), dest: publicDir});
 			const functionsPackageJson = JSON.parse(readFileSync(path.join(functions.source, 'package.json'), 'utf-8'));
 			if (!functionsPackageJson?.main) {
 				throw new Error(`Error reading ${functionsPackageJson}. Required field "main" missing.`);
 			}
 
 			const dirs = {
-				files: fileURLToPath(new URL('./files', import.meta.url)),
+				files: fileURLToPath(new URL('files', import.meta.url)),
 				serverDirname: functions.name ?? 'svelteKit',
 				serverPath: path.join(functions.source, path.dirname(functionsPackageJson.main), functions.name ?? 'svelteKit'),
 				tmp: path.join('.svelte-kit', 'firebase'),
@@ -51,16 +51,9 @@ const entrypoint = function (options = {}) {
 			builder.copy(
 				path.join(dirs.files, 'entry.js')
 				, path.join(dirs.tmp, 'entry.js'), {
-				replace: { SERVER: `${relativePath}/index.js`, MANIFEST: `./manifest.js` }
-			});
+					replace: {SERVER: `${relativePath}/index.js`, MANIFEST: `${relativePath}/manifest.js`},
+				});
 			builder.copy(path.join(dirs.files, 'firebase-to-svelte-kit.js'), path.join(dirs.tmp, 'firebase-to-svelte-kit.js'));
-
-			writeFileSync(
-				`${dirs.tmp}/manifest.js`,
-				`export const manifest = ${builder.generateManifest({
-					relativePath
-				})};\n`
-			);
 
 			/** @type {esbuild.BuildOptions} */
 			const defaultOptions = {
@@ -106,10 +99,26 @@ const entrypoint = function (options = {}) {
 			builder.writeClient(publicDir);
 
 			builder.log.minor(logRelativeDir('Prerendering static pages to', publicDir));
-			const {paths} = await builder.prerender({dest: publicDir});
 			writeFileSync(`${dirs.tmp}/manifest.js`, `export const manifest = ${builder.generateManifest({
 				relativePath,
-			})};\n\nexport const prerendered = new Set(${JSON.stringify(paths)});\n`);
+			})};\n`);
+			builder.log.minor('Writing routes...');
+
+			builder.mkdirp(`${dirs.tmp}/config`);
+			writeFileSync(
+				`${dirs.tmp}/config/routes.json`,
+				JSON.stringify([
+					{
+						src: `/${builder.appDir}/.+`,
+						headers: {
+							'cache-control': 'public, immutable, max-age=31536000',
+						},
+					},
+					{
+						handle: 'filesystem',
+					},
+				]),
+			);
 		},
 	};
 };
