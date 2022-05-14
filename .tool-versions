@@ -1,5 +1,7 @@
 firebase 9.18.0
-nodejs 14.17.5
+nodejs 16.14.2
 pnpm 6.13.0
+
 # use for Firebase Emulator
+
 java openjdk-14.0.2
