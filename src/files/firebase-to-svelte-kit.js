@@ -6,7 +6,7 @@
  */
 export function toSvelteKitRequest(request) {
 	const host = `${request.headers['x-forwarded-proto']}://${request.headers.host}`;
-	const {href} = new URL(request.url || '', host);
+	const {href, pathname, searchParams: searchParameters} = new URL(request.url || '', host);
 	// eslint-disable-next-line no-undef
 	return new Request(href, {
 		method: request.method,
@@ -14,6 +14,9 @@ export function toSvelteKitRequest(request) {
 		body: request.rawBody
 			? request.rawBody
 			: null,
+		host,
+		path: pathname,
+		query: searchParameters,
 	});
 }
 

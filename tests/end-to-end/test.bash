@@ -12,7 +12,7 @@ IFS=$'\n\t'
 #
 # Usage:
 #
-# tests/integration/test.bash
+# tests/end-to-end/test.bash
 
 SCRIPT_PATH=$(dirname "$(realpath -s "$0")")
 TEST_DIR="$(mktemp -dt svelte-adapter-firebase-XXXX)"
@@ -90,23 +90,23 @@ echo "${INDICATOR}Test POST to '/todos' API"
 EXPECTED_SUBSTRING='"text":"asdf"'
 # expected result = {"uid":"","created_at":01234,"text":"asdf","done":false}
 # generated from the browser & copied with 'copy for cURL' browser context menu
-RESULT="$(curl "http://localhost:${PORT}/todos.json" \
+RESULT="$(curl -X POST "http://localhost:${PORT}/todos" \
 	-H "User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0" \
-	-H "Accept: application/json" \
+	-H "Accept: */*" \
 	-H "Accept-Language: en-GB,en;q=0.5" \
 	--compressed \
 	-H "Referer: http://localhost:${PORT}/todos" \
 	-H "Content-Type: multipart/form-data; boundary=---------------------------349341627025106406523834848301" \
 	-H "Origin: http://localhost:${PORT}" \
 	-H "Connection: keep-alive" \
-	-H "Cookie: userid=0a52e7d5-25d4-4b12-b307-38756d00bbcb" \
+	-H "Cookie: userid=f6524441-8d1d-4292-898e-2d9fbbb212ed" \
 	-H "Sec-Fetch-Dest: empty" \
 	-H "Sec-Fetch-Mode: cors" \
 	-H "Sec-Fetch-Site: same-origin" \
 	-H 'Sec-GPC: 1' --data-binary $'-----------------------------349341627025106406523834848301\r\nContent-Disposition: form-data; name="text"\r\n\r\nasdf\r\n-----------------------------349341627025106406523834848301--\r\n')"
 echo "$RESULT"
 if [[ "${RESULT}" != *"${EXPECTED_SUBSTRING}"* ]]; then
-	echo "${INDICATOR}Failed POSTing to localhost:${PORT}/todos.json"
+	echo "${INDICATOR}Failed POSTing to localhost:${PORT}/todos"
 	exit 1
 fi
 

@@ -52,16 +52,9 @@ const entrypoint = function (options = {}) {
 			builder.copy(
 				path.join(dirs.files, 'entry.js')
 				, path.join(dirs.tmp, 'entry.js'), {
-					replace: {SERVER: `${relativePath}/index.js`, MANIFEST: './manifest.js'},
+					replace: {SERVER: `${relativePath}/index.js`, MANIFEST: `${relativePath}/manifest.js`},
 				});
 			builder.copy(path.join(dirs.files, 'firebase-to-svelte-kit.js'), path.join(dirs.tmp, 'firebase-to-svelte-kit.js'));
-
-			writeFileSync(
-				`${dirs.tmp}/manifest.js`,
-				`export const manifest = ${builder.generateManifest({
-					relativePath,
-				})};\n`,
-			);
 
 			/** @type {esbuild.BuildOptions} */
 			const defaultOptions = {
@@ -107,6 +100,26 @@ const entrypoint = function (options = {}) {
 			builder.writeClient(publicDir);
 
 			builder.log.minor(logRelativeDir('Prerendering static pages to', publicDir));
+			writeFileSync(`${dirs.tmp}/manifest.js`, `export const manifest = ${builder.generateManifest({
+				relativePath,
+			})};\n`);
+			builder.log.minor('Writing routes...');
+
+			builder.mkdirp(`${dirs.tmp}/config`);
+			writeFileSync(
+				`${dirs.tmp}/config/routes.json`,
+				JSON.stringify([
+					{
+						src: `/${builder.appDir}/.+`,
+						headers: {
+							'cache-control': 'public, immutable, max-age=31536000',
+						},
+					},
+					{
+						handle: 'filesystem',
+					},
+				]),
+			);
 		},
 	};
 };
