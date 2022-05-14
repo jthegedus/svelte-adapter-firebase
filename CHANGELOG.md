@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.14.0](https://www.github.com/jthegedus/svelte-adapter-firebase/compare/v0.13.1...v0.14.0) (2022-05-14)
+
+
+### Features
+
+* Support for SvelteKit Next 303 ([#159](https://www.github.com/jthegedus/svelte-adapter-firebase/issues/159)) ([d10fcf6](https://www.github.com/jthegedus/svelte-adapter-firebase/commit/d10fcf6b68b65f59363aa9d25210b0f9f2b63793))
+* upgrade to sveltekit 329 ([#161](https://www.github.com/jthegedus/svelte-adapter-firebase/issues/161)) ([bf7c2e9](https://www.github.com/jthegedus/svelte-adapter-firebase/commit/bf7c2e90e61f7562993d465bc90b4ab1232dfaac))
+
+
+### Bug Fixes
+
+* reading 'log' error ([#157](https://www.github.com/jthegedus/svelte-adapter-firebase/issues/157)) ([f855bfb](https://www.github.com/jthegedus/svelte-adapter-firebase/commit/f855bfb7a18ed9186463e8a04af8e4ef886d3b6a))
+
 ## [0.14.0](https://www.github.com/jthegedus/svelte-adapter-firebase/compare/v0.13.1...v0.14.0) (2022-05-13)
 
 ### Bug Fixes
