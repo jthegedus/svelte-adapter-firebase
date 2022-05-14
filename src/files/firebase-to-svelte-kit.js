@@ -6,7 +6,7 @@
  */
 export function toSvelteKitRequest(request) {
 	const host = `${request.headers['x-forwarded-proto']}://${request.headers.host}`;
-	const { href, pathname, searchParams: searchParameters } = new URL(request.url || '', host);
+	const {href, pathname, searchParams: searchParameters} = new URL(request.url || '', host);
 
 	return new Request(href, {
 		method: request.method,
