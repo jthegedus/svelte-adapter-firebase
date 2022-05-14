@@ -1,9 +1,9 @@
-import {App} from 'APP';
-import {manifest} from 'MANIFEST';
-import {toSvelteKitRequest} from './firebase-to-svelte-kit.js';
 
-/** @type {import('@sveltejs/kit').App} */
-const app = new App(manifest);
+import { Server } from 'SERVER';
+import { manifest } from 'MANIFEST';
+import { toSvelteKitRequest } from './firebase-to-svelte-kit.js';
+
+const server = new Server(manifest);
 
 /**
  * Firebase Cloud Function handler for SvelteKit
@@ -18,8 +18,8 @@ const app = new App(manifest);
  * @returns {Promise<void>}
  */
 export default async function svelteKit(request, response) {
-	const rendered = await app.render(toSvelteKitRequest(request));
-  const body = await rendered.text();
+	const rendered = await server.respond(toSvelteKitRequest(request));
+	const body = await rendered.text();
 
 	return rendered
 		? response.writeHead(rendered.status, rendered.headers).end(body)

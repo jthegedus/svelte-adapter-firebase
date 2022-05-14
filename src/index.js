@@ -1,7 +1,7 @@
-import {readFileSync, writeFileSync} from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 import path from 'path';
 import process from 'process';
-import {fileURLToPath} from 'url';
+import { fileURLToPath } from 'url';
 import esbuild from 'esbuild';
 import {
 	ensureCompatibleCloudFunctionVersion,
@@ -23,9 +23,8 @@ const entrypoint = function (options = {}) {
 			} = options;
 
 			builder.log.minor(`Adapter configuration:\n\t${JSON.stringify(options)}`);
-			const {functions, publicDir} = parseFirebaseConfiguration({firebaseJsonPath, target, sourceRewriteMatch});
-			ensureStaticResourceDirsDiffer({source: path.join(process.cwd(), builder.getStaticDirectory()), dest: publicDir});
-
+			const { functions, publicDir } = parseFirebaseConfiguration({ firebaseJsonPath, target, sourceRewriteMatch });
+			ensureStaticResourceDirsDiffer({ source: path.join(process.cwd(), builder.getStaticDirectory()), dest: publicDir });
 			const functionsPackageJson = JSON.parse(readFileSync(path.join(functions.source, 'package.json'), 'utf-8'));
 			if (!functionsPackageJson?.main) {
 				throw new Error(`Error reading ${functionsPackageJson}. Required field "main" missing.`);
@@ -49,8 +48,19 @@ const entrypoint = function (options = {}) {
 			});
 			builder.rimraf(dirs.tmp);
 			builder.rimraf(dirs.serverPath);
-			builder.copy(path.join(dirs.files, 'entry.js'), path.join(dirs.tmp, 'entry.js'), {replace: {APP: `${relativePath}/app.js`, MANIFEST: `${relativePath}/manifest.js`}});
+			builder.copy(
+				path.join(dirs.files, 'entry.js')
+				, path.join(dirs.tmp, 'entry.js'), {
+				replace: { SERVER: `${relativePath}/index.js`, MANIFEST: `./manifest.js` }
+			});
 			builder.copy(path.join(dirs.files, 'firebase-to-svelte-kit.js'), path.join(dirs.tmp, 'firebase-to-svelte-kit.js'));
+
+			writeFileSync(
+				`${dirs.tmp}/manifest.js`,
+				`export const manifest = ${builder.generateManifest({
+					relativePath
+				})};\n`
+			);
 
 			/** @type {esbuild.BuildOptions} */
 			const defaultOptions = {
@@ -72,17 +82,17 @@ const entrypoint = function (options = {}) {
 				if (!readFileSync(ssrFunc.entrypoint, 'utf-8').includes(`${functions.name} =`)) {
 					builder.log.warn(`Add the following Cloud Function to ${ssrFunc.entrypoint}`);
 					builder.log.warn(`
-let ${ssrFunc.svelteSSR};
-exports.${functions.name} = functions.region("us-central1").https.onRequest(async (request, response) => {
-	if (!${ssrFunc.svelteSSR}) {
-		functions.logger.info("Initialising SvelteKit SSR entry");
-		${ssrFunc.svelteSSR} = require("./${dirs.serverDirname}/index").default;
-		functions.logger.info("SvelteKit SSR entry initialised!");
-	}
-	functions.logger.info("Requested resource: " + request.originalUrl);
-	return ${ssrFunc.svelteSSR}(request, response);
-});
-		`);
+              let ${ssrFunc.svelteSSR};
+              exports.${functions.name} = functions.region("us-central1").https.onRequest(async (request, response) => {
+                if (!${ssrFunc.svelteSSR}) {
+                  functions.logger.info("Initialising SvelteKit SSR entry");
+                  ${ssrFunc.svelteSSR} = require("./${dirs.serverDirname}/index").default;
+                  functions.logger.info("SvelteKit SSR entry initialised!");
+                }
+                functions.logger.info("Requested resource: " + request.originalUrl);
+                return ${ssrFunc.svelteSSR}(request, response);
+              });
+                  `);
 				}
 			} catch (error) {
 				throw new Error(`Error reading Cloud Function entrypoint file: ${ssrFunc.entrypoint}. ${error.message}`);
