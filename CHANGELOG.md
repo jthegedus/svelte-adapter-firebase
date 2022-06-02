@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.14.1](https://www.github.com/pham/svelte-adapter-firebase/compare/v0.14.0...v0.14.1) (2022-06-02)
+
+
+### Bug Fixes
+
+* **#169:** Replace @sveltejs/kit/install-fetch with @sveltejs/kit/node/polyfills ([cc00699](https://www.github.com/pham/svelte-adapter-firebase/commit/cc00699fdf968a6a771a644ea75cc25877ed9dc2))
+
 ## [0.14.0](https://www.github.com/jthegedus/svelte-adapter-firebase/compare/v0.13.1...v0.14.0) (2022-05-14)
 
 
