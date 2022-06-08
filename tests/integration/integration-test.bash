@@ -11,9 +11,9 @@ IFS=$'\n\t'
 #
 # Usage:
 #
-# tests/integration/integration-test.bash "functions_single_site" "public/_app/manifest.json" "functions/sveltekit/index.js" "."
-# tests/integration/integration-test.bash "nested_app_dirs" "public/_app/manifest.json" "functions/sveltekit/index.js" "app"
-# tests/integration/integration-test.bash "run_service_id" "public/_app/manifest.json" "functions/cloudrun/index.js" "."
+# tests/integration/integration-test.bash "functions_single_site" "public/_app/immutable/pages/index.svelte-*.js" "functions/sveltekit/index.js" "."
+# tests/integration/integration-test.bash "nested_app_dirs" "public/_app/immutable/pages/index.svelte-*.js" "functions/sveltekit/index.js" "app"
+# tests/integration/integration-test.bash "run_service_id" "public/_app/immutable/pages/index.svelte-*.js" "functions/cloudrun/index.js" "."
 
 SOURCE_DIR="$1"
 PUBLIC_FILENAME="$2"
@@ -25,7 +25,7 @@ SCRIPT_PATH=$(dirname "$(realpath -s "$0")")
 TEST_DIR="$(mktemp -dt "svelte-adapter-firebase-test-${SOURCE_DIR}-XXXX")"
 
 # Cleanup files on exit
-trap 'echo "${INDICATOR}Exiting, removing ${TEST_DIR}" && rm -rf -- "$TEST_DIR"' EXIT
+# trap 'echo "${INDICATOR}Exiting, removing ${TEST_DIR}" && rm -rf -- "$TEST_DIR"' EXIT
 
 echo "${INDICATOR}TEST_DIR: ${TEST_DIR}"
 echo "${INDICATOR}PWD: ${PWD}"
@@ -57,7 +57,7 @@ echo "${INDICATOR}Build Kit todos site"
 npm run build
 
 # Check ${PUBLIC_FILENAME} exists
-if [ ! -f "${TEST_DIR}/${NESTED_APP_DIR}/${PUBLIC_FILENAME}" ]; then
+if ! [ $(ls ${TEST_DIR}/${NESTED_APP_DIR}/${PUBLIC_FILENAME} 2> /dev/null) ] ; then
 	echo "${INDICATOR}FAILED to find ${TEST_DIR}/${NESTED_APP_DIR}/${PUBLIC_FILENAME}"
 	exit 1
 fi
