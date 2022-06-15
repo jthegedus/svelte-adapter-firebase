@@ -1,5 +1,13 @@
 # Changelog
 
+### [0.14.1](https://www.github.com/jthegedus/svelte-adapter-firebase/compare/v0.14.0...v0.14.1) (2022-06-15)
+
+
+### Bug Fixes
+
+* **#169:** Replace `installFetch()` with `installPolyfills()` ([#170](https://www.github.com/jthegedus/svelte-adapter-firebase/issues/170)) ([9c44f0c](https://www.github.com/jthegedus/svelte-adapter-firebase/commit/9c44f0cbcab64a390ad4197f8a13f474761e5476))
+* builds on windows ([#164](https://www.github.com/jthegedus/svelte-adapter-firebase/issues/164)) ([0dd5005](https://www.github.com/jthegedus/svelte-adapter-firebase/commit/0dd50055706e85d4fb1cff562ab73af42c93df33))
+
 ### [0.14.1](https://www.github.com/pham/svelte-adapter-firebase/compare/v0.14.0...v0.14.1) (2022-06-02)
 
 
