@@ -34,7 +34,7 @@ const entrypoint = function (options = {}) {
 				files: fileURLToPath(new URL('files', import.meta.url)),
 				serverDirname: functions.name ?? 'svelteKit',
 				serverPath: path.join(functions.source, path.dirname(functionsPackageJson.main), functions.name ?? 'svelteKit'),
-				tmp: path.join('.svelte-kit', 'firebase'),
+				tmp: builder.getBuildDirectory('.svelte-kit'),
 			};
 			const ssrFunc = {
 				entrypoint: path.join(functions.source, functionsPackageJson.main),
