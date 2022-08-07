@@ -1,12 +1,5 @@
 # Changelog
 
-### [0.14.2](https://www.github.com/pham/svelte-adapter-firebase/compare/v0.14.1...v0.14.2) (2022-07-20)
-
-
-### Bug Fixes
-
-* **#172:** Remove reference to obsoleted `writeStatic` ([d5760ca](https://www.github.com/pham/svelte-adapter-firebase/commit/d5760cabb1162812e4b23715e5003c6ed517053b))
-
 ### [0.14.1](https://www.github.com/jthegedus/svelte-adapter-firebase/compare/v0.14.0...v0.14.1) (2022-06-15)
 
 
