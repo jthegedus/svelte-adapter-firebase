@@ -95,7 +95,6 @@ const entrypoint = function (options = {}) {
 			builder.rimraf(publicDir);
 
 			builder.log.minor(logRelativeDir('Writing client application to', publicDir));
-			builder.writeStatic(publicDir);
 			builder.writeClient(publicDir);
 
 			builder.log.minor(logRelativeDir('Prerendering static pages to', publicDir));
