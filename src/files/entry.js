@@ -20,6 +20,6 @@ export default async function svelteKit(request, response) {
 	const body = await rendered.text();
 
 	return rendered
-		? response.writeHead(rendered.status, rendered.headers).end(body)
+		? response.writeHead(rendered.status, Object.fromEntries(rendered.headers)).end(body)
 		: response.writeHead(404, 'Not Found').end();
 }
