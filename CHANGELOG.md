@@ -1,5 +1,14 @@
 # Changelog
 
+### [0.14.2](https://www.github.com/jthegedus/svelte-adapter-firebase/compare/v0.14.1...v0.14.2) (2022-08-13)
+
+
+### Bug Fixes
+
+* **#172:** Remove reference to obsoleted `writeStatic` ([#173](https://www.github.com/jthegedus/svelte-adapter-firebase/issues/173)) ([9a990a0](https://www.github.com/jthegedus/svelte-adapter-firebase/commit/9a990a00667b5f2197915d8b380593a5a05d306b))
+* bump kit versions, update deps & fix xojs issues ([#178](https://www.github.com/jthegedus/svelte-adapter-firebase/issues/178)) ([dde0a0e](https://www.github.com/jthegedus/svelte-adapter-firebase/commit/dde0a0ea9802000df2b07c760357d8eac8a976fa))
+* Pass rendered.headers to writeHead as object ([#176](https://www.github.com/jthegedus/svelte-adapter-firebase/issues/176)) ([11d90cb](https://www.github.com/jthegedus/svelte-adapter-firebase/commit/11d90cb6059585e9c95ca06d06e153ddf514f7b4))
+
 ### [0.14.1](https://www.github.com/jthegedus/svelte-adapter-firebase/compare/v0.14.0...v0.14.1) (2022-06-15)
 
 
