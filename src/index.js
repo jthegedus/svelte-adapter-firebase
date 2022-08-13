@@ -25,7 +25,7 @@ const entrypoint = function (options = {}) {
 			builder.log.minor(`Adapter configuration:\n\t${JSON.stringify(options)}`);
 			const {functions, publicDir} = parseFirebaseConfiguration({firebaseJsonPath, target, sourceRewriteMatch});
 			ensureStaticResourceDirsDiffer({source: path.join(process.cwd(), builder.getStaticDirectory()), dest: publicDir});
-			const functionsPackageJson = JSON.parse(readFileSync(path.join(functions.source, 'package.json'), 'utf-8'));
+			const functionsPackageJson = JSON.parse(readFileSync(path.join(functions.source, 'package.json'), 'utf8'));
 			if (!functionsPackageJson?.main) {
 				throw new Error(`Error reading ${functionsPackageJson}. Required field "main" missing.`);
 			}
@@ -72,7 +72,7 @@ const entrypoint = function (options = {}) {
 			builder.log.minor(logRelativeDir('Writing Cloud Function server assets to', dirs.serverPath));
 
 			try {
-				if (!readFileSync(ssrFunc.entrypoint, 'utf-8').includes(`${functions.name} =`)) {
+				if (!readFileSync(ssrFunc.entrypoint, 'utf8').includes(`${functions.name} =`)) {
 					builder.log.warn(`Add the following Cloud Function to ${ssrFunc.entrypoint}`);
 					builder.log.warn(`
               let ${ssrFunc.svelteSSR};

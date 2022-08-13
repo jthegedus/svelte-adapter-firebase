@@ -126,7 +126,7 @@ function parseFirebaseConfiguration({target, sourceRewriteMatch, firebaseJsonPat
 	 */
 	let firebaseConfig;
 	try {
-		firebaseConfig = JSON.parse(readFileSync(firebaseJson, 'utf-8'));
+		firebaseConfig = JSON.parse(readFileSync(firebaseJson, 'utf8'));
 	} catch (error) {
 		throw new Error(`Error: failure while parsing ${firebaseJsonPath}. ${error.message}`);
 	}

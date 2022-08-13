@@ -1,13 +1,11 @@
 import {Adapter} from '@sveltejs/kit';
 import {BuildOptions} from 'esbuild';
 
-type AdapterOptions = {
-	esbuildOptions?: (defaultOptions: BuildOptions) => Promise<BuildOptions> | BuildOptions;
+type Options = {
+	esbuildOptions?: (defaultOptions: BuildOptions) => Promise<BuildOptions>;
 	firebaseJsonPath?: string;
 	target?: string;
 	sourceRewriteMatch?: string;
 };
 
-declare function plugin(options?: AdapterOptions): Adapter;
-
-export = plugin;
+export default function plugin(options?: Options): Adapter;
