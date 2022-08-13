@@ -1,3 +1,3 @@
-import {installPolyfills} from '@sveltejs/kit/node/polyfills';
+import {installPolyfills} from '@sveltejs/kit/node/polyfills.js';
 
 installPolyfills();
