@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.14.3](https://www.github.com/jthegedus/svelte-adapter-firebase/compare/v0.14.2...v0.14.3) (2022-09-02)
+
+
+### Bug Fixes
+
+* **#180:** Prepend `Server.init` before calling `Server.respond` ([#181](https://www.github.com/jthegedus/svelte-adapter-firebase/issues/181)) ([5c937c9](https://www.github.com/jthegedus/svelte-adapter-firebase/commit/5c937c9ca6627025ecd19c889a9be3b50be2a266))
+
 ### [0.14.2](https://www.github.com/jthegedus/svelte-adapter-firebase/compare/v0.14.1...v0.14.2) (2022-08-13)
 
 
