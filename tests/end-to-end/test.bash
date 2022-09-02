@@ -5,7 +5,7 @@ set -u
 IFS=$'\n\t'
 
 # Execute end-to-end tests of the SvelteKit Todo template app built with
-# the svelte-adapter-firebase adapter hosted on the Cloud Function using 
+# the svelte-adapter-firebase adapter hosted on the Cloud Function using
 # the Firebase Emulator in CI
 #
 # Curl API and assert response payload
@@ -26,7 +26,7 @@ echo "TEST_DIR: ${TEST_DIR}"
 echo "PWD: ${PWD}"
 
 echo "${INDICATOR}Install svelte-adapter-firebase ${SCRIPT_PATH}/../../ deps"
-npm install 
+npm install
 
 echo "${INDICATOR}init SvelteKit Todos app"
 yes "" | "$(npm init svelte@next "${TEST_DIR}")"
@@ -68,24 +68,27 @@ RESULT="$(curl -L localhost:${PORT}/about)"
 
 if [[ "${RESULT}" != *"${EXPECTED_SUBSTRING}"* ]]; then
 	echo "Failed testing localhost:${PORT}/about"
+	echo -e "Expect --> ${EXPECTED_SUBSTRING}\nGot -->\n${RESULT}"
 	exit 1
 fi
 
 echo "${INDICATOR}Test GET SSR route '/'"
-EXPECTED_SUBSTRING="<h2>try editing <strong>src/routes/index.svelte</strong></h2>"
+EXPECTED_SUBSTRING="<h2>try editing <strong"
 RESULT="$(curl -L localhost:${PORT}/)"
 
 if [[ "${RESULT}" != *"${EXPECTED_SUBSTRING}"* ]]; then
 	echo "${INDICATOR}Failed testing localhost:${PORT}/"
+	echo -e "Expect --> ${EXPECTED_SUBSTRING}\nGot -->\n${RESULT}"
 	exit 1
 fi
 
 echo "${INDICATOR}Test GET SSR route '/todos'"
-EXPECTED_SUBSTRING="<h1>Todos</h1>"
+EXPECTED_SUBSTRING='<h1>Todos</h1>'
 RESULT="$(curl -L localhost:${PORT}/todos)"
 
 if [[ "${RESULT}" != *"${EXPECTED_SUBSTRING}"* ]]; then
 	echo "${INDICATOR}Failed testing localhost:${PORT}/todos/"
+	echo -e "Expect --> ${EXPECTED_SUBSTRING}\nGot -->\n${RESULT}"
 	exit 1
 fi
 
@@ -107,9 +110,9 @@ RESULT="$(curl -X POST "http://localhost:${PORT}/todos" \
 	-H "Sec-Fetch-Mode: cors" \
 	-H "Sec-Fetch-Site: same-origin" \
 	-H 'Sec-GPC: 1' --data-binary $'-----------------------------349341627025106406523834848301\r\nContent-Disposition: form-data; name="text"\r\n\r\nasdf\r\n-----------------------------349341627025106406523834848301--\r\n')"
-echo "$RESULT"
 if [[ "${RESULT}" != *"${EXPECTED_SUBSTRING}"* ]]; then
 	echo "${INDICATOR}Failed POSTing to localhost:${PORT}/todos"
+	echo -e "Expect --> ${EXPECTED_SUBSTRING}\nGot -->\n${RESULT}"
 	exit 1
 fi
 

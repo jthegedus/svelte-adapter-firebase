@@ -1,3 +1,4 @@
+import process from 'process';
 import {Server} from 'SERVER';
 import {manifest} from 'MANIFEST';
 import {toSvelteKitRequest} from './firebase-to-svelte-kit.js';
@@ -16,6 +17,10 @@ const server = new Server(manifest);
  * @returns {Promise<void>}
  */
 export default async function svelteKit(request, response) {
+	await server.init({
+		env: process.env,
+	});
+
 	const rendered = await server.respond(toSvelteKitRequest(request));
 	const body = await rendered.text();
 

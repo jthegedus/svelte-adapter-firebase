@@ -30,19 +30,19 @@ jobs:
         params:
           - {
               test_dir: "functions_single_site",
-              validation_app_dir: "public/_app/immutable/pages/index.svelte-*.js",
+              validation_app_dir: "public/_app/immutable/components/pages/_page.svelte-*.js",
               validation_compute_dir: "functions/sveltekit/index.js",
               nested_dir: ".",
             }
           - {
               test_dir: "nested_app_dirs",
-              validation_app_dir: "public/_app/immutable/pages/index.svelte-*.js",
+              validation_app_dir: "public/_app/immutable/components/pages/_page.svelte-*.js",
               validation_compute_dir: "functions/sveltekit/index.js",
               nested_dir: "app",
             }
           - {
               test_dir: "run_service_id",
-              validation_app_dir: "public/_app/immutable/pages/index.svelte-*.js",
+              validation_app_dir: "public/_app/immutable/components/pages/_page.svelte-*.js",
               validation_compute_dir: "functions/cloudrun/index.js",
               nested_dir: ".",
             }
