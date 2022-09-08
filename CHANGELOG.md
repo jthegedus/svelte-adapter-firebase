@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.14.4](https://www.github.com/jthegedus/svelte-adapter-firebase/compare/v0.14.3...v0.14.4) (2022-09-08)
+
+
+### Bug Fixes
+
+* cross-site POST requests ([#184](https://www.github.com/jthegedus/svelte-adapter-firebase/issues/184)) ([e2d8081](https://www.github.com/jthegedus/svelte-adapter-firebase/commit/e2d80812976feb5d16e34131462628647af59dc3))
+
 ### [0.14.3](https://www.github.com/jthegedus/svelte-adapter-firebase/compare/v0.14.2...v0.14.3) (2022-09-02)
 
 
