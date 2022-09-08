@@ -93,10 +93,10 @@ if [[ "${RESULT}" != *"${EXPECTED_SUBSTRING}"* ]]; then
 fi
 
 echo "${INDICATOR}Test POST to '/todos' API"
-EXPECTED_SUBSTRING='"text":"asdf"'
+EXPECTED_SUBSTRING='{"type":"success","status":204}'
 # expected result = {"uid":"","created_at":01234,"text":"asdf","done":false}
 # generated from the browser & copied with 'copy for cURL' browser context menu
-RESULT="$(curl -X POST "http://localhost:${PORT}/todos" \
+RESULT="$(curl -X POST "http://localhost:${PORT}/todos?/add" \
 	-H "User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0" \
 	-H "Accept: */*" \
 	-H "Accept-Language: en-GB,en;q=0.5" \

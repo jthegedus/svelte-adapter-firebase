@@ -5,7 +5,10 @@
  * @return {import('@sveltejs/kit').IncomingRequest}
  */
 export function toSvelteKitRequest(request) {
-	const host = `${request.headers['x-forwarded-proto']}://${request.headers.host}`;
+	// Firebase sometimes omits the protocol used. Default to http.
+	const protocol = request.headers['x-forwarded-proto'] || 'http';
+	// Firebase forwards the request to sveltekit, use the forwarded host.
+	const host = `${protocol}://${request.headers['x-forwarded-host']}`;
 	const {href, pathname, searchParams: searchParameters} = new URL(request.url || '', host);
 	// eslint-disable-next-line no-undef
 	return new Request(href, {
