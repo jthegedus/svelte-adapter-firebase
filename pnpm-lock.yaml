@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@sveltejs/kit': ^1.0.0-next.562
+  '@sveltejs/kit': ^1.0.0-next.570
   '@types/express': ^4.17.13
   '@types/node': ^18.7.3
   ava: ^4.3.1
