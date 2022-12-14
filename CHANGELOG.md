@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.14.5](https://www.github.com/jthegedus/svelte-adapter-firebase/compare/v0.14.4...v0.14.5) (2022-12-14)
+
+
+### Bug Fixes
+
+* **#192:** replace getStaticDirectory with kit.files.assets ([#193](https://www.github.com/jthegedus/svelte-adapter-firebase/issues/193)) ([a4b4daa](https://www.github.com/jthegedus/svelte-adapter-firebase/commit/a4b4daac795cd93a4a06f5d218f69841810e686b))
+
 ### [0.14.4](https://www.github.com/jthegedus/svelte-adapter-firebase/compare/v0.14.3...v0.14.4) (2022-09-08)
 
 
