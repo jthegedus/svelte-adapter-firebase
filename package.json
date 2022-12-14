@@ -38,18 +38,18 @@
     "node": "^14.13.1 || >= 16"
   },
   "dependencies": {
-    "esbuild": "^0.15.2"
+    "esbuild": "^0.16.6"
   },
   "peerDependencies": {
-    "@sveltejs/kit": "^1.0.0-next.443"
+    "@sveltejs/kit": "^1.0.0-next.587"
   },
   "devDependencies": {
-    "@sveltejs/kit": "^1.0.0-next.443",
-    "@types/express": "^4.17.13",
-    "@types/node": "^18.7.3",
-    "ava": "^4.3.1",
-    "firebase-functions": "^3.22.0",
-    "xo": "^0.51.0"
+    "@sveltejs/kit": "1.0.0-next.587",
+    "@types/express": "^4.17.15",
+    "@types/node": "^18.11.15",
+    "ava": "^4.3.3",
+    "firebase-functions": "^3.24.1",
+    "xo": "^0.53.1"
   },
   "scripts": {
     "fix": "xo --fix",
