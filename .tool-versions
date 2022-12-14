@@ -1,6 +1,6 @@
-firebase 11.6.0
-nodejs 16.16.0
-pnpm 7.9.1
+firebase 11.18.0
+nodejs 18.12.1
+pnpm 7.18.2
 
 # use for Firebase Emulator
 
