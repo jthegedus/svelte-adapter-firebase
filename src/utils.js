@@ -218,39 +218,6 @@ function ensureStaticResourceDirsDiffer({source, dest}) {
 }
 
 /**
- * Validate Cloud Function runtime Node.js version for use with SvelteKit.
- * Throw error if invalid.
- * Returns number part of input values.
- *
- * @param {{
- * 	functionsPackageJsonEngine: undefined|string;
- * 	firebaseJsonFunctionsRuntime: undefined|string;
- * }} version
- * @returns {string} number part of input value. Eg: input=nodejs14 return=14 || input=14 return=14
- */
-function ensureCompatibleCloudFunctionVersion({functionsPackageJsonEngine, firebaseJsonFunctionsRuntime}) {
-	const validPackageJsonValues = [
-		'14',
-		'16',
-	];
-	const validFirebaseJsonValues = [
-		'nodejs14',
-		'nodejs16',
-	];
-
-	const validPkgJsonVersion = validPackageJsonValues.includes(functionsPackageJsonEngine);
-	const validFirebaseJsonVersion = validFirebaseJsonValues.includes(firebaseJsonFunctionsRuntime);
-
-	if (!validPkgJsonVersion && !validFirebaseJsonVersion) {
-		throw new Error(`Error: Node.js runtime not supported. SvelteKit on Cloud Functions requires either "firebase.json:functions.runtime" with one of ${validFirebaseJsonValues} or "functions/package.json:engines.node" with one of ${validPackageJsonValues}`);
-	}
-
-	return functionsPackageJsonEngine
-		? functionsPackageJsonEngine.slice(-2)
-		: firebaseJsonFunctionsRuntime.slice(-2);
-}
-
-/**
  * Format message with relative dir on following newline.
  *
  * @param {string} message
@@ -262,7 +229,6 @@ function logRelativeDir(message, dir) {
 }
 
 export {
-	ensureCompatibleCloudFunctionVersion,
 	ensureStaticResourceDirsDiffer,
 	logRelativeDir,
 	parseFirebaseConfiguration,

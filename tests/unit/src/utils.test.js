@@ -1,7 +1,7 @@
 import {fileURLToPath} from 'url';
 import path from 'path';
 import test from 'ava';
-import {ensureCompatibleCloudFunctionVersion, ensureStaticResourceDirsDiffer, parseFirebaseConfiguration, validCloudFunctionName, validCloudRunServiceId} from '../../../src/utils.js';
+import {ensureStaticResourceDirsDiffer, parseFirebaseConfiguration, validCloudFunctionName, validCloudRunServiceId} from '../../../src/utils.js';
 
 // ParseFirebaseConfiguration: Valid configs
 test(
@@ -299,76 +299,6 @@ test(
 		t.throws(
 			() => ensureStaticResourceDirsDiffer({source: 'a', dest: 'a'}),
 			{message: 'Error: "firebase.json:hosting.public" field (a) must be a different directory to "svelte.config.js:kit.files.assets" field (a).'},
-		);
-	},
-);
-
-// EnsureCompatibleCloudFunctionVersion
-test('Valid Function runtime (nodejs14) version in package.json', t => {
-	let version;
-	t.notThrows(
-		() => {
-			version = ensureCompatibleCloudFunctionVersion({functionsPackageJsonEngine: '14'});
-		},
-		'',
-	);
-	t.is(version, '14');
-});
-test('Valid Function runtime (nodejs14) version in firebase.json', t => {
-	let version;
-	t.notThrows(
-		() => {
-			version = ensureCompatibleCloudFunctionVersion({firebaseJsonFunctionsRuntime: 'nodejs14'});
-		},
-		'',
-	);
-	t.is(version, '14');
-});
-test('Valid Function runtime (nodejs16) version in package.json', t => {
-	let version;
-	t.notThrows(
-		() => {
-			version = ensureCompatibleCloudFunctionVersion({functionsPackageJsonEngine: '16'});
-		},
-		'',
-	);
-	t.is(version, '16');
-});
-test('Valid Function runtime (nodejs16) version in firebase.json', t => {
-	let version;
-	t.notThrows(
-		() => {
-			version = ensureCompatibleCloudFunctionVersion({firebaseJsonFunctionsRuntime: 'nodejs16'});
-		},
-		'',
-	);
-	t.is(version, '16');
-});
-
-test(
-	'No Function runtime provided',
-	t => {
-		t.throws(
-			() => ensureCompatibleCloudFunctionVersion({}),
-			{message: 'Error: Node.js runtime not supported. SvelteKit on Cloud Functions requires either "firebase.json:functions.runtime" with one of nodejs14,nodejs16 or "functions/package.json:engines.node" with one of 14,16'},
-		);
-	},
-);
-test(
-	'Invalid Function runtime in package.json',
-	t => {
-		t.throws(
-			() => ensureCompatibleCloudFunctionVersion({functionsPackageJsonEngine: '12'}),
-			{message: 'Error: Node.js runtime not supported. SvelteKit on Cloud Functions requires either "firebase.json:functions.runtime" with one of nodejs14,nodejs16 or "functions/package.json:engines.node" with one of 14,16'},
-		);
-	},
-);
-test(
-	'Invalid Function runtime in firebase.json',
-	t => {
-		t.throws(
-			() => ensureCompatibleCloudFunctionVersion({firebaseJsonFunctionsRuntime: 'nodejs12'}),
-			{message: 'Error: Node.js runtime not supported. SvelteKit on Cloud Functions requires either "firebase.json:functions.runtime" with one of nodejs14,nodejs16 or "functions/package.json:engines.node" with one of 14,16'},
 		);
 	},
 );
