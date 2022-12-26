@@ -159,16 +159,22 @@ function parseFirebaseConfiguration({target, sourceRewriteMatch, firebaseJsonPat
 		throw new Error('Error: Cloud Function name must use only alphanumeric characters and underscores and cannot be longer than 63 characters');
 	}
 
-	// If function, ensure function root-level field is present
-	if (!firebaseConfig?.functions || !firebaseConfig.functions?.source || !isString(firebaseConfig.functions.source)) {
-		throw new Error('Error: Required "functions.source" field is missing from Firebase Configuration file.');
+	// If function, ensure function root-level field is present. If functions is an array, gets the first entry
+	let functions;
+	if (firebaseConfig?.functions) {
+		functions = Array.isArray(firebaseConfig.functions) ? firebaseConfig.functions[0] : firebaseConfig.functions;
+		if (!functions || !isString(functions.source)) {
+			throw new Error('Error: Required "functions.source" or "functions[].source" field is missing from Firebase Configuration file.');
+		}
+	} else {
+		throw new Error('Error: Required "functions" field is missing from Firebase Configuration file.');
 	}
 
 	return {
 		functions: {
 			name: rewriteConfig.function ?? rewriteConfig.run.serviceId,
-			source: path.join(path.dirname(firebaseJson), firebaseConfig.functions.source),
-			runtime: firebaseConfig.functions?.runtime,
+			source: path.join(path.dirname(firebaseJson), functions.source),
+			runtime: functions?.runtime,
 		},
 		publicDir: path.join(path.dirname(firebaseJson), hostingConfig.public),
 	};
