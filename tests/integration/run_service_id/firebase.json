@@ -9,7 +9,8 @@
           "serviceId": "cloudrun"
         }
       }
-    ]
+    ],
+    "cleanUrls": true
   },
   "functions": {
     "source": "functions"
