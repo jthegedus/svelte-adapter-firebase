@@ -41,7 +41,7 @@
     "esbuild": "^0.17.0"
   },
   "peerDependencies": {
-    "@sveltejs/kit": "^1.0.0-next.443"
+    "@sveltejs/kit": "^1.0.0-next.587"
   },
   "devDependencies": {
     "@sveltejs/kit": "^1.1.1",

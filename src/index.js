@@ -4,7 +4,6 @@ import process from 'process';
 import {fileURLToPath} from 'url';
 import esbuild from 'esbuild';
 import {
-	ensureCompatibleCloudFunctionVersion,
 	ensureStaticResourceDirsDiffer,
 	logRelativeDir,
 	parseFirebaseConfiguration,
@@ -44,10 +43,7 @@ const entrypoint = function (options = {}) {
 			};
 
 			const relativePath = path.posix.relative(dirs.tmp, builder.getServerDirectory());
-			const runtimeVersion = ensureCompatibleCloudFunctionVersion({
-				functionsPackageJsonEngine: functionsPackageJson?.engines?.node,
-				firebaseJsonFunctionsRuntime: functions.runtime,
-			});
+			const runtimeVersion = functions.runtime || functionsPackageJson?.engines?.node || '18';
 			builder.rimraf(dirs.tmp);
 			builder.rimraf(dirs.serverPath);
 			builder.copy(
