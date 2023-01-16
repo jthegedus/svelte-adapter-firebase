@@ -3,6 +3,8 @@ import path from 'path';
 import test from 'ava';
 import {ensureCompatibleCloudFunctionVersion, ensureStaticResourceDirsDiffer, parseFirebaseConfiguration, validCloudFunctionName, validCloudRunServiceId} from '../../../src/utils.js';
 
+const nodeVerErrorString = 'Error: Node.js runtime not supported. SvelteKit on Cloud Functions requires either "firebase.json:functions.runtime" with one of nodejs14,nodejs16,nodejs18 or "functions/package.json:engines.node" with one of 14,16,18';
+
 // ParseFirebaseConfiguration: Valid configs
 test(
 	'Firebase config w Cloud Functions & single site',
@@ -350,7 +352,7 @@ test(
 	t => {
 		t.throws(
 			() => ensureCompatibleCloudFunctionVersion({}),
-			{message: 'Error: Node.js runtime not supported. SvelteKit on Cloud Functions requires either "firebase.json:functions.runtime" with one of nodejs14,nodejs16 or "functions/package.json:engines.node" with one of 14,16'},
+			{message: nodeVerErrorString},
 		);
 	},
 );
@@ -359,7 +361,7 @@ test(
 	t => {
 		t.throws(
 			() => ensureCompatibleCloudFunctionVersion({functionsPackageJsonEngine: '12'}),
-			{message: 'Error: Node.js runtime not supported. SvelteKit on Cloud Functions requires either "firebase.json:functions.runtime" with one of nodejs14,nodejs16 or "functions/package.json:engines.node" with one of 14,16'},
+			{message: nodeVerErrorString},
 		);
 	},
 );
@@ -368,7 +370,7 @@ test(
 	t => {
 		t.throws(
 			() => ensureCompatibleCloudFunctionVersion({firebaseJsonFunctionsRuntime: 'nodejs12'}),
-			{message: 'Error: Node.js runtime not supported. SvelteKit on Cloud Functions requires either "firebase.json:functions.runtime" with one of nodejs14,nodejs16 or "functions/package.json:engines.node" with one of 14,16'},
+			{message: nodeVerErrorString},
 		);
 	},
 );
