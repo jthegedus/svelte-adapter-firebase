@@ -232,10 +232,12 @@ function ensureCompatibleCloudFunctionVersion({functionsPackageJsonEngine, fireb
 	const validPackageJsonValues = [
 		'14',
 		'16',
+		'18',
 	];
 	const validFirebaseJsonValues = [
 		'nodejs14',
 		'nodejs16',
+		'nodejs18',
 	];
 
 	const validPkgJsonVersion = validPackageJsonValues.includes(functionsPackageJsonEngine);
