@@ -4,7 +4,7 @@
     "site": "svelte-func-single-site",
     "rewrites": [
       {
-        "source: "/about",
+        "source": "/about",
         "destination": "/about.html"
       },
       {

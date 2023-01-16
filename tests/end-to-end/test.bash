@@ -28,7 +28,7 @@ echo "PWD: ${PWD}"
 echo "${INDICATOR}Install svelte-adapter-firebase ${SCRIPT_PATH}/../../ deps"
 npm install
 
-echo "${INDICATOR}init SvelteKit Todos app"
+echo "${INDICATOR}init SvelteKit Sverdle app"
 yes "" | "$(npm create svelte@latest "${TEST_DIR}")"
 echo "${INDICATOR}Complete SvelteKit create"
 
