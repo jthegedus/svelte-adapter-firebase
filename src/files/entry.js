@@ -22,7 +22,11 @@ export default async function svelteKit(request, response) {
 		env: process.env,
 	});
 
-	const rendered = await server.respond(toSvelteKitRequest(request));
+	const rendered = await server.respond(toSvelteKitRequest(request), {
+		getClientAddress() {
+			return request.headers.get('x-forwarded-for');
+		},
+	});
 	const body = await rendered.text();
 
 	return rendered

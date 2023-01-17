@@ -1,5 +1,5 @@
-import {type Adapter} from '@sveltejs/kit';
-import {type BuildOptions} from 'esbuild';
+import type {Adapter} from '@sveltejs/kit';
+import type {BuildOptions} from 'esbuild';
 
 type Options = {
 	esbuildOptions?: (defaultOptions: BuildOptions) => Promise<BuildOptions>;
