@@ -14,7 +14,7 @@ export function toSvelteKitRequest(request) {
 	return new Request(href, {
 		method: request.method,
 		headers: toSvelteKitHeaders(request.headers),
-		body: request.rawBody ?? null,
+		body: request.rawBody || null,
 		host,
 		path: pathname,
 		query: searchParameters,

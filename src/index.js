@@ -9,12 +9,10 @@ import {
 	parseFirebaseConfiguration,
 } from './utils.js';
 
-const adapterName = 'svelte-adapter-firebase';
-
 /** @type {import('.')} **/
 const entrypoint = function (options = {}) {
 	return {
-		name: adapterName,
+		name: 'svelte-adapter-firebase',
 		async adapt(builder) {
 			const {
 				esbuildOptions = undefined,
@@ -35,7 +33,7 @@ const entrypoint = function (options = {}) {
 				files: fileURLToPath(new URL('files', import.meta.url)),
 				serverDirname: functions.name ?? 'svelteKit',
 				serverPath: path.join(functions.source, path.dirname(functionsPackageJson.main), functions.name ?? 'svelteKit'),
-				tmp: builder.getBuildDirectory(adapterName),
+				tmp: builder.getBuildDirectory('.svelte-kit'),
 			};
 			const ssrFunc = {
 				entrypoint: path.join(functions.source, functionsPackageJson.main),
@@ -96,7 +94,6 @@ const entrypoint = function (options = {}) {
 			builder.writeClient(publicDir);
 
 			builder.log.minor(logRelativeDir('Prerendering static pages to', publicDir));
-			builder.writePrerendered(publicDir);
 			writeFileSync(`${dirs.tmp}/manifest.js`, `export const manifest = ${builder.generateManifest({
 				relativePath,
 			})};\n`);
@@ -107,7 +104,7 @@ const entrypoint = function (options = {}) {
 				`${dirs.tmp}/config/routes.json`,
 				JSON.stringify([
 					{
-						src: `/${builder.config.kit.appDir}/.+`,
+						src: `/${builder.appDir}/.+`,
 						headers: {
 							'cache-control': 'public, immutable, max-age=31536000',
 						},
