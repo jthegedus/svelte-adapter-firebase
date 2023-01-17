@@ -36,6 +36,7 @@ Cloud Functions!
 
 ## Contents
 
+- [Contents](#contents)
 - [Setup](#setup)
   - [Beta Adapter Version Compatibility](#beta-adapter-version-compatibility)
 - [Configuration Overview](#configuration-overview)
@@ -43,12 +44,13 @@ Cloud Functions!
   - [`firebase.json` Configurations](#firebasejson-configurations)
   - [Adapter Configurations](#adapter-configurations)
 - [How it works](#how-it-works)
-- [Firebase Emulator local Testing](#cloud-function-firebase-emulator-local-testing)
+- [Firebase Emulator local Testing](#firebase-emulator-local-testing)
 - [Deployment](#deployment)
 - [Caveats](#caveats)
-- [Non-Goals](#non-goals)
+- [Non-goals](#non-goals)
 - [FAQ](#faq)
 - [Contributing](#contributing)
+  - [external contributions](#external-contributions)
 
 ## Setup
 
@@ -86,6 +88,7 @@ the Adapter and SvelteKit becoming incompatible. Here is a compatibility table:
 
 | Adapter Version | SvelteKit Version    |
 | --------------- | -------------------- |
+| `0.14.5`        | `1.0.0-next.587`     |
 | `0.14.4`        | `1.0.0-next.443`     |
 | `0.14.3`        | `1.0.0-next.443`     |
 | `0.14.2`        | `1.0.0-next.405`     |
@@ -531,7 +534,7 @@ import/require of the generated code will not change unless you change the
 `firebase.json:hosting.site` or `package.json:main` fields, so you shouldn't
 need to update this code after adding it.
 
-## Cloud Function Firebase Emulator local Testing
+## Firebase Emulator local Testing
 
 Test your production build locally before pushing to git or deploying!
 
