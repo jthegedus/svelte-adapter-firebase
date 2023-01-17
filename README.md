@@ -2,8 +2,8 @@
 
 <!-- TODO: on 1.0.0 release, delete this section -->
 
-| :warning: WARNING: this project is considered to be in BETA until SvelteKit is available for general use and the Adapter API is stable! |
-| --------------------------------------------------------------------------------------------------------------------------------------- |
+| :warning: WARNING: this project is considered to be in BETA (pre-`1.x.x`), `1.0.0` release imminent! |
+| ---------------------------------------------------------------------------------------------------- |
 
 <!-- END -->
 
@@ -88,6 +88,7 @@ the Adapter and SvelteKit becoming incompatible. Here is a compatibility table:
 
 | Adapter Version | SvelteKit Version    |
 | --------------- | -------------------- |
+| `0.15.0`        | `1.1.1`              |
 | `0.14.5`        | `1.0.0-next.587`     |
 | `0.14.4`        | `1.0.0-next.443`     |
 | `0.14.3`        | `1.0.0-next.443`     |
