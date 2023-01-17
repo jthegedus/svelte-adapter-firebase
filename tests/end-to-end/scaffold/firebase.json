@@ -1,18 +1,14 @@
 {
-  "hosting": [{
+  "hosting": {
     "public": "public",
     "site": "svelte-func-single-site",
     "rewrites": [
-      {
-        "source": "/about",
-        "destination": "/about.html"
-      },
       {
         "source": "**",
         "function": "sveltekit"
       }
     ]
-  }],
+  },
   "functions": {
     "source": "functions"
   },
