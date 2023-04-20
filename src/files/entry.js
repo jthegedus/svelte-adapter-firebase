@@ -27,9 +27,9 @@ export default async function svelteKit(request, response) {
 			return request.headers.get('x-forwarded-for');
 		},
 	});
-	const body = await rendered.text();
+	const body = await rendered.arrayBuffer();
 
 	return rendered
-		? response.writeHead(rendered.status, Object.fromEntries(rendered.headers)).end(body)
+		? response.writeHead(rendered.status, Object.fromEntries(rendered.headers)).end(Buffer.from(body))
 		: response.writeHead(404, 'Not Found').end();
 }
