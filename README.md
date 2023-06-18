@@ -1,11 +1,7 @@
 <div align="center">
 
-<!-- TODO: on 1.0.0 release, delete this section -->
-
-| :warning: WARNING: this project is considered to be in BETA (pre-`1.x.x`), `1.0.0` release imminent! |
+| :warning: WARNING: Firebase have introduced first-party support for [Web Frameworks](https://firebase.google.com/docs/hosting/frameworks/frameworks-overview). [SvelteKit support is experimental](https://github.com/FirebaseExtended/firebase-framework-tools). This adapter may be deprecated in future as it cannot support the same level of integration as the official team and tooling. Use at your own risk. |
 | ---------------------------------------------------------------------------------------------------- |
-
-<!-- END -->
 
 ![SvelteKit adapter Firebase social preview](assets/github-preview-svelte-adapter-firebase.png)
 
@@ -83,8 +79,7 @@ export default {
 
 ### Beta Adapter Version Compatibility
 
-SvelteKit is still in Beta and the Adapter API is in flux, this can result in
-the Adapter and SvelteKit becoming incompatible. Here is a compatibility table:
+This adapter has not been tested beyond the versions listed below, use at your own risk:
 
 | Adapter Version | SvelteKit Version    |
 | --------------- | -------------------- |
