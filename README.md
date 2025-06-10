@@ -1,6 +1,6 @@
 <div align="center">
 
-| :warning: WARNING: Firebase have introduced first-party support for [Web Frameworks](https://firebase.google.com/docs/hosting/frameworks/frameworks-overview). [SvelteKit support is experimental](https://github.com/FirebaseExtended/firebase-framework-tools). This adapter may be deprecated in future as it cannot support the same level of integration as the official team and tooling. Use at your own risk. |
+| :warning: WARNING: Firebase have introduced first-party support for SvelteKit on [Hosting (experimental)](https://firebase.google.com/docs/hosting/frameworks/frameworks-overview) and [App Hosting](https://firebase.blog/posts/2025/06/app-hosting-frameworks#sveltekit). This adapter may be deprecated in future as it cannot support the same level of integration as the official team and tooling. Use at your own risk. |
 | ---------------------------------------------------------------------------------------------------- |
 
 ![SvelteKit adapter Firebase social preview](assets/github-preview-svelte-adapter-firebase.png)
